@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>监控</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <!--标准mui.css-->
+        <link rel="stylesheet" href="css/mui.min.css">
+        <style>
+     	    html,
+			body {
+				background-color: #ffffff;
+			}
+            .chart {
+                /*height: 200px;*/
+                /*width: 340px;*/
+                margin: 0px;
+                padding: 0px;
+            }
+            h5 {
+                margin-top: 30px;
+                font-weight: bold;
+            }
+            h5:first-child {
+                margin-top: 15px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+            <div id="monitor-content" class="mui-fullscreen">
+                <div class="chart" style="width: 100%;height: 50%;">
+                    <table style="width: 100%;height: 100%;">
+                    	<tr><td style="width: 50%;height: 100%;"><div class="chart" style="width: 100%;height: 100%;" id="ApChart"></div></td>
+                    	    <td style="width: 50%;height: 100%;"><div class="chart" style="width: 100%;height: 100%;" id="clientChart"></div></td>
+                    	</tr>
+                    </table>
+                </div>
+                <hr style="margin:0; padding:0; border:0; height:1px; background-color:#c9ccd0" />
+                <hr style="margin:0; padding:0; border:0; height:1px; background-color:#e2e5e9" />
+				<hr style="margin:0; padding:0; border:0; height:10px; background-color:#eff2f6" />
+                <div class="content-bottom chart" style="position: relative;height: 50%;">
+                    <div class="chart" id="gridBar" style="position: absolute; z-index: 1; width: 100%;height: 100%;"></div>
+                    <div class="chart" id="speedBar" style="position: absolute; z-index: 2; width: 100%;height: 100%;"></div>
+                </div>
+            </div>
+        </div>
+        <script src="js/mui.min.js"></script>
+        <script src="libs/echarts-all.js"></script>
+        <script src="js/base.js"></script>
+        <script src="js/data.js"></script>
+        <script>
+            var domready=false;
+            var apChart = null;
+            var clientChart = null;
+            var speedChart = null;
+            var speedGridChart = null;
+
+            mui.init({
+                pullRefresh: {
+                    container: '#pullrefresh',
+                    down: {
+                        callback: pulldownRefresh
+                    }
+                }
+            });
+
+            function isCurrentWebviewVisible(){
+                var isVisible = false;
+                var ws = plus.webview.currentWebview();
+                if (ws) {
+                	isVisible = ws.isVisible();
+                }
+
+                return isVisible;
+            }
+
+            /**
+             * 下拉刷新具体业务实现
+             */
+            function pulldownRefresh() {
+                updataMonitorData();
+//              mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+            }
+
+            function drawApChart(data) {
+                // 基于准备好的dom，初始化echarts图表
+
+                var onlineper=0;
+                var offlineper=1;
+
+                if (data.online || data.offline) {
+                    onlineper=data.online * 100 /(data.online+data.offline);
+                    offlineper=data.offline * 100 /(data.online+data.offline);
+                }
+
+//              if (!apChart) {
+                	apChart = echarts.init(document.getElementById('ApChart'));
+//              }
+                apChart.clear();
+                var labelTop = {
+                    normal: {
+                        color: '#69c4c5',
+                        label: {
+                            show: true,
+                            position: 'center',
+                            textStyle: {
+                                color: '#69c4c5',
+                                fontFamily: 'arial',
+                                fontSize: 13,
+                                baseline: 'bottom'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        }
+                    }
+                };
+                var labelBottom = {
+                    normal: {
+                        color: '#f2f5f8',
+                        label: {
+                            show: true,
+                            position: 'center',
+                            textStyle: {
+                                color: '#616e7f',
+                                fontFamily: 'arial',
+                                baseline: 'middle'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        }
+                    }
+
+                };
+                var radius = ['71%', '85%'];
+                var option = {
+                	    backgroundColor: '#fafafa',
+                    title: {
+                        text: 'AP',
+                        x: 9,
+                        y: 11,
+                        textStyle: {
+                            fontSize: 16,
+                            fontWeight: 'normal',
+                            fontFamily: 'arial',
+                            color: '#131a2d'
+                        }
+                    },
+                    series: [
+                        {
+                            type: 'pie',
+                            startAngle: 90,
+                            center: ['50%', '55%'],
+                            radius: radius,
+                            x: '0%', // for funnel
+
+                            data: [
+                                {name: ' \n\n——————\n' + data.offline + ' 离线', value: offlineper, itemStyle: labelBottom},
+                                {name: data.online + ' 在线', value: onlineper, itemStyle: labelTop}
+                            ]
+                        }
+                    ]
+                };
+
+                // 为echarts对象加载数据
+                apChart.setOption(option);
+            }
+
+            function drawClientChart(data) {
+                // 基于准备好的dom，初始化echarts图表
+//              if (!clientChart) {
+                	clientChart = echarts.init(document.getElementById('clientChart'), 'macarons');
+//              }
+                var clientData = [];
+                // for (var i = 0; i < 6; i++) {
+                //     clientData.push(Math.floor(Math.random() * 100) + 1);
+                // }
+                clientData[0] = data.b;
+                clientData[1] = data.g;
+                clientData[2] = data.gn;
+                clientData[3] = data.a;
+                clientData[4] = data.an;
+                clientData[5] = data.ac;
+
+                var option = {
+                		backgroundColor:'#fafafa',
+                    title: {
+                        text: '无线终端',
+                        x: 'right',
+                        y: 11,
+                        textStyle: {
+                            fontSize: 16,
+                            fontWeight: 'normal',
+                            fontFamily: '华文细黑',
+                            color: '#131a2d'
+                        }
+                    },
+                    grid: {borderWidth: 0, x: '22%', y: '18%', y2: '7%', x2: '11%'},
+                    xAxis: [{
+                            show: false,
+                            type: 'value'
+                        }],
+                    yAxis: [
+                        {
+                            type: 'category',
+                            axisLine: {show: false},
+                            axisTick: {show: false},
+                            splitArea: {show: false},
+                            splitLine: {show: false},
+                            data: [
+                                {
+                                    value: 'b  ',
+                                    textStyle: {
+                                        color: '#131a2d',
+                                        fontFamily: 'Arial'
+                                    }
+                                },
+                                {
+                                    value: 'g  ',
+                                    textStyle: {
+                                        color: '#131a2d',
+                                        fontFamily: 'Arial'
+                                    }
+                                },
+                                {
+                                    value: 'gn',
+                                    textStyle: {
+                                        color: '#131a2d',
+                                        fontFamily: 'Arial'
+                                    }
+                                },
+                                {
+                                    value: 'a  ',
+                                    textStyle: {
+                                        color: '#131a2d',
+                                        fontFamily: 'Arial'
+                                    }
+                                },
+                                {
+                                    value: 'an',
+                                    textStyle: {
+                                        color: '#131a2d',
+                                        fontFamily: 'Arial'
+                                    }
+                                },
+                                {
+                                    value: 'ac',
+                                    textStyle: {
+                                        color: '#131a2d',
+                                        fontFamily: 'Arial'
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            show: false,
+                            type: 'category',
+                            data: ['11b', '11g', '11gn', '11a', '11an', '11ac']
+                        },
+                    ],
+                    series: [
+                        {
+                            barCategoryGap: '68%',
+                            type: 'bar',
+                            itemStyle: {
+                                normal: {
+                                    color: '#f2f5f8', label: {
+                                        show: false, formatter: function (p) {
+                                            return p.value > 0 ? (p.value + '\n') : '';
+                                        }
+                                    }
+                                }
+                            },
+                            markPoint: {
+                                symbol: 'emptyCircle',
+                                symbolSize: 0,
+                                itemStyle: {
+                                    normal: {
+                                        borderColor: '#616e7f',
+                                        borderWidth: 5,
+                                        label: {show: true}
+                                    }
+                                },
+                                data: [
+                                    {
+                                        xAxis: 45,
+                                        yAxis: 0,
+                                        name: '11b',
+                                        value: clientData[0],
+                                        itemStyle: {normal: {color: '#1e90ff', label: {position: 'right'}}}
+                                    },
+                                    {
+                                        xAxis: 45,
+                                        yAxis: 1,
+                                        name: '11g',
+                                        value: clientData[1],
+                                        itemStyle: {normal: {color: '#1e90ff', label: {position: 'right'}}}
+                                    },
+                                    {
+                                        xAxis: 45,
+                                        yAxis: 2,
+                                        name: '11gn',
+                                        value: clientData[2],
+                                        itemStyle: {normal: {color: '#1e90ff', label: {position: 'right'}}}
+                                    },
+                                    {
+                                        xAxis: 45,
+                                        yAxis: 3,
+                                        name: '11a',
+                                        value: clientData[3],
+                                        itemStyle: {normal: {color: '#1e90ff', label: {position: 'right'}}}
+                                    },
+                                    {
+                                        xAxis: 45,
+                                        yAxis: 4,
+                                        name: '11an',
+                                        value: clientData[4],
+                                        itemStyle: {normal: {color: '#1e90ff', label: {position: 'right'}}}
+                                    },
+                                    {
+                                        xAxis: 45,
+                                        yAxis: 5,
+                                        name: '11ac',
+                                        value: clientData[5],
+                                        itemStyle: {normal: {color: '#1e90ff', label: {position: 'right'}}}
+                                    },
+                                ]
+                            },
+                            data: [45, 45, 45, 45, 45, 45]
+                        },
+                        {
+                            barCategoryGap: '68%',
+                            type: 'bar',
+                            yAxisIndex: 1,
+                            itemStyle: {
+                                normal: {
+                                    color: function (params) {
+                                        if (params.dataIndex >= 3) {
+                                            return '#69c4c5'
+                                        }
+                                        else {
+                                            return '#ffd961'
+                                        }
+                                    },
+                                    label: {show: false, textStyle: {fontFamily: 'arial'}}
+                                }
+                            },
+                            data: clientData
+                        },
+                    ]
+                };
+
+                // 为echarts对象加载数据
+                clientChart.clear();
+                clientChart.setOption(option);
+            }
+
+            function drawSpeedBg(data) {
+//              if (!speedGridChart) {
+                	speedGridChart = echarts.init(document.getElementById('gridBar'), 'macarons');
+//              }
+
+                var portNames = ["WAN1","WAN2"]
+
+                var portNum = data.length;
+                if (portNum) {
+                    for (var i = 0; i < (portNum>2?2:portNum); i++) {
+                        if(data[i].description.length <= 5){
+                            portNames[i] = data[i].description;
+                        }
+                    }
+                }
+
+                var optionGrid = {
+                    tooltip: {
+                        show: true
+                    },
+                    grid: {
+                        borderWidth: 0,
+                        x: '2%',
+                        y: '20%',
+                        x2: '2%',
+                        y2: '25%'
+                    },
+                    animation: false,
+                    xAxis: [{
+                        show: true,
+                        type: 'category',
+                        position: 'top',
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        splitArea: {
+                            show: false
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        data: [
+                            {
+                                value: portNames[0] + '↓',
+                                textStyle: {
+                                    color: '#131a2d',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            {
+                                value: portNames[0] + '↑',
+                                textStyle: {
+                                    color: '#131a2d',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            {
+                                value: portNames[1] + '↓',
+                                textStyle: {
+                                    color: '#131a2d',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            {
+                                value: portNames[1] + '↑',
+                                textStyle: {
+                                    color: '#131a2d',
+                                    fontFamily: 'arial'
+                                }
+                            }
+                        ]
+                    }],
+                    yAxis: [{
+                        type: 'value',
+                        show: false
+                    }],
+                    series: [
+                        {
+                            name: 'backgroud_data',
+                            type: 'bar',
+                            stack: 'backgroup',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data1',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data2',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data3',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data4',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data5',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data6',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data7',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data8',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data9',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data10',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data11',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data12',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data13',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data14',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data15',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data16',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        },
+                        {
+                            name: 'backgroud_data17',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [4000, 4000, 4000, 4000, 4000]
+                        },
+                        {
+                            name: 'backgroud_data18',
+                            stack: 'backgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(242,245,248,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: [10000, 10000, 10000, 10000, 10000]
+                        }
+                    ]
+                };
+                // 为echarts对象加载数据
+                speedGridChart.setOption(optionGrid);
+            }
+
+            function drawSpeed(data) {
+//              if (!speedChart) {
+                	speedChart = echarts.init(document.getElementById('speedBar'), 'macarons');
+//              }
+
+                speedData = [0,0,0,0];
+
+                speedDataSub = new Array();   //先声明一维
+                for (var i = 0; i < 19; i++) {             //一维长度为i,i为变量，可以根据实际情况改变
+                    speedDataSub[i] = new Array();  //声明二维，每一个一维数组里面的一个元素都是一个数组；
+                    for (var j = 0; j < 4; j++) {         //一维数组里面每个元素数组可以包含的数量p，p也是一个变量；
+                        speedDataSub[i][j] = 0;              //这里将变量初始化，我这边统一初始化为空，后面在用所需的值覆盖里面的值
+                    }
+                }
+
+                var portNum = data.length;
+                if (portNum) {
+                    for (var i = 0; i < (portNum>2?2:portNum); i++) {
+                        speedData[2*i] = data[i].speed_down;
+                        speedData[2*i+1] = data[i].speed_up;
+                    }
+                }
+
+                //var maxSpeed = Math.max.apply(null, speedData);
+                //var digits = maxSpeed.toString().length;
+                //var power = (digits - 1) > 2 ? (digits-1) : 2;
+                //var unit_scale = Math.pow(10, power);
+                var unit_scale = 10000;
+
+                var cellCount = 0;
+                var digits_2 = 0;
+                for (i = 0; i < 4; i++) {
+                    //cellCount = Math.ceil(speedData[i] / unit_scale);
+                    if(speedData[i]){
+                        digits_2 = speedData[i].toString(2).length;
+                        cellCount = digits_2  > 8 ? (digits_2 - 8 + 1) : 1;
+                        cellCount = cellCount > 10 ? 10 : cellCount;
+                    }
+                    else{
+                        cellCount = 0;
+                    }
+                    for (j = cellCount * 2 - 1; j > 0; j--) {
+                        if (j % 2 == 0) {
+                            speedDataSub[j - 1][i] = 0.4 * unit_scale;
+                        }
+                        else {
+                            speedDataSub[j - 1][i] = unit_scale;
+                        }
+                    }
+                }
+
+                speedChart.clear();
+
+                var optionSpeed = {
+                    tooltip: {
+                        show: false
+                    },
+                    grid: {
+                        borderWidth: 0,
+                        x: '2%',
+                        y: '20%',
+                        x2: '2%',
+                        y2: '25%'
+                    },
+                    xAxis: [{
+                        show: false,
+                        type: 'category',
+                        data: ["WAN1↓", "WAN1↑", "WAN2↓", "WAN2↑"]
+                    },
+                        {
+                            show: false,
+                            type: 'category',
+                            data: ["WAN1↓", "WAN1↑", "WAN2↓", "WAN2↑"]
+                        }],
+                    yAxis: [{
+                        type: 'value',
+                        show: false,
+                        max: 13*unit_scale
+                    }],
+                    animation: false,
+                    series: [
+
+                        {
+                            name: 'front_data',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            xAxisIndex: 1,
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(195,251,251,0)',
+                                    label: {
+                                        show: true,
+                                        position: 'bottom',
+                                        formatter: function (p) {
+                                            return p.value >= 1000 ? ((p.value/1000.0).toFixed(1) + '\n' + 'Mbps') : (p.value + '\n' + 'Kbps');
+                                        },
+                                        textStyle: {
+                                            color: '#616e7f',
+                                            fontFamily: 'arial',
+                                            fontSize: 10
+                                        }
+                                    }
+                                }
+                            },
+                            data: speedData
+                        },
+                        {
+                            name: 'speed_data',
+                            type: 'bar',
+                            stack: 'speedgroup',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(195,251,251,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[0]
+                        },
+                        {
+                            name: 'speed_data1',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[1]
+                        },
+                        {
+                            name: 'speed_data2',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(184,244,244,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[2]
+                        },
+                        {
+                            name: 'speed_data3',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[3]
+                        },
+                        {
+                            name: 'speed_data4',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(174,238,238,0.8)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[4]
+                        },
+                        {
+                            name: 'speed_data5',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[5]
+                        },
+                        {
+                            name: 'speed_data6',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(160,230,229,0.8)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[6]
+                        },
+                        {
+                            name: 'speed_data7',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[7]
+                        },
+                        {
+                            name: 'speed_data8',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(146,222,221,0.8)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[8]
+                        },
+                        {
+                            name: 'speed_data9',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[9]
+                        },
+                        {
+                            name: 'speed_data10',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(134,215,214,0.8)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[10]
+                        },
+                        {
+                            name: 'speed_data11',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[11]
+                        },
+                        {
+                            name: 'speed_data12',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(123,207,206,0.8)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[12]
+                        },
+                        {
+                            name: 'speed_data13',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[13]
+                        },
+                        {
+                            name: 'speed_data14',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(114,201,201,0.8)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[14]
+                        },
+                        {
+                            name: 'speed_data15',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[15]
+                        },
+                        {
+                            name: 'speed_data16',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(105,196,196,0.8)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[16]
+                        },
+                        {
+                            name: 'speed_data17',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(255,255,255,1)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[17]
+                        },
+                        {
+                            name: 'speed_data18',
+                            stack: 'speedgroup',
+                            type: 'bar',
+                            barCategoryGap: '50%',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgba(95,190,190,0.8)',
+                                    fontFamily: 'arial'
+                                }
+                            },
+                            data: speedDataSub[18]
+                        }
+
+                    ]
+                };
+                speedChart.setOption(optionSpeed);
+            }
+
+            function drawSpeedChart(data){
+                drawSpeedBg(data);
+                drawSpeed(data);
+            }
+
+            function initMonitorChart(){
+                var defaultData = {
+                    "ap_statistic":{"online":0,"offline":0},
+                    "client_statistic":{"b":0,"g":0,"gn":0,"a":0,"an":0,"ac":0},
+                    "wan_speed":[{"name":"WAN1","description":"WAN1","speed_down":0,"speed_up":0},
+                                {"name":"WAN2","description":"WAN2","speed_down":0,"speed_up":0}]
+                };
+                var ap_statistic = defaultData.ap_statistic;
+                drawApChart(ap_statistic);
+
+                var clientdata = defaultData.client_statistic;
+                drawClientChart(clientdata);
+
+                var wan_speed = defaultData.wan_speed;
+                drawSpeedChart(wan_speed);
+            }
+
+            function updataMonitorData() {
+                var finishedReq = 0;
+                var defaultData = {
+                    "ap_statistic":{"online":0,"offline":0},
+                    "client_statistic":{"b":0,"g":0,"gn":0,"a":0,"an":0,"ac":0},
+                    "wan_speed":[{"name":"WAN1","description":"WAN1","speed_down":0,"speed_up":0},
+                                {"name":"WAN2","description":"WAN2","speed_down":0,"speed_up":0}]
+                };
+
+                dataAPI.getAPStatistic(baseAPI.getCurrentACSN(), function(data,err){
+                    finishedReq++;
+                    if (finishedReq == 3) {
+                        finishedReq = 0;
+                    	mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                    }
+                    var ap_statistic;
+                    if(err){
+                        if (isCurrentWebviewVisible()) {
+                        	plus.nativeUI.toast(data);
+                        }
+                    }
+                    else{
+                        if (data.ap_statistic) {
+                            ap_statistic = data.ap_statistic;
+                        }
+                        else{
+                            ap_statistic = defaultData.ap_statistic;
+                        }
+                        drawApChart(ap_statistic);
+                    }
+                });
+
+                dataAPI.getClientStatistic(baseAPI.getCurrentACSN(),function(data,err){
+                    finishedReq++;
+                    if (finishedReq == 3) {
+                        finishedReq = 0;
+                        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                    }
+                    var clientdata;
+                    if(err){
+                        if (isCurrentWebviewVisible()) {
+                            plus.nativeUI.toast(data);
+                        }
+                    }
+                    else{
+                        if (data.client_statistic) {
+                            clientdata = data.client_statistic;
+                        } else{
+                        	clientdata = defaultData.client_statistic;
+                        }
+                        drawClientChart(clientdata);
+                    }
+                });
+
+                dataAPI.getWanSpeed(baseAPI.getCurrentACSN(), function(data,err){
+                    finishedReq++;
+                    if (finishedReq == 3) {
+                        finishedReq = 0;
+                        mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                    }
+                    var wan_speed;
+                    if(err){
+                        if (isCurrentWebviewVisible()) {
+                            plus.nativeUI.toast(data);
+                        }
+                    }
+                    else{
+                        if (data.wan_speed) {
+                       	    wan_speed = data.wan_speed;
+                        } else{
+                       	    wan_speed = defaultData.wan_speed;
+                        }
+                        drawSpeedChart(wan_speed);
+                   }
+                });
+            }
+
+            function initContentSize(){
+                var contentheight = plus.screen.resolutionHeight - plus.navigator.getStatusbarHeight()-110;
+                var contentwidth = plus.screen.resolutionWidth;
+                document.getElementById("monitor-content").style.cssText = "height:" + contentheight + "px;width:" + contentwidth+"px";
+            }
+
+            function plusReady(){
+//              console.log("plusready");
+                if(!window.plus||!domready){
+                    return;
+                }
+                initContentSize();
+                apChart = echarts.init(document.getElementById('ApChart'));
+                clientChart = echarts.init(document.getElementById('clientChart'), 'macarons');
+                speedGridChart = echarts.init(document.getElementById('gridBar'), 'macarons');
+                speedChart = echarts.init(document.getElementById('speedBar'), 'macarons');
+                setTimeout(function(){initMonitorChart();},100);
+                var curView = plus.webview.currentWebview();
+                curView.addEventListener( "show", function(e){
+//                  console.log( "Webview Showed" );
+                    updataMonitorData();
+                }, false );
+            }
+
+            if(window.plus){
+                plusReady();
+            }else{
+                document.addEventListener("plusready",plusReady,false);
+            }
+
+            // 监听DOMContentLoaded事件
+            document.addEventListener("DOMContentLoaded",function(){
+                domready=true;
+                plusReady();
+//              console.log("DOMContentLoaded");
+            },false);
+
+            window.addEventListener('Refresh',function(event){
+                updataMonitorData();
+            });
+        </script>
+    </body>
+
+</html>

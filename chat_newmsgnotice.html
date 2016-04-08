@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/chat_common.css" rel="stylesheet" />
+   	<style type="text/css">
+
+   	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 id="title" class="mui-title">新消息通知</h1>
+	</header>
+	<div class="mui-content">
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell">
+				<span>声音</span>
+				<div id="beep" class="mui-switch mui-switch-mini">
+					<div class="mui-switch-handle"></div>
+				</div>
+			</li>
+			<li class="mui-table-view-cell">
+				<span>振动</span>
+				<div id="vibrate"  class="mui-switch mui-switch-mini">
+					<div class="mui-switch-handle"></div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</body>
+<script src="js/mui.min.js"></script>
+<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" charset="UTF-8">
+	(function($,mui){
+		mui.init();
+		var self;
+		mui.plusReady(function(){
+			self = plus.webview.currentWebview();
+			var beep = self.beep;
+			var vibrate = self.vibrate;
+			if(beep){
+				$("#beep").addClass("mui-active")
+			}
+			if(vibrate){
+				$("#vibrate").addClass("mui-active")
+			}
+		})
+		
+		$(document).on("toggle",".mui-switch",function(){
+			var beep = false;
+			var vibrate = false;
+			if($("#beep").hasClass("mui-active")){
+				beep = true;
+			}
+			if($("#vibrate").hasClass("mui-active")){
+				vibrate = true;
+			}
+			mui.fire(plus.webview.getWebviewById("chat_me.html"),"changeNewMsgNoticeOpt",{beep:beep,vibrate:vibrate})
+		})
+ 
+	})(jQuery,mui)
+ 
+</script>
+</html>

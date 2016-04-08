@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/chat_common.css" rel="stylesheet" />
+		<style type="text/css">
+			html,
+			body {
+				height: 100%;
+			}
+			
+			.mui-content {
+				height: 100%;
+				padding: 44px 0px 0px 0px;
+				overflow: auto;
+			}
+			
+			#msg-list {
+				height: 100%;
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">群聊</h1>
+		</header>
+		<div class="mui-content">
+			<div id="msg-list">
+				<ul class="mui-table-view">
+					<!--<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_1_1" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_2 c_g_2_1" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_2 c_g_2_2" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_3 c_g_3_1" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_3 c_g_3_2" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_3 c_g_3_3" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_4 c_g_4_1" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_4 c_g_4_2" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_4 c_g_4_3" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_4 c_g_4_4" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_5 c_g_5_1" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_5 c_g_5_2" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_5 c_g_5_3" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_5 c_g_5_4" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_5 c_g_5_5" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_6 c_g_6_1" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_6 c_g_6_2" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_6 c_g_6_3" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_6 c_g_6_4" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_6 c_g_6_5" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_6 c_g_6_6" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_7 c_g_7_1" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_7 c_g_7_2" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_7 c_g_7_3" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_7 c_g_7_4" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_7 c_g_7_5" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_7 c_g_7_6" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_7 c_g_7_7" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_8 c_g_8_1" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_8 c_g_8_2" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_8 c_g_8_3" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_8 c_g_8_4" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_8 c_g_8_5" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_8 c_g_8_6" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_8 c_g_8_7" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_8 c_g_8_8" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>
+			
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<div class="chat_groupheadimg_content  mui-pull-left ">
+						<img class="c_g_9 c_g_9_1" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_9 c_g_9_2" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_9 c_g_9_3" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_9 c_g_9_4" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_9 c_g_9_5" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_9 c_g_9_6" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_9 c_g_9_7" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_9 c_g_9_8" src="./images/chat/test_xiaozhu.jpg" style="">
+						<img class="c_g_9 c_g_9_9" src="./images/chat/test_xiaozhu.jpg" style="">
+					</div>
+					<div class="mui-media-body">
+						<span style="position: absolute;top:20px">大家一起群聊</span>
+					</div>
+				</a>
+			</li>-->
+
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/chat_websql.js"></script>
+	<!--<script src="js/chat_websql_test.js"</script>-->
+	<script type="text/javascript" charset="UTF-8">
+		var self;
+		var myName;
+		var myUid;
+		mui.init();
+		mui.plusReady(function() {
+			recoverSelfInfo();
+			recoverGroupList();
+		})
+
+		function recoverSelfInfo() {
+			chatDb.query('select * from selfInfo where key = "base"', function(res) {
+				if (res.rows.length == 0) {
+					return;
+				}
+				var info = res.rows.item(0).info;
+				info = JSON.parse(info);
+				myUid = info.uid;
+				myName = unescape(info.name);
+			})
+		}
+		window.addEventListener("setNameAndUid", function(event) {
+			myUid = event.detail.uid;
+			myName = event.detail.name;
+		})
+		window.addEventListener("recoverGroupList", function(event) {
+			recoverGroupList();
+		})
+		window.addEventListener("updateHeadImg", function(event) {
+			var uid = event.detail.uid;
+			$(".mui-table-view").find("img[uid='" + uid + "']").attr("src", "../doc/" + uid + ".jpg?" + new Date().getTime());
+		})
+
+		function recoverGroupList() {
+			$(".mui-table-view").children().remove();
+			chatDb.query('select * from groupList', function(res) {
+				for (i = 0; i < res.rows.length; i++) {
+					var info = res.rows.item(i).info;
+					info = JSON.parse(info);
+					var gs = makeHtmlStringGroupList(info.sid, info.members, unescape(info.title));
+					$(".mui-table-view").append(gs);
+				}
+			})
+		}
+
+		function makeHtmlStringMenber(sid, members) {
+			var len = members.length;
+			if (len > 9) {
+				len = 9;
+			}
+			var div = $("<div class='chat_groupheadimg_content mui-pull-left '></div>");
+			for (var i = 0; i < len; i++) {
+				var uid = members[i].uid;
+				var s = parseInt(i) + 1;
+				var img = $("<img uid='" + uid + "' onerror=this.src='./images/chat/test_xiaozhu.jpg'>");
+				var class1 = "c_g_" + len;
+				var class2 = "c_g_" + len + "_" + s;
+				img.addClass(class1);
+				img.addClass(class2);
+				img.attr("src", "../doc/" + uid + ".jpg?" + new Date().getTime());
+				div.append(img);
+			}
+			return div;
+		}
+
+		function makeHtmlStringGroupList(sid, members, title) {
+			var li = $("<li class='mui-table-view-cell mui-media' sid='" + sid + "'></li>");
+			var a = $("<a></a>");
+			var div2 = $("<div class='mui-media-body'></div>");
+			var span = $("<span style='position: absolute;top:20px'></span>");
+			span.text(title);
+			div2.append(span);
+			var div1 = makeHtmlStringMenber(sid, members);
+			a.append(div1, div2);
+			li.append(a);
+			return li;
+		}
+		$(document).on('tap', '.mui-table-view-cell', function() {
+				var sid = $(this).attr("sid");
+				var title = $(this).find("span").text();
+				var nw = mui.openWindow({
+					id: 'chat_chat.html',
+					url: 'chat_chat.html',
+					styles: {
+						popGesture: "close",
+						render: "always"
+					},
+					show: {
+						autoShow: false,
+						aniShow: "slide-in-right"
+					},
+					waiting: {
+						autoShow: false
+					},
+					extras: {
+						title: title,
+						sid: sid,
+						type: "mutiple",
+						myUid: myUid
+					}
+				})
+				nw.addEventListener("loaded", function(e) {
+					plus.webview.show(nw, "slide-in-right");
+					//				waitting.close();
+				}, false);
+				nw.addEventListener("popGesture", function(e){
+					mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"closeChat",{});
+				}, false );
+			})
+			//	mui.back(function(){
+			//		plus.webview.hide(plus.webview.currentWebview());
+			//	})
+	</script>
+
+</html>

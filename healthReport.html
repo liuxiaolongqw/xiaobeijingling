@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="css/mui.min.css">
+        	
+		<style type="text/css">
+			/*CSS源代码*/
+			
+			html,
+			body {
+				height: 100%;
+				background: #FAFAFA;
+			}
+			
+			body {
+				position: relative;
+				overflow: hidden;
+			}
+			
+			#container {
+				left: 0;
+				right: 0;
+				width: 100%;
+				background-color: #FAFAFA;
+				-webkit-perspective: 450px;
+				-moz-perspective: 450px;
+				-ms-perspective: 450px;
+				perspective: 450px;
+				text-align: center;
+    			position: relative;
+			}			
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">健康报告</h1>
+		</header>
+		<div class="mui-content">
+				<div id="container" style="position: absolute; height:56%; width:100%;">
+					<div id="radarchart" style="position: absolute; height:80%; width:100%;"></div>
+	            	<div id="resulttext" style="position: absolute; top:72%; height:20%; width:100%; display:black;"></div>
+				</div>
+				<div id="content2" style="position: absolute; top:54%; height:36%; width:100%;">
+					<ul class="mui-table-view ">
+						<li class="mui-table-view-cell mui-collapse">
+							<a class="mui-navigate-right">
+								<table style="width: 100%;">
+                                <tr>
+                                    <td id="scoreT_1" style="font-size: 15px;">AP在线率</td>
+                                    <td id="score_1" style="color: #69c4c5;font-size: 15px;position:absolute; left:80%"></td>
+                                </tr>
+                               </table>
+							</a>
+							<div class="mui-collapse-content">
+	                            <h5 id="tips_1" style="font-size: 14px;color: #616e7f;"></h5>
+	                        </div>
+						</li>
+						<li class="mui-table-view-cell mui-collapse">
+							<a class="mui-navigate-right">
+								<table style="width: 100%;">
+                                <tr>
+                                    <td id="scoreT_2" style="font-size: 15px;">终端速率</td>
+                                    <td id="score_2" style="color: #69c4c5;font-size: 15px;position:absolute; left:80%"></td>
+                                </tr>
+                               </table>
+							</a>
+							<div class="mui-collapse-content">
+	                            <h5 id="tips_2" style="font-size: 14px;color: #616e7f;"></h5>
+	                        </div>
+						</li>
+						<li class="mui-table-view-cell mui-collapse">
+							<a class="mui-navigate-right">
+								<table style="width: 100%;">
+                                <tr>
+                                    <td id="scoreT_3" style="font-size: 15px;">安全评价</td>
+                                    <td id="score_3" style="color: #A6DCDC;font-size: 15px;position:absolute; left:80%"></td>
+                                </tr>
+                               </table>
+							</a>
+							<div class="mui-collapse-content">
+	                            <h5 id="tips_3" style="font-size: 14px;color: #616e7f;"></h5>
+	                        </div>
+						</li>
+						<li class="mui-table-view-cell mui-collapse">
+							<a class="mui-navigate-right">
+								<table style="width: 100%;">
+                                <tr>
+                                    <td id="scoreT_4" style="font-size: 15px;">无线环境</td>
+                                    <td id="score_4" style="color: #ff7e78;font-size: 15px;position:absolute; left:80%"></td>
+                                </tr>
+                               </table>
+							</a>
+							<div class="mui-collapse-content">
+	                            <h5 id="tips_4" style="font-size: 14px;color: #616e7f;"></h5>
+	                        </div>
+						</li>
+						<li class="mui-table-view-cell mui-collapse">
+							<a class="mui-navigate-right">
+								<table style="width: 100%;">
+                                <tr>
+                                    <td id="scoreT_5" style="font-size: 15px;">系统健康</td>
+                                    <td id="score_5" style="color: #FFC833;font-size: 15px;position:absolute; left:80%"></td>
+                                </tr>
+                               </table>
+							</a>
+							<div class="mui-collapse-content">
+	                            <h5 id="tips_5" style="font-size: 14px;color: #616e7f;"></h5>
+	                        </div>
+						</li>
+						<li class="mui-table-view-cell mui-collapse">
+							<a class="mui-navigate-right">
+								<table style="width: 100%;">
+                                <tr>
+                                    <td id="scoreT_6" style="font-size: 15px;">剩余带宽</td>
+                                    <td id="score_6" style="color: #69c4c5; font-size: 15px;position:absolute; left:80%"></td>
+                                </tr>
+                               </table>
+							</a>
+							<div class="mui-collapse-content">
+	                            <h5 id="tips_6" style="font-size: 14px;color: #616e7f;"></h5>
+	                        </div>
+						</li>
+					</ul>
+				</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="libs/echarts-all.js"></script>
+		<script src="js/base.js"></script>
+		<script>
+			mui.init({
+                swipeBack:false //启用右滑关闭功能
+			});
+			
+			mui.plusReady(function () {
+
+	            enterRadarChartPage();
+			});
+			/*
+            function pulldownRefresh() {
+                setTimeout(function() {
+                    enterRadarChartPage();
+                    console.log("OK");
+                    mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+                }, 1500);
+            }
+            */
+            
+			var myChart, option_radar;
+			
+			function initRadarChart(){
+        		var autoradius = document.getElementById("radarchart").offsetHeight;
+				myChart = echarts.init(document.getElementById('radarchart'));
+
+		        option_radar = {
+		
+		            calculable: false,
+		            polar: [
+		                {
+		                    indicator: [
+		                        {text: '剩余宽带', max: 5},
+		                        {text: 'AP在线率', max: 5},
+		                        {text: '终端速率', max: 5},
+		                        {text: '安全评价', max: 5},
+		                        {text: '无线环境', max: 5},
+		                        {text: '系统健康', max: 5}
+		                    ],
+		                    radius: autoradius * 0.29,
+		                    name: {
+		                        textStyle: {color: '#616e7f', fontFamily: '华文细黑'}
+		                    }
+		                }
+		
+		            ],
+		            series: [
+		                {
+		                    name: '评分',
+		                    type: 'radar',
+		                    itemStyle: {
+		                        normal: {
+		                            lineStyle: {
+		                                width: 1,
+		                                fontFamily: '华文细黑',
+		                                type: 'solid'//'solid' | 'dotted' | 'dashed'
+		                            },
+		                            color: "rgba(200,200,200,0.1)"
+		                        }
+		                    },
+		                    data: [
+		                        {
+		
+		                            value: [0, 0, 0, 0, 0, 0],
+		                            name: '',
+		                            symbolSize: 0
+		
+		                        },
+		                    ]
+		                }
+		            ]
+		        };
+		
+		        // 为echarts对象加载数据
+		        //option_radar.series.clear();
+		        myChart.setOption(option_radar);
+			}
+            
+            function drawRadarChart(resultdata){
+            	var colorvalue = "rgba(105,196,197,";
+		        var resultpercent = resultdata.Bpercent;
+		        var scorenumber = resultdata.finalscore;
+		        
+		        if (resultdata == "")
+		        {
+		        	mui.toast("暂无数据获取");
+		        	return;
+		        }
+		        
+	            document.getElementById("resulttext").style.fontSize = "15px";
+	            document.getElementById("resulttext").style.fontFamily = "arial,华文细黑";
+	            document.getElementById("resulttext").style.textShadow = "none";
+		
+		        if (scorenumber < 40) {
+		            colorvalue = "rgba(255,134,134,";
+		            document.getElementById("resulttext").style.color = "#d84b61";
+		            document.getElementById("resulttext").innerHTML = "被" + (100 - resultpercent) + "%的小贝用户打败，累觉不爱... ...";
+		        }
+		        else if (scorenumber < 70) {
+		            colorvalue = "rgba(255,217,97,";
+		            document.getElementById("resulttext").style.color = "#f08519";
+		            document.getElementById("resulttext").innerHTML = "打败了" + resultpercent + "%的小贝用户，小贝需要体检啦~~";
+		        }
+		        else {
+		            document.getElementById("resulttext").style.color = "#69c4c5";
+		            if (scorenumber < 80) {
+		                document.getElementById("resulttext").innerHTML = "打败了" + resultpercent + "%的小贝用户，还可以更棒哟~";
+		            } else if (scorenumber < 90) {
+		                document.getElementById("resulttext").innerHTML = "打败了" + resultpercent + "%的小贝用户，觉得自己萌萌哒~";
+		            } else {
+		                document.getElementById("resulttext").innerHTML = "打败了" + resultpercent + "%的小贝用户，简直~太~赞~啦 !";
+		            }
+		        }
+		
+		        //$("#resulttext").slideDown();
+		
+		        option_radar.series.push(
+		            {
+		                name: '评分',
+		                type: 'radar',
+		                itemStyle: {
+		                    normal: {
+		                        areaStyle: {
+		                            color: colorvalue + "0.5)"
+		                        },                           //'rgba(105,196,196,0.2)'},
+		                        color: colorvalue + "1)",
+		                        lineStyle: {
+		                            width: 1,
+		                            type: 'solid'
+		                        }
+		                    },
+		
+		                    emphasis: {
+		                        areaStyle: {color: colorvalue + "0.8)"}
+		                    }
+		                },
+		                data: [
+		                    {
+		                        value: [resultdata.wanspeed,
+		                            resultdata.APpercent,
+		                            resultdata.clientspeed,
+		                            resultdata.security,
+		                            resultdata.wireless,
+		                            resultdata.system],
+		                        name: '',
+		                        symbol: 'circle'
+		
+		                    }
+		                ]
+		            });
+		
+		        myChart.setOption(option_radar);
+            }
+            
+            function drawscorelist(resultdata){
+            	setscorelistcss("scoreT_1", "score_1", resultdata.APpercent);
+            	setscorelistcss("scoreT_2", "score_2", resultdata.clientspeed);
+            	setscorelistcss("scoreT_3", "score_3", resultdata.security);
+            	setscorelistcss("scoreT_4", "score_4", resultdata.wireless);
+            	setscorelistcss("scoreT_5", "score_5", resultdata.system);
+            	setscorelistcss("scoreT_6", "score_6", resultdata.wanspeed);
+            }
+            
+            function setscorelistcss(scoretitletext, scoretext, scoreNum){
+            	
+            	if(scoreNum == 5){
+            		document.getElementById(scoretitletext).style.color = "#69c4c5";
+            		document.getElementById(scoretext).style.color = "#69c4c5";
+    				document.getElementById(scoretext).innerHTML = "很好";
+    				if ("score_1" == scoretext)
+    				{
+    					document.getElementById('tips_1').innerHTML = "所有AP全在线了！继续保持";
+    				}else if(scoretext == "score_2"){
+    					document.getElementById('tips_2').innerHTML = "终端都处于高速状态，表现正常";
+    				}else if(scoretext == "score_3"){
+    					document.getElementById('tips_3').innerHTML = "未检查到有非法AP和私接代理";
+    				}else if(scoretext == "score_4"){
+    					document.getElementById('tips_4').innerHTML = "无线环境正常，信道畅通";
+    				}else if(scoretext == "score_5"){
+    					document.getElementById('tips_5').innerHTML = "系统内存和CPU占用率正常";
+    				}else if(scoretext == "score_6"){
+    					document.getElementById('tips_6').innerHTML = "带宽速率正常";
+    				}
+            	}
+            	else if(scoreNum == 4){
+            		document.getElementById(scoretitletext).style.color = "#4ec1b2";
+            		document.getElementById(scoretext).style.color = "#4ec1b2";
+    				document.getElementById(scoretext).innerHTML = "较好";
+    				if ("score_1" == scoretext)
+    				{
+    					document.getElementById('tips_1').innerHTML = "哎哟，这个不错噢！所有AP几乎都在线了！";
+    				}else if(scoretext == "score_2"){
+    					document.getElementById('tips_2').innerHTML = "终端都处于高速状态，表现正常";
+    				}else if(scoretext == "score_3"){
+    					document.getElementById('tips_3').innerHTML = "可能存在非法AP或私接代理";
+    				}else if(scoretext == "score_4"){
+    					document.getElementById('tips_4').innerHTML = "无线环境基本正常";
+    				}else if(scoretext == "score_5"){
+    					document.getElementById('tips_5').innerHTML = "系统内存和CPU占用率基本正常";
+    				}else if(scoretext == "score_6"){
+    					document.getElementById('tips_6').innerHTML = "带宽速率正常";
+    				}
+            	}
+            	else if(scoreNum == 3){
+            		document.getElementById(scoretitletext).style.color = "#FFD961";
+            		document.getElementById(scoretext).style.color = "#FFD961";
+    				document.getElementById(scoretext).innerHTML = "一般";
+    				if ("score_1" == scoretext)
+    				{
+    					document.getElementById('tips_1').innerHTML = "有AP离线，请确定是否是连接问题";
+    				}else if(scoretext == "score_2"){
+    					document.getElementById('tips_2').innerHTML = "终端速率基本正常";
+    				}else if(scoretext == "score_3"){
+    					document.getElementById('tips_3').innerHTML = "存在非法AP或私接代理，请排查";
+    				}else if(scoretext == "score_4"){
+    					document.getElementById('tips_4').innerHTML = "当前使用信道占用率有点高";
+    				}else if(scoretext == "score_5"){
+    					document.getElementById('tips_5').innerHTML = "系统内存或CPU占用率有点高";
+    				}else if(scoretext == "score_6"){
+    					document.getElementById('tips_6').innerHTML = "带宽速率基本正常";
+    				}
+            	}
+            	else if(scoreNum ==2){
+            		document.getElementById(scoretitletext).style.color = "#FF8686";
+            		document.getElementById(scoretext).style.color = "#FF8686";
+    				document.getElementById(scoretext).innerHTML = "较差";
+    				if ("score_1" == scoretext)
+    				{
+    					document.getElementById('tips_1').innerHTML = "有AP离线，请确定是否是连接问题";
+    				}else if(scoretext == "score_2"){
+    					document.getElementById('tips_2').innerHTML = "终端速率有点低，请排查是否低速终端接入";
+    				}else if(scoretext == "score_3"){
+    					document.getElementById('tips_3').innerHTML = "请检查是否有非法AP或私接代理";
+    				}else if(scoretext == "score_4"){
+    					document.getElementById('tips_4').innerHTML = "当前信道占用率较高";
+    				}else if(scoretext == "score_5"){
+    					document.getElementById('tips_5').innerHTML = "系统内存和CPU占用率偏高";
+    				}else if(scoretext == "score_6"){
+    					document.getElementById('tips_6').innerHTML = "带宽速率一般般";
+    				}
+            	}else{
+            		document.getElementById(scoretitletext).style.color = "#D82733";
+            		document.getElementById(scoretext).style.color = "#D82733";
+    				document.getElementById(scoretext).innerHTML = "很差";
+    				if ("score_1" == scoretext)
+    				{
+    					document.getElementById('tips_1').innerHTML = "AP基本都掉光了，请检查网络连接";
+    				}else if(scoretext == "score_2"){
+    					document.getElementById('tips_2').innerHTML = "速率较低，请排查是否低速终端接入";
+    				}else if(scoretext == "score_3"){
+    					document.getElementById('tips_3').innerHTML = "有私接代理或者非法AP，请查看监控解决";
+    				}else if(scoretext == "score_4"){
+    					document.getElementById('tips_4').innerHTML = "无线信道阻塞严重，快去排查";
+    				}else if(scoretext == "score_5"){
+    					document.getElementById('tips_5').innerHTML = "内存使用率或者CPU使用率过高";
+    				}else if(scoretext == "score_6"){
+    					document.getElementById('tips_6').innerHTML = "带宽速率太低了，请联系运营商";
+    				}
+            	}
+            }
+            
+			function getHealthData(para, callback){
+				//利用RunJS的Echo Ajax功能测试
+				var url_t = "https://lvzhouv3.h3c.com/v3/health/home/history/achievement";
+				
+				
+		        mui.ajax({
+		            url:url_t,
+		            dataType:'json',
+		            timeout: 5000,
+		            data: para,
+		            success:function(data) {
+		                var result = mui.parseJSON(data);
+		                err = 0;
+		                callback(result,err);
+		            },
+		            error:function(request, status, err){
+		                if (status == "timeout")
+		                {
+		                    err = 1;
+		                    callback("",err);
+		                }
+		            }
+		        });
+			};
+			
+			function enterRadarChartPage(){
+				clearRadarChartData();
+                var initdata = {'acSN':'2016',
+                                'finalscore':0,
+                                'wanspeed':0,
+                                'APpercent':0,
+                                'clientspeed': 0,
+                                'security': 0,
+                                'wireless': 0,
+                                'system':0,
+                                'Bpercent':0};
+                getHealthData({acSN:baseAPI.getCurrentACSN()}, function(resultdata, err){
+                	
+                	if (err == 0){
+		                drawRadarChart(resultdata);
+		                drawscorelist(resultdata);
+	                }else{
+		                drawRadarChart(initdata);
+		                drawscorelist(initdata);
+	                }
+                });
+			    
+			}
+			
+			function clearRadarChartData(){
+		        myChart.clear();
+		        initRadarChart();
+			}
+		
+	        initRadarChart();
+		</script>
+	</body>
+
+</html>

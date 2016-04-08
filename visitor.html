@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>访客统计</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <!--标准mui.css-->
+        <link rel="stylesheet" href="css/mui.min.css">
+        <style>
+            html,
+            body {
+                background-color: #ffffff;
+            }
+            .chart {
+                /*height: 200px;*/
+                /*width: 340px;*/
+                margin: 0px;
+                padding: 0px;
+            }
+            h5 {
+                margin-top: 30px;
+                font-weight: bold;
+            }
+            h5:first-child {
+                margin-top: 15px;
+            }
+        </style>
+	</head>
+	<body>
+	    <header class="mui-bar mui-bar-nav">
+            <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 id="title" class="mui-title">访客数据</h1>
+        </header>
+        <div class="mui-content">
+        	<hr style="margin:0; padding:0; border:0; height:2px; background-color:#e6e7e8"/>
+	    <!--<div id="pullrefresh" class="mui-content mui-scroll-wrapper">-->
+            <div id="visitor-content">
+                <div id="probe_ssid_pie" class="chart" style="width: 100%;height: 50%;">
+                    <!--<table style="width: 100%;height: 100%;">
+                        <tr><td style="width: 50%;height: 100%;"><div class="chart" style="width: 100%;height: 100%;" id="ApChart"></div></td>
+                            <td style="width: 50%;height: 100%;"><div class="chart" style="width: 100%;height: 100%;" id="clientChart"></div></td>
+                        </tr>
+                    </table>-->
+                </div>
+                <hr style="margin:0; padding:0; border:0; height:1px; background-color:#c9ccd0" />
+                <hr style="margin:0; padding:0; border:0; height:1px; background-color:#e2e5e9" />
+                <hr style="margin:0; padding:0; border:0; height:10px; background-color:#eff2f6" />
+                <div class="content-bottom chart" style="position: relative;height: 50%;">
+                    <div class="chart" id="probe_line" style="position: absolute; z-index: 1; width: 100%;height: 100%;"></div>
+                </div>
+            </div>
+        <!--</div>-->
+        </div>
+        <script src="js/mui.min.js"></script>
+        <script src="libs/echarts-all.js"></script>
+        <script src="js/base.js"></script>
+        <script src="js/data.js"></script>
+        <script>
+        (function($, visitor){
+            var domready=false;
+            var ssidChart = null;
+            var visitorLineChart = null;
+            var cloudUrl= baseAPI.serverUrl;
+            var strAnt = "";
+
+            var ostatistics = {};
+            var opt = {};
+
+            var oProbeChoice = {
+                GetStatistic:{type:"statistics",name:"访客统计信息"},
+                GetDayStatistic:{type:"statistics",name:"单日访客统计信息"},
+                GetClient:{type:"clientprobe",name:""},
+                GetAssoc:{type:"association",name:""},
+                GetStatus:{type:"status",name:""},
+                GetVendor:{type:"vendor",name:"访客终端厂商"},
+                GetDuration:{type:"duration",name:"访客停留时间"},
+                GetSsid:{type:"ssid",name:"SSID统计信息"}
+            };
+
+            var probeStatisticsRc = {
+                type:"总计,信号强(>40dBi),信号中(30~40dBi),信号弱(<30dBi)",
+                axis:"人数,时间"
+            };
+
+            var defaultData = {ssidData:[],visitorData:[]};
+            for (var i = 0; i < 24; i++) {
+            	defaultData.visitorData.push({ACSN:"",RssiMaxNum:0,RssiMiddleNum:0,RssiMinNum:0,TotalNum:0,Sign: i*3600});
+            }
+
+
+            $.init({
+                pullRefresh: {
+                    container: '#pullrefresh',
+                    down: {
+                        callback: pulldownRefresh
+                    }
+                }
+            });
+
+            function getRcText(sRcName)
+            {
+                return probeStatisticsRc[sRcName];
+            }
+
+            function isCurrentWebviewVisible(){
+                var isVisible = false;
+                var ws = plus.webview.currentWebview();
+                if (ws) {
+                    isVisible = ws.isVisible();
+                }
+
+                return isVisible;
+            }
+
+            /**
+             * 下拉刷新具体业务实现
+             */
+            function pulldownRefresh() {
+                updateVisitorData();
+//              mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+            }
+
+            function updateVisitorData() {
+                    updateLine();
+                    updateSsid();
+            }
+
+            function ajax2server(aData, onSuccess, onError){
+                var count = 0;
+                var errorCount = 0;
+                var errMsg = "";
+                var getData = {};
+                for(var i = 0; i < aData.length; i++){
+                    (function(index){
+                        $.ajax({
+                            url:aData[index].url,
+                            dataType: "json",
+                            type:"post",
+                            data:aData[index].data,
+                            success: function (Data)
+                            {
+                                count++;
+                                getData[oProbeChoice[Data.Method].type] = Data.Message;
+                                if(count == aData.length){
+                                    onSuccess(getData);
+                                }
+                            },
+                            error: function(error){
+                                errorCount++;
+                                if(errorCount==1)
+                                {
+                                    errMsg = "获取" + oProbeChoice[aData[index].data.Method].name + "失败";
+                                    onError(error,errMsg);
+                                }
+                            }
+                        });
+                    }(i));
+
+                }
+            }
+
+
+            function drawLine(aData)
+            {
+                var aData = aData || [];
+                var aType = getRcText("type").split(",");
+
+                var aSelectData = [],
+                    aMax = [],
+                    aMiddle = [],
+                    aMin = [],
+                    aTotal = [],
+                    aXlabel = [];
+                aSelectData = aData;
+                $.each(aSelectData, function(index, oSelectData){
+                    aMax.push(oSelectData.RssiMaxNum);
+                    aMiddle.push(oSelectData.RssiMiddleNum);
+                    aMin.push(oSelectData.RssiMinNum);
+                    aTotal.push(oSelectData.TotalNum);
+                    var sTime = 0;
+                    if(ostatistics.data.Method == "GetStatistic")
+                    {
+                        sTime =  (new Date(1000*oSelectData.Sign)).toTimeString().slice(0,5);
+                    }
+                    else{
+                        sTime =  (new Date(1000*oSelectData.Sign)).toLocaleDateString().slice(5);
+                    }
+                    aXlabel.push(sTime);
+                });
+                var option = {
+                    height:260,
+                    calculable: false,
+                    title: {
+                        text: '访客统计',
+                        x: 9,
+                        y: 11,
+                        textStyle: {
+                            fontSize: 15,
+                            fontWeight: 'normal',
+                            fontFamily: 'arial',
+                            color: 'rgb(128, 135, 140)'
+                        }
+                    },
+//                  tooltip: {
+//                      show: true,
+//                      trigger: 'axis',
+//                      axisPointer:{
+//                          type : 'line',
+//                          lineStyle : {
+//                              color: '#373737',
+//                              width: 1,
+//                              type: 'solid'
+//                          }
+//                      }
+//                  },
+                    legend: {
+                        orient: "vertical",
+                        y: 'top',
+                        x: "right",
+                        data: aType.slice(1)
+                    },
+                    grid: {
+                        x: 40,
+                        y: 65,
+                        x2:35,
+                        borderColor: '#FFF'
+                    },
+                    xAxis: [
+                        {
+                            name:getRcText("axis").split(',')[1],
+                            nameTextStyle:{color:"gray"},
+                            type: 'category',
+                            boundaryGap: false,
+                            splitLine:false,
+                            axisLabel: {
+                                interval:3,
+                                rotate:45
+                            },
+                            axisLine  : {
+                                show:true,
+                                lineStyle :{color: '#F6F7F8', width: 1}
+                            },
+                            axisTick :{
+                                show:true
+                            },
+                            data:aXlabel
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            name:getRcText("axis").split(',')[0],
+                            nameTextStyle:{color:"gray"},
+                            type: 'value',
+                            splitLine:{
+                                show:true,
+                                lineStyle :{color: '#F6F7F8', width: 1}
+                            },
+                            axisLabel: {
+                                show: true,
+                                textStyle:{color: '#373737'}
+                            },
+                            axisLine  : {
+                                show:true,
+                                lineStyle :{color: '#E5E8E8', width: 1}
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            type: 'line',
+                            //stack: 'total',
+                            smooth: true,
+                            symbol: 'none',
+                            itemStyle: {
+                                normal: {
+                                    areaStyle: {
+                                        color:"rgba(0,150,214,0.2)",
+                                        type: 'default'
+                                    },
+                                    lineStyle:{
+                                        width:1
+                                    }
+                                }
+                            },
+                            name:aType[1],
+                            data: aMax
+                        },
+                        {
+                            type: 'line',
+                            //stack: 'total',
+                            smooth: true,
+                            symbol: 'none',
+                            itemStyle: {
+                                normal: {
+                                    areaStyle: {
+                                        color:"rgba(0,150,214,0.2)",
+                                        type: 'default'
+                                    },
+                                    lineStyle:{
+                                        width:1
+                                    }
+                                }
+                            },
+                            name:aType[2],
+                            data: aMiddle
+                        },
+                        {
+                            type: 'line',
+                            //stack: 'total',
+                            smooth: true,
+                            symbol: 'none',
+                            itemStyle: {
+                                normal: {
+                                    areaStyle: {
+                                        color:"rgba(0,150,214,0.2)",
+                                        type: 'default'
+                                    },
+                                    lineStyle:{
+                                        width:1
+                                    }
+                                }
+                            },
+                            name:aType[3],
+                            data: aMin
+                        }
+                    ]
+
+                };
+                var oTheme = {
+                    color: ["rgba(0,150,214,1)","rgba(0,150,214,0.8)","rgba(0,150,214,0.6)","rgba(0,150,214,0.3)"]
+                };
+
+                //$("#probe_line").echart("init", option, oTheme);
+                visitorLineChart = echarts.init(document.getElementById('probe_line'), 'macarons');
+                visitorLineChart.clear();
+                visitorLineChart.setOption(option);
+            }
+
+            function drawSsid(aType)
+            {
+
+                var aData=[];
+                var nSum = 0;
+                var showFlag = true;
+                var positionX = "30%";
+
+                var labelDefault = {
+                    normal : {
+                        color: '#ccc',
+                        label : {
+                            show : true,
+                            position : 'center',
+                            formatter : '{b}',
+                            textStyle: {
+                                color: '#ccc',
+                                baseline : 'bottom'
+                            }
+                        },
+                        labelLine : {
+                            show : false
+                        }
+                    },
+                    emphasis: {
+                        color: 'rgba(0,0,0,0)'
+                    }
+                };
+
+                aType.forEach(function(i){
+                    var oTmp = {};
+                    oTmp.name =i.Ssid;
+                    oTmp.value = i.Sum;
+                    if(!oTmp.name)
+                    {
+                        oTmp.name = "no Ssid";
+                    }
+                    else
+                    {
+                        aData.push(oTmp);
+                        nSum +=  i.Sum;
+                    }
+                });
+                aData = aData.slice(0,6);
+                var oOthers = {name:"Others", value:nSum};
+                for(var i = 0; i < aData.length; i++)
+                {
+                    oOthers.value-=aData[i].value;
+                }
+                if(oOthers.value){
+                    aData.push(oOthers);
+                }
+
+                var ssidNames = [];
+                for (var j = 0; j < aData.length; j++) {
+                	ssidNames.push(aData[j].name);
+                }
+
+                if (aData.length == 0) {
+                	aData = [{name:"无数据",value:"1",itemStyle:labelDefault}];
+                	showFlag = false;
+                	positionX = "50%";
+                }
+
+                var option = {
+                    title: {
+                        text: 'SSID统计',
+                        x: 9,
+                        y: 11,
+                        textStyle: {
+                            fontSize: 15,
+                            fontWeight: 'normal',
+                            fontFamily: 'arial',
+                            color: 'rgb(128, 135, 140)'
+                        }
+                    },
+                    height:220,
+//                  tooltip : {
+//                      show:true,
+//                      trigger: 'item',
+//                      formatter: "{b}<br/> {c} ({d}%)"
+//                  },
+                    calculable : false,
+                    legend:{
+                        show:showFlag,
+                        orient: "vertical",
+                        y: 'center',
+                        x: "right",
+//                      formatter: "{name}",
+                        data: ssidNames
+                    },
+                    series : [
+                        {
+                            name:'App flow anaylsis',
+                            type:'pie',
+                            radius : ['40%', '70%'],
+                            center: [positionX, '50%'],
+                            itemStyle : {
+                                normal : {
+                                    label : {
+                                        show : false
+                                    },
+                                    labelLine : {
+                                        show : false
+                                    }
+                                },
+                                emphasis : {
+                                    label : {
+                                        formatter : "{b}\n{d}%"
+                                    }
+                                }
+                            },
+                            data:aData
+                        }
+                    ]
+                };
+                var oTheme = {
+                    color : ['#53B9E7','#31ADB4','#69C4C5','#FFBB33','#FF8800','#CC324B','#E64C65','#D7DDE4']
+                };
+
+                //$("#probe_Ssid_pie").echart("init", option,oTheme);
+                ssidChart = echarts.init(document.getElementById('probe_ssid_pie'), 'macarons');
+                ssidChart.clear();
+                ssidChart.setOption(option);
+            }
+
+
+            function updateSsid(startTime, endTime)
+            {
+                function myCallback(ainfo){
+                    //$('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                    var data = ainfo["ssid"] || [];
+                    drawSsid(data);
+                }
+
+                var curDate = new Date();
+                opt = {
+                    url:strAnt+"/clientprobe_client",
+                    data:{
+                        Method:"GetSsid",
+                        Param:{
+                            ACSN:baseAPI.getCurrentACSN(),
+                            StartTime:parseInt(curDate.getTime()/1000 - 24 * 60 * 60 ),
+                            EndTime:parseInt(curDate.getTime()/1000 ),
+                            NowDuration:30*60
+                        },
+                        return:{
+                        }
+                    }
+                }
+                ajax2server([opt], myCallback, func_error);
+
+            }
+
+            function updateLine(startTime, endTime)
+            {
+                function myCallback(ainfo){
+                    //$('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                    var data = ainfo["statistics"] || [];
+
+                    if (data.length == 0) {
+                    	data = defaultData.visitorData;
+                    }
+                    drawLine(data);
+                }
+
+                var curDate = new Date();
+                ostatistics = {
+                    url:strAnt+"/clientprobe_client",
+                    data:{
+                        Method:"GetStatistic",
+                        Param:{
+                            ACSN:baseAPI.getCurrentACSN(),
+                            StartTime:parseInt(curDate.getTime()/1000 - 24 * 60 * 60 ),
+                            EndTime:parseInt(curDate.getTime()/1000 )
+                        },
+                        return:{
+
+                        }
+                    }
+                };
+
+                ajax2server([ostatistics], myCallback, func_error);
+
+            }
+
+            function initData(sStartTime, sEndTime)
+            {
+                //initLine();
+                //initSsid();
+                //setTimeout(function(){drawSsid(defaultData.ssidData)},100);
+                //setTimeout(function(){drawLine(defaultData.visitorData)},100);
+            }
+
+            function initContentSize(){
+                var headerHeight = 45;
+                var centerHrHeight = 12;
+                var contentheight = plus.screen.resolutionHeight - plus.navigator.getStatusbarHeight()-headerHeight-centerHrHeight;
+                var contentwidth = plus.screen.resolutionWidth;
+                document.getElementById("visitor-content").style.cssText = "height:" + contentheight + "px;width:" + contentwidth+"px";
+            }
+
+            function func_error(error, errMsg){
+                plus.nativeUI.toast(errMsg);
+                //$('#pullrefresh').pullRefresh().endPulldownToRefresh();
+            }
+
+            function initVisitorChart()
+            {
+//              g_jForm = $("#Probe_Monitor");
+                strAnt = cloudUrl + '/ant';
+                ssidChart = echarts.init(document.getElementById('probe_ssid_pie'), 'macarons');
+                visitorLineChart = echarts.init(document.getElementById('probe_line'), 'macarons');
+
+                var curDate = new Date();
+                ostatistics = {
+                    url:strAnt+"/clientprobe_client",
+                    data:{
+                        Method:"GetStatistic",
+                        Param:{
+                            ACSN:baseAPI.getCurrentACSN(),
+                            StartTime:parseInt(curDate.getTime()/1000 - 24 * 60 * 60 ),
+                            EndTime:parseInt(curDate.getTime()/1000 )
+                        },
+                        return:{
+
+                        }
+                    }
+                };
+                //initForm();
+                initData();
+            }
+
+
+            function plusReady(){
+//              console.log("plusready");
+                if(!window.plus||!domready){
+                    return;
+                }
+                initContentSize();
+                initVisitorChart();
+                setTimeout(function(){
+                    updateVisitorData();
+                },100);
+
+                visitor.update = updateVisitorData;
+            }
+
+            if(window.plus){
+                plusReady();
+            }else{
+                document.addEventListener("plusready",plusReady,false);
+            }
+
+            // 监听DOMContentLoaded事件
+            document.addEventListener("DOMContentLoaded",function(){
+                domready=true;
+                plusReady();
+//              console.log("DOMContentLoaded");
+            },false);
+
+//          window.addEventListener('Refresh',function(event){
+//              updateVisitorData();
+//          });
+        }(mui, window.visitor = {}));
+        </script>
+	</body>
+</html>

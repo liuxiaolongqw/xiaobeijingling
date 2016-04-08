@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <style type="text/css">
+	.mui-table-view .mui-media-object{
+		width: 35px;
+		height: 35px;
+		border-radius: 2px;
+	}
+	.mui-media-body span{
+		top: 18px;
+		position: absolute;	
+		font-size: 15px;
+	}
+
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 id="title" class="mui-title">新建会话</h1>
+	    <button id="ok" type="button" class="mui-btn mui-btn-link mui-disabled" style="position: absolute;top:0px;right: 10px">
+			完成
+		</button>
+	</header>
+	<div class="mui-content">
+
+		<ul class="mui-table-view ">
+			<!--<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>liuchao</span>
+						<input name="checkbox1" value="Item 3" type="checkbox" >
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>wanghao</span>
+						<input name="checkbox1" value="Item 4" type="checkbox" checked>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>liuxhao</span>
+						<input name="checkbox1" value="Item 3" type="checkbox" >
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaolong</span>
+						<input name="checkbox1" value="Item 4" type="checkbox" checked>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaokai</span>
+						<input name="checkbox1" value="Item 3" type="checkbox" >
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>diaodif</span>
+						<input name="checkbox1" value="Item 4" type="checkbox" checked>
+					</div>
+				</a>
+			</li>-->
+		</ul>
+
+	</div>
+</body>
+<script src="js/mui.min.js"></script>
+<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/chat_websql.js"></script>
+<script type="text/javascript" charset="UTF-8">
+	var slef;
+	var myUid;
+	var sFriends = [];
+  	mui.init();
+  	mui.plusReady(function(){
+  		self = plus.webview.currentWebview();
+		myUid = self.myuid;
+  		recover()
+  	})
+  	function makeHtmlStringUserList(uid,name,sid){
+//		<li class="mui-table-view-cell mui-media mui-checkbox">
+//				<a href="javascript:;">
+//					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+//					<div class="mui-media-body">
+//						<span>xiaokai</span>
+//						<input name="checkbox1" value="Item 3" type="checkbox" >
+//					</div>
+//				</a>
+//			</li>
+		var li = $('<li class="mui-table-view-cell mui-media mui-checkbox"></li>');
+		var a = $('<a href="javascript:;"></a>');
+		var img = $('<img class="mui-media-object mui-pull-left" onerror=this.src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;"/>')
+  		var div = $('<div class="mui-media-body"></div>');
+  		var span = $('<span class="mui-ellipsis mui-col-xs-8"></span>');
+  		var input = $('<input name="checkbox1" value="'+uid+'" sid="'+sid+'" type="checkbox" style="top: 15px;">');
+  		
+  		span.text(name);
+  		img.attr("src",  "../doc/"+uid+".jpg");
+  		div.append(span,input);
+  		a.append(img,div);
+		li.append(a);
+  		
+  		return li;
+  	}
+  	function recover(){
+  		$(".mui-table-view").children().remove();
+		chatDb.query('select * from friendList', function(res){
+			for (i = 0; i < res.rows.length; i++) {
+				var info=res.rows.item(i).info;
+				info = JSON.parse(info);
+				if(info.name != escape("系统") && info.state == "ready"){
+					var ss = makeHtmlStringUserList(info.uid,info.name,info.sid);
+					$(".mui-table-view").append(ss);
+				}
+			}
+		})
+  	}
+	mui('.mui-table-view').on('change', 'input', function() {
+		var name = $(this).prev().text();
+		var uid = $(this).attr("value");
+		var sid = $(this).attr("sid");
+		if($(this).is(':checked') == true){
+			sFriends.push({name:name,uid:uid,sid:sid});
+		}else{
+			for(var i in sFriends){
+				if(uid == sFriends[i]["uid"]){
+					sFriends.splice(i,1);
+				}
+			}
+		}
+		if(sFriends.length != 0){
+			$("#ok").removeClass("mui-disabled");
+		}else{
+			$("#ok").addClass("mui-disabled");
+		}
+	});
+	
+  	$(document).on("tap","#ok",function(){
+  		if(sFriends.length == 1){
+  			var sid = sFriends[0]["sid"];
+  			var title = sFriends[0]["name"];
+  			var nw = mui.openWindow({
+				id:'chat_chat.html',
+				url:'chat_chat.html',
+				styles:{
+					popGesture:"close",
+					render:"always"
+				},
+				show:{
+			    	autoShow:false,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:false
+				},
+				extras:{
+					title:title,
+					sid:sid,
+					type:"couple",
+					myUid:myUid
+				}
+			})
+			nw.addEventListener( "loaded", function(e){
+//				plus.webview.close(self, "none", 0);
+				plus.webview.show(nw,"slide-in-right");
+			}, false );
+			nw.addEventListener("popGesture", function(e){
+				mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"closeChat",{});
+			}, false );
+  		}else{
+	  		plus.nativeUI.showWaiting("",{back:"close",padlock:true});
+  			mui.fire(plus.webview.getWebviewById("chat.html"),"newDialogCreate",{sFriends:sFriends});
+  		}
+  	})
+  	window.addEventListener("newDialogCreateResp",function(e){
+  		var sid = e.detail.sid;
+  		console.log(sid);
+  		plus.nativeUI.closeWaiting();
+	
+		if(event.detail.result && event.detail.result == "disconnect"){
+			plus.nativeUI.toast("请检查网络连接！");
+		}else if (event.detail.result == "success"){
+  			var title = "群聊";
+  			var nw = mui.openWindow({
+				id:'chat_chat.html',
+				url:'chat_chat.html',
+				styles:{
+					popGesture:"close",
+					render:"always"
+				},
+				show:{
+			    	autoShow:false,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:false
+				},
+				extras:{
+					title:title,
+					sid:sid,
+					type:"mutiple",
+					myUid:myUid
+				}
+			})
+			nw.addEventListener( "loaded", function(e){
+				console.log("loaded");
+				plus.webview.show(nw,"slide-in-right");
+			}, false );
+		}else{
+			plus.nativeUI.toast("创建会话失败！");
+		}
+	})
+</script>
+</html>

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>网络拓扑</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <!--标准mui.css-->
+        <link rel="stylesheet" href="css/mui.min.css">
+        <link href="css/mui.picker.css" rel="stylesheet" />
+        <link href="css/mui.poppicker.css" rel="stylesheet" />
+        <style>
+        .panel .topology {
+            margin: auto;
+            position: relative;
+            width: 248px;
+            height: 440px;
+            background: url(images/link.png) no-repeat 0px 0px;
+            background-size: 100% 100%;
+        }
+        .panel .topology .hover-trigger {
+            position: absolute;
+            display: inline-block;
+        }
+        .panel .topology .hover-trigger.cloud {
+            width: 58px;
+            height: 40px;
+            top: 40px;
+            left: 5px;
+        }
+        .panel .topology .topo-icon.cloud {
+            top: 90px;
+            left: 26px;
+            background-position: -235px -126px;
+            -webkit-animation: flash 2s infinite;
+        }
+        @-webkit-keyframes flash
+        {
+            0% {opacity: 0;}
+            50% {opacity: 1;}
+            100% {opacity: 0;}
+        }
+        .panel .topology .hover-trigger.network {
+            width: 60px;
+            height: 60px;
+            top: 20px;
+            right: 3px;
+        }
+        .panel .topology .topo-icon.network {
+            top: 90px;
+            left: 208px;
+            background-position: -235px -126px;
+            -webkit-animation: flash 2s infinite;
+        }
+        .panel .topology .hover-trigger.ap {
+            width: 80px;
+            height: 40px;
+            top: 175px;
+            right: 90px;
+        }
+        .panel .topology .topo-icon.cloud {
+            top: 110px;
+            left: 70px;
+        }
+        .panel .topology .topo-icon.ac {
+            top: 140px;
+            left: 115px;
+        }
+        .panel .topology .topo-icon.ap {
+            top: 225px;
+            left: 118px;
+        }
+        .panel .topology .topo-icon.topo-count-dev {
+            display: none;
+            top: 176px;
+            left: 79px;
+            text-align: center;
+            line-height: 17px;
+            background: none;
+        }
+        .panel .topology .topo-icon.topo-count-ap {
+            top: 285px;
+            left: 79px;
+            text-align: center;
+            line-height: 17px;
+            background: none;
+        }
+        .panel .topology .topo-icon {
+            position: absolute;
+            display: inline-block;
+            height: 17px;
+            width: 17px;
+            background: url(images/xb-icons.png) no-repeat;
+            cursor: pointer;
+        }
+        .panel .topology .topo-icon.topo-warning {
+            background-position: -236px -126px;
+            -webkit-animation: flash 2s infinite;
+        }
+        .panel .topology .hover-trigger.scan {
+            width: 100px;
+            height: 100px;
+            top: 350px;
+            left: 95px;
+        }
+        .device-list{
+            width: 100%;
+            height: 100%;
+            display: inline-block;
+        }
+        .mui-table-view-cell>.mui-slider-handle {
+            background-color: #f7f7f7;
+        }
+        .mui-popover .mui-scroll-wrapper {
+            border-radius: 0px;
+        }
+        .popover-center{
+            top:50%;
+            left:50%;
+            width: 300px;
+            height: 340px;
+            margin-left: -150px;
+            margin-top: -170px;
+        }
+        .flow-active .data-flow-bar{
+            opacity: 1;
+        }
+        .data-line{
+            position: absolute;
+            font-size: 1.2em;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            border: 0px solid rgba(255, 255, 255, 0.2);
+        }
+        .data-flow-bar{
+            display: block;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            /*border: 1px solid;*/
+            border-radius: 2px 0 0 2px;
+            background-size: 100px 10px;
+            background-position: center -20%;
+            background-repeat: no-repeat;
+            -webkit-transition: opacity 0.2s ease, width 0.8s ease-out, background-color 1s ease, border-color 0.3s ease, box-shadow 1s ease;
+                    transition: opacity 0.2s ease, width 0.8s ease-out, background-color 1s ease, border-color 0.3s ease, box-shadow 1s ease;
+            background-color: rgba(178, 255, 188, 1);
+            background-image: -webkit-linear-gradient(0deg, rgba(0, 203, 26, 0) 10%, rgba(0, 229, 30, 0.8) 30%, #00fe21 70%, rgba(0, 229, 30, 0.8) 80%, rgba(0, 203, 26, 0) 90%), -webkit-linear-gradient(left, rgba(0, 254, 33, 0) 0%, #00fe21 100%), -webkit-linear-gradient(right, rgba(0, 254, 33, 0) 0%, #00fe21 100%);
+            background-image: linear-gradient(90deg, rgba(0, 203, 26, 0) 10%, rgba(0, 229, 30, 0.8) 30%, #00fe21 70%, rgba(0, 229, 30, 0.8) 80%, rgba(0, 203, 26, 0) 90%), linear-gradient(to right, rgba(0, 254, 33, 0) 0%, #00fe21 100%), linear-gradient(to left, rgba(0, 254, 33, 0) 0%, #00fe21 100%);
+            border-color: #19ff37;
+            /*box-shadow: 0 0 0.6em #00e51e inset, 0 0 0.4em #00cb1a inset, 0 0 0.5em rgba(0, 178, 23, 0.5), 0 0 0.1em rgba(178, 255, 188, 0.5);*/
+        }
+        .flow-vertical{
+            -webkit-animation: pulse-vertical 1s ease-out infinite;
+                    animation: pulse-vertical 1s ease-out infinite;
+        }
+        .flow-horizontal{
+            -webkit-animation: pulse-horizontal 1s ease-out infinite;
+                    animation: pulse-horizontal 1s ease-out infinite;
+        }
+        .flow-horizontal-reverse{
+            -webkit-animation: pulse-horizontal-reverse 1s ease-out infinite;
+                    animation: pulse-horizontal-reverse 1s ease-out infinite;
+        }
+        @-webkit-keyframes pulse-vertical {
+          0% {
+            background-position:  center -50%;
+          }
+          100% {
+            background-position:  center 150%;
+          }
+        }
+        @-webkit-keyframes pulse-horizontal {
+          0% {
+            background-position: -50% center ;
+          }
+          100% {
+            background-position: 150% center ;
+          }
+        }
+        @-webkit-keyframes pulse-horizontal-reverse  {
+          0% {
+            background-position: 150% center ;
+          }
+          100% {
+            background-position: -50% center ;
+          }
+        }
+        .device-add-title{
+            font-weight: normal;
+            padding: 10px 0;
+            margin: 0px;
+            text-align: center;
+            color: #fff;
+            font-size: 17px;
+            background-color: #69C4C5;
+            border-radius: 7px 7px 0 0;
+        }
+        .device-content{
+            padding: 10px;
+        }
+        .mui-popover .mui-btn-block {
+            margin: 5px 0;
+        }
+        .mui-btn-block {
+             padding: 10px;
+        }
+        .mui-input-row label {
+            padding: 10px 0;
+        }
+        .mui-popover .mui-input-row input {
+            padding-right: 0;
+            border-bottom: solid 1px #D6DCE3;
+            border-radius: 0;
+        }
+        div.required::after, label.required::after, span.required::after {
+            content: "*";
+            color: #ff7178;
+            vertical-align: sub;
+            font-size: 20px;
+            position: relative;
+            top: 4px;
+        }
+        .state-error{
+            border: solid 1px #ff7178 !important;
+        }
+        .mui-btn-primary{
+            border: 1px solid #69c4c5;
+            background-color: #69c4c5;
+        }
+        .mui-btn-primary:enabled:active{
+            border: 1px solid #2faab2;
+            background-color: #2faab2;
+        }
+        .device-name{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 60%;
+            display: inline-block;
+        }
+        .show-sn{
+            font-size: 12px;
+            float:right;
+        }
+        </style>
+	</head>
+	<body>
+	    <header class="mui-bar mui-bar-nav">
+            <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 id="title" class="mui-title">添加设备</h1>
+        </header>
+        <div class="mui-content">
+        	<hr style="margin:0; padding:0; border:0; height:2px; background-color:#e6e7e8"/>
+            <div class="panel topology-panel" id="topology">
+                <div class="topology">
+                    <span class="hide hover-trigger cloud" type="Cloud" style="display: inline-block;"></span>
+                    <span style="top: 80px;left: 40px;position: absolute;font-size: 15px;">云端</span>
+                    <span class="hide hover-trigger network" type="Net" style="display: inline-block;"> </span>
+                    <span style="top: 80px;right: 40px;position: absolute;font-size: 15px;">互联网</span>
+                    <span class="hide hover-trigger ap" type="AP" style="display: block;"><a id="device_list_link" href="#deviceListPopover" class="device-list"></a></span>
+                    <span style="top: 155px;left: 135px;position: absolute;font-size: 15px;">AC</span>
+                    <div id="cloud-flow1" class="data-line flow-active" style="top: 80px;left: 31px; width: 8px; height: 42px; display: none;">
+                        <b class="data-flow-bar flow-vertical" style="width: 100%;">
+                        </b>
+                    </div>
+                    <div id="internet-flow1" class="data-line flow-active" style="top: 80px;left: 213px; width: 8px; height: 42px; display: none;">
+                        <b class="data-flow-bar flow-vertical" style="width: 100%;">
+                        </b>
+                    </div>
+                    <div id="internet-flow2" class="data-line flow-active" style="top: 115px;left: 125px; width: 95px; height: 8px; display: none;">
+                        <b class="data-flow-bar flow-horizontal-reverse" style="width: 100%;background-size: 10px 100px;">
+                        </b>
+                    </div>
+                    <div id="cloud-flow2" class="data-line flow-active" style="top: 115px;left: 31px; width: 95px; height: 8px; display: none;">
+                        <b class="data-flow-bar flow-horizontal" style="width: 100%;background-size: 10px 100px;">
+                        </b>
+                    </div>
+                    <div id="ac-flow" class="data-line flow-active" style="top: 115px;left: 120px; width: 8px; height: 62px; display: none;">
+                        <b class="data-flow-bar flow-vertical" style="width: 100%;">
+                        </b>
+                    </div>
+                    <div id="ap-flow" class="data-line flow-active" style="top: 214px;left: 121px; width: 8px; height: 40px; display: none;">
+                        <b class="data-flow-bar flow-vertical" style="width: 100%;">
+                        </b>
+                    </div>
+                    <span class="hide topo-icon cloud" type="Cloud" style="display: none;"> </span>
+                    <span id="cloud-warning" class="hide topo-icon cloud topo-warning" type="cloud" style="display: none;"></span>
+                    <span class="hide topo-icon network" type="network" style="display: none;"> </span>
+                    <span class="hide topo-icon ac" type="ac" style="display: none;"> </span>
+                    <span class="topo-icon topo-count-dev" type="Count">
+                        <i id="device_count" class="mui-badge mui-badge-danger"></i>
+                    </span>
+                    <span id="ap-warning" class="hide topo-icon ap topo-warning" type="AP" style="display: none;"></span>
+                    <span class="topo-icon topo-count-ap" type="Count">
+                        <i id="ap_count" class="mui-badge mui-badge-danger"></i>
+                    </span>
+                    <span id="add_dev" class="hide hover-trigger scan" type="Scan" style="display: inline-block;"> </span>
+                    <span style="top: 440px;left: 85px;position: absolute;font-size: 15px;color: #8f8f94;">长按添加设备</span>
+                </div>
+            </div>
+        </div>
+        <div id="deviceListPopover" class="mui-popover popover-center">
+            <!--<div class="mui-popover-arrow"></div>-->
+            <div class="mui-scroll-wrapper">
+                <div class="mui-scroll">
+                    <ul id="history" class="mui-table-view" style="text-align:left;">
+                        <li id="nohistory" class="mui-table-view-cell">无设备</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="addDevicePopover" class="mui-popover popover-center">
+            <!--<div class="mui-popover-arrow"></div>-->
+            <!--<div class="mui-scroll-wrapper">-->
+                <h2 class="device-add-title">添加设备</h2>
+                <form class="device-content mui-input-group">
+                    <div class="mui-input-row">
+                        <label class="required">设备序列号</label>
+                        <input id="add_dev_sn" type="text" class="mui-input-clear mui-input" placeholder="输入设备序列号">
+                    </div>
+                    <div class="mui-input-row">
+                        <label class="required">场所名称</label>
+                        <input id="place_name" type="text" class="mui-input-clear mui-input" placeholder="场景名, 如：东大街店">
+                    </div>
+                    <button id='showCityPicker' class="mui-btn mui-btn-block" type='button'>
+                        <span id="province">选择省市区</span>
+                        <span id="city"></span>
+                        <span id="area"></span>
+                    </button>
+                    <div class="mui-input-row">
+                        <label class="required">详细地址</label>
+                        <input id="address" type="text" class="mui-input-clear mui-input" placeholder="">
+                    </div>
+                    <div class="mui-input-row">
+                        <label class="required">联系电话</label>
+                        <input id="phone" type="tel" class="mui-input-clear mui-input" placeholder="">
+                    </div>
+                    <div class="mui-button-row">
+                        <table style="width: 100%;">
+                        	<tr>
+                        	    <td style="width:50%;padding: 5px 10px;"><button id="add_dev_commit" type="button" class="mui-btn mui-btn-primary" onclick="return false;">确认</button></td>
+                        	    <td style="width:50%;padding: 5px 10px;"><button id="add_dev_cancel" type="button" class="mui-btn mui-btn-danger">取消</button></td>
+                        	</tr>
+                        </table>
+                    </div>
+                </form>
+            <!--</div>-->
+        </div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/base.js"></script>
+	<script src="js/data.js"></script>
+    <script src="js/mui.picker.js"></script>
+    <script src="js/mui.poppicker.js"></script>
+    <script src="js/city.data.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        var img = null;
+        var blist = [];
+        var validDevCount = 0;
+        var aniShow = "slide-in-right";
+        var serverUrl = baseAPI.serverUrl;
+
+        var devSNEle = document.getElementById('add_dev_sn');
+        var placeNameEle = document.getElementById('place_name');
+        var provinceEle = document.getElementById('province');
+        var cityEle = document.getElementById('city');
+        var areaEle = document.getElementById('area');
+        var addressEle = document.getElementById('address');
+        var phoneEle = document.getElementById('phone');
+
+        //关于backbutton和menubutton两个按键的说明，在iOS平台不存在，故需隐藏
+        if(!mui.os.android){
+            var span = document.getElementById("android-only")
+            if(span){
+                span.style.display = "none";
+            }
+            aniShow = "pop-in";
+        }
+        mui('.mui-scroll-wrapper').scroll();
+
+        function addDeviceOnServer(devInfo,callBack){
+            var err = 0;
+            var errMsg = null;
+            var data = JSON.stringify({
+                "user_name": devInfo.username,
+                "dev_sn": devInfo.devSN
+            });
+            var username = "security_super";
+            var password = "lvzhou1-super";
+            var xhr = new plus.net.XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                switch ( xhr.readyState ) {
+                    case 0:
+                        //mui.toast( "xhr请求已初始化" );
+                    break;
+                    case 1:
+                        //mui.toast( "xhr请求已打开" );
+                    break;
+                    case 2:
+                        //mui.toast( "xhr请求已发送" );
+                    break;
+                    case 3:
+                        //mui.toast( "xhr请求已响应");
+                        break;
+                    case 4:
+                        if ( xhr.status == 200 ) {
+                            var data=JSON.parse(xhr.responseText);
+                            if(data.error_code)
+                            {
+                                callBack(data.error_code, data.error_message);
+                            }
+                            else{
+                                addPlace(devInfo,callBack);
+                            }
+                        } else {
+                            err = 99;
+                            errMsg = "网络错误";
+                            callBack(err, errMsg);
+                        }
+                        break;
+                    default :
+                        break;
+                }
+            }
+            xhr.open( "POST", serverUrl + '/ace/o2oportal/addDev',username, password);
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(data);
+        }
+
+        function addPlace(devInfo,callBack){
+            var err = 0;
+            var errMsg = null;
+            var data = JSON.stringify({
+                "user_name":devInfo.username,
+                "dev_sn":devInfo.devSN,
+                "province":devInfo.place.province,
+                "city":devInfo.place.city,
+                "area":devInfo.place.area,
+                "address":devInfo.place.address,
+                "name":devInfo.place.name,
+                "phone":devInfo.phone
+            });
+            var username = "security_super";
+            var password = "lvzhou1-super";
+            var xhr = new plus.net.XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                switch ( xhr.readyState ) {
+                    case 0:
+                        //mui.toast( "xhr请求已初始化" );
+                    break;
+                    case 1:
+                        //mui.toast( "xhr请求已打开" );
+                    break;
+                    case 2:
+                        //mui.toast( "xhr请求已发送" );
+                    break;
+                    case 3:
+                        //mui.toast( "xhr请求已响应");
+                        break;
+                    case 4:
+                        if ( xhr.status == 200 ) {
+                            var data=JSON.parse(xhr.responseText);
+                            if(data.error_code)
+                            {
+                                callBack(data.error_code, data.error_message);
+                            }
+                            else{
+                                callBack();
+                            }
+                        } else {
+                            err = 99;
+                            errMsg = "网络错误";
+                            callBack(err, errMsg);
+                        }
+                        break;
+                    default :
+                        break;
+                }
+            }
+            xhr.open( "POST", serverUrl + '/ace/o2oportal/addPlace',username, password);
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(data);
+        }
+
+        function deleteDeviceOnServer(devInfo,callBack){
+            var err = 0;
+            var errMsg = null;
+            var data = JSON.stringify({
+                "user_name": devInfo.username,
+                "dev_sn": devInfo.devSN
+            });
+            var username = "security_super";
+            var password = "lvzhou1-super";
+            var xhr = new plus.net.XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                switch ( xhr.readyState ) {
+                    case 0:
+                        //mui.toast( "xhr请求已初始化" );
+                    break;
+                    case 1:
+                        //mui.toast( "xhr请求已打开" );
+                    break;
+                    case 2:
+                        //mui.toast( "xhr请求已发送" );
+                    break;
+                    case 3:
+                        //mui.toast( "xhr请求已响应");
+                        break;
+                    case 4:
+                        if ( xhr.status == 200 ) {
+                            var data=JSON.parse(xhr.responseText);
+                            if(data.error_code)
+                            {
+                                callBack(data.error_code, data.error_message);
+                            }
+                            else{
+                                callBack();
+                            }
+                        } else {
+                            err = 99;
+                            errMsg = "网络错误";
+                            callBack(err,errMsg);
+                        }
+                        break;
+                    default :
+                        break;
+                }
+            }
+            xhr.open( "POST", serverUrl + '/ace/o2oportal/deleteDev',username, password);
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(data);
+        }
+
+        function displayAC(acSN,acName){
+            var li=null,hl = document.getElementById("history");
+            if ( blist.length > 0 ) {
+                li = document.createElement("li");
+                li.className = "mui-table-view-cell";
+                hl.appendChild(li);
+            } else {
+                li = document.getElementById("nohistory");
+
+            }
+            li.id = acSN;
+
+            var sliderRight = document.createElement("div");
+            sliderRight.className = "mui-slider-right mui-disabled";
+            sliderRight.innerHTML = '<a class="mui-btn mui-btn-red">解除绑定</a>';
+
+            var sliderHandle = document.createElement("div");
+            sliderHandle.className = "mui-slider-handle";
+
+            var span_devname = document.createElement("span");
+            span_devname.className = "device-name";
+            span_devname.innerText = acName;
+
+            var span_sn = document.createElement("span");
+            span_sn.className = "mui-badge mui-badge-success show-sn";
+            span_sn.innerText = "查看序列号";
+            span_sn.addEventListener('tap',function(){
+                plus.nativeUI.alert( "场所名: " + acName + "\nSN: " + acSN );
+            });
+
+            sliderHandle.appendChild(span_devname);
+            sliderHandle.appendChild(span_sn);
+
+//          var html = '<div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red">解除绑定</a></div><div class="mui-slider-handle">';
+//          html += '<span class="device-name">' + devName + '</span><span class="mui-badge mui-badge-success" style="font-size: 12px;float:right;">查看序列号</span></div>';
+            li.innerHTML = "";
+            li.appendChild(sliderRight);
+            li.appendChild(sliderHandle);
+            li.acSN = acSN;
+        }
+
+        function saveDeviceList(){
+            var itemKey = "deviceList";
+            var itemValue = JSON.stringify(blist);
+            //console.log(itemValue);
+            plus.storage.setItem(itemKey, itemValue);
+        }
+
+        function updateIndexTitle(acSN, name){
+            if(!indexPage){
+                indexPage = plus.webview.getLaunchWebview();;
+            }
+            mui.fire(indexPage,'updateTitle',{
+                deviceId:acSN,
+                placeName:name
+            });
+        }
+
+        function updateCurDevice(changeDevSN, placeName, isAdd){
+            var curACSN = baseAPI.getCurrentACSN();
+            var tmpDevSN = "";
+            var tmpPlaceName = "";
+            if (isAdd) {
+                if (!curACSN) {
+                	baseAPI.setCurrentACSN(changeDevSN);
+                	updateIndexTitle(changeDevSN, placeName);
+                }
+            }
+            else{
+                if (curACSN == changeDevSN) {
+                    for (var i = 0; i < blist.length;i++) {
+                    	if (blist[i].valided == "valid") {
+                            baseAPI.setCurrentACSN(blist[i].acSN);
+                            tmpDevSN = blist[i].acSN;
+                            tmpPlaceName = blist[i].placeName
+                            break;
+                        }
+                    }
+                	baseAPI.setCurrentACSN(tmpDevSN);
+                	updateIndexTitle(tmpDevSN, tmpPlaceName);
+                }
+            }
+        }
+
+        function deleteDevice(devSN){
+            var delIndex = -1;
+
+            blist.forEach(function(e,i){
+                if (e.acSN === devSN) {
+                	delIndex = i;
+                }
+            });
+
+            if (delIndex >= 0) {
+                var placeName = blist[delIndex].placeName;
+                blist.splice(delIndex, 1);
+            	validDevCount --;
+            	saveDeviceList();
+            	updateCurDevice(devSN, placeName, false);
+            	document.getElementById("device_count").innerText = validDevCount;
+            	if(!indexPage){
+                    indexPage = plus.webview.getLaunchWebview();
+                }
+                mui.fire(indexPage,'deviceDelete',{
+                    deviceId:devSN,
+                    placeName:placeName
+                });
+            }
+
+            if (blist.length == 0) {
+            	cleanHistroy();
+            }
+        }
+
+        var indexPage = null;
+        function addDevice(SN, name){
+            displayAC(SN, name);
+
+            blist.push({acSN:SN, acName:"", placeName:name, valided:"valid"});
+            validDevCount ++ ;
+
+            saveDeviceList();
+            updateCurDevice(SN, name, true);
+
+            document.getElementById("device_count").innerText = validDevCount;
+            if(!indexPage){
+                indexPage = plus.webview.getLaunchWebview();
+            }
+            mui.fire(indexPage,'deviceAdd',{
+                deviceId:SN,
+                placeName:name
+            });
+        }
+
+        function clearAddDevForm(){
+            devSNEle.value = "";
+            placeNameEle.value = "";
+            provinceEle.innerText = "选择省市区";
+            cityEle.innerText = "";
+            areaEle.innerText = "";
+            addressEle.value = "";
+            phoneEle.value = "";
+        }
+
+        function scaned( t, r, f ) {
+            clearAddDevForm();
+            devSNEle.value = r;
+            mui("#addDevicePopover").popover('show');
+        }
+
+        function update( t, r, f ) {
+            if ( !f || f=="null" ) {
+                img.src = "../img/barcode.png";
+            } else {
+                plus.io.resolveLocalFileSystemURL(f,function(entry){
+                    img.src=entry.toLocalURL();
+                });
+            }
+        }
+
+        function cleanHistroy() {
+            if ( blist.length > 0 ) {
+                var hl = document.getElementById("history");
+                hl.innerHTML = '<li id="nohistory" class="mui-table-view-cell">无设备 </li>';
+            }
+            plus.io.resolveLocalFileSystemURL( "_doc/barcode/", function ( entry ) {
+                entry.removeRecursively( function () {
+                    // Success
+                }, function ( e ) {
+                    //alert( "failed"+e.message );
+                });
+            } );
+        }
+
+        var btnArray = ['确定', '取消'];
+        mui('#history').on('tap', '.mui-btn', function(event) {
+            var devInfo = {};
+            var elem = this;
+            var li = elem.parentNode.parentNode;
+            mui.confirm('确定解除绑定该设备？', '解除绑定', btnArray, function(e) {
+                if (e.index == 0) {
+                    var devSN = li.acSN;
+                    devInfo.username = localStorage.getItem('$users');
+                    devInfo.devSN = devSN;
+                    deleteDeviceOnServer(devInfo,function(err,errMsg){
+                        if (err) {
+                        	plus.nativeUI.toast(errMsg);
+                        	
+                        	//设备不存在，在aclist中删除
+							if (errMsg.indexOf("设备不存在") != -1)
+							{	
+								li.parentNode.removeChild(li);
+								deleteDevice(devSN);
+							}
+                        }
+                        else{
+                            li.parentNode.removeChild(li);
+                            deleteDevice(devSN);
+                            plus.nativeUI.toast("设备解除绑定成功");
+                        }
+                    });
+
+                } else {
+                    setTimeout(function() {
+                        mui.swipeoutClose(li);
+                    }, 0);
+                }
+            });
+        });
+
+        //popover层显示回调函数
+        mui('body').on('shown', '.mui-popover', function(e) {
+            switch (e.detail.id){
+                case "deviceListPopover":
+                    break;
+                default:
+                    break;
+            }
+            //console.log('shown', e.detail.id);//detail为当前popover元素
+        });
+        //popover层隐藏回调函数
+        mui('body').on('hidden', '.mui-popover', function(e) {
+            switch (e.detail.id){
+                case "deviceListPopover":
+                    mui.swipeoutClose(mui("#deviceListPopover li.mui-selected")[0]);
+                    break;
+                case "addDevicePopover":
+                    document.getElementById('province').innerText ="选择省市区";
+                    document.getElementById('city').innerText = "";
+                    document.getElementById('area').innerText = "";
+                    break;
+                default:
+                    break;
+            }
+            //console.log('hidden', e.detail.id);//detail为当前popover元素
+        });
+
+
+        mui('#topology').on('tap','a',function(){
+            switch (this.id){
+                case "device_list_link":
+                    mui(this.hash).popover('show');
+                    var popover = document.getElementById(this.hash.replace('#', ''));
+
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
+
+        function isValidDeviceInfo(devInfo){
+            var isValid = true;
+            var isComplete  = true;
+            var errMsg = "";
+            if (!devInfo.devSN) {
+            	document.getElementById('add_dev_sn').classList.add("state-error");
+            	isValid = false;
+            	isComplete  = false;
+            }
+
+            if (!devInfo.place.name) {
+                document.getElementById('place_name').classList.add("state-error");
+                isValid = false;
+                isComplete  = false;
+            }
+
+            if (!devInfo.place.province || !devInfo.place.city || !devInfo.place.area) {
+                document.getElementById('showCityPicker').classList.add("state-error");
+                isValid = false;
+                isComplete  = false;
+            }
+
+            if (!devInfo.place.address) {
+                document.getElementById('address').classList.add("state-error");
+                isValid = false;
+                isComplete  = false;
+            }
+
+            if (!devInfo.phone) {
+                document.getElementById('phone').classList.add("state-error");
+                isValid = false;
+                isComplete  = false;
+            }
+            else if((devInfo.phone.length != 11) || (devInfo.phone.indexOf('1')!= 0)){
+                document.getElementById('phone').classList.add("state-error");
+                isValid = false;
+                errMsg ='不是有效的电话号码';
+
+            }
+
+            if (!isValid) {
+                if (isComplete) {
+                	plus.nativeUI.toast(errMsg);
+                }
+                else{
+                    plus.nativeUI.toast("信息填写不完整");
+                }
+            }
+
+            return isValid;
+        }
+
+        document.getElementById('add_dev_commit').addEventListener('tap',function(){
+            var devInfo = {place:{}};
+            var username = localStorage.getItem('$users');
+
+            devInfo.username = username;
+            devInfo.devSN = devSNEle.value.toUpperCase();
+            devInfo.place.name = placeNameEle.value;
+            devInfo.place.province = provinceEle.innerText;
+            devInfo.place.city = cityEle.innerText;
+            devInfo.place.area = areaEle.innerText;
+            devInfo.place.address = addressEle.value;
+            devInfo.phone = phoneEle.value;
+
+            if (!isValidDeviceInfo(devInfo)) {
+            	return;
+            }
+
+            addDeviceOnServer(devInfo,function(err,errMsg){
+                if (err) {
+                	plus.nativeUI.toast(errMsg);
+                }
+                else{
+                    addDevice(devInfo.devSN, devInfo.place.name);
+                    mui("#addDevicePopover").popover('hide');
+                    plus.nativeUI.toast("设备添加成功");
+                }
+            });
+        });
+
+        mui("#addDevicePopover").on('input','input',function(){
+            if (this.classList.contains("state-error")) {
+            	this.classList.remove("state-error");
+            }
+        })
+
+        document.getElementById('add_dev_cancel').addEventListener('tap',function(){
+            mui("#addDevicePopover").popover('hide');
+        });
+
+        document.getElementById("add_dev").addEventListener("longtap",function(){
+            if(!mui.os.android) {
+                clearAddDevForm();
+                mui("#addDevicePopover").popover('show');
+            }
+            else {
+                clicked('barcode_scan.html',true,true);
+                mui.toast('请扫描设备序列号对应的条形码/二维码');
+            }
+        });
+
+        var cityPicker = new mui.PopPicker({
+            layer: 3
+        });
+        cityPicker.setData(cityData3);
+        var showCityPickerButton = document.getElementById('showCityPicker');
+        var provinceResult = document.getElementById('province');
+        var cityResult = document.getElementById('city');
+        var areaResult = document.getElementById('area');
+        showCityPickerButton.addEventListener('tap', function(event) {
+            cityPicker.show(function(items) {
+                provinceResult.innerText = (items[0] || {}).text;
+                cityResult.innerText = (items[1] || {}).text;
+                areaResult.innerText = (items[2] || {}).text;
+                showCityPickerButton.classList.remove("state-error");
+                //返回 false 可以阻止选择框的关闭
+                //return false;
+            });
+        }, false);
+
+        function getDevStatus(){
+//          var devStatus = baseAPI.getCurDevStatus();
+            var devSN = baseAPI.getCurrentACSN();
+            if (!devSN) return;
+            dataAPI.getDevStatus(app.getUser(), devSN,function(err, devStatusList){
+                if (!err && (baseAPI.getCurrentACSN() == devSN) && (devStatusList.length > 0)) {
+                    if (devStatusList[0].dev_status != 1) {//offline
+                        document.getElementById("cloud-flow1").style.display = "none";
+                        document.getElementById("cloud-flow2").style.display = "none";
+                        document.getElementById("cloud-warning").style.display = "inline-block";
+                    }
+                    else{//online
+                        document.getElementById("cloud-flow1").style.display = "block";
+                        document.getElementById("cloud-flow2").style.display = "block";
+                        document.getElementById("internet-flow1").style.display = "block";
+                        document.getElementById("internet-flow2").style.display = "block";
+                        document.getElementById("ac-flow").style.display = "block";
+                        document.getElementById("cloud-warning").style.display = "none";
+                    }
+                }
+            });
+        }
+
+        function getAPInfo(){
+            document.getElementById("ap_count").innerText = '0';
+            dataAPI.getAPStatistic(baseAPI.getCurrentACSN(), function(data,err){
+                    if(!err){
+                        var onlineAP = data && data.ap_statistic && data.ap_statistic.online;
+                        var offlineAP = data && data.ap_statistic && data.ap_statistic.offline;
+                        var totalAP = 0;
+                        if ((onlineAP!== undefined) && (offlineAP!== undefined)){
+                        	totalAP = onlineAP+offlineAP;
+                        }
+                        document.getElementById("ap_count").innerText = totalAP;
+
+                        if(offlineAP>0){
+                            document.getElementById("ap-warning").style.display = "inline-block";
+                        }
+                        else{
+                            document.getElementById("ap-warning").style.display = "none";
+                        }
+
+                        if(onlineAP>0){
+                            document.getElementById("ap-flow").style.display = "block";
+                        }
+                        else{
+                            document.getElementById("ap-flow").style.display = "none";
+                        }
+
+
+                    }
+                });
+        }
+
+        function deviceListRecovery(){
+            var curIndex = 0;
+            var devices = baseAPI.getLocalACList();
+            if (devices){
+                for(var i = 0; i<devices.length; i++){
+                    if (devices[i].valided == "valid") {
+                    	displayAC(devices[i].acSN,devices[i].placeName ? devices[i].placeName:devices[i].acSN);
+                        blist[curIndex] = devices[i];
+                        curIndex ++;
+                    }
+                }
+                validDevCount = blist.length;
+            }
+            document.getElementById("device_count").innerText = validDevCount;
+        }
+
+        mui.init({
+            gestureConfig:{
+                longtap: true
+            },
+            swipeBack:false //启用右滑关闭功能
+        });
+
+        // H5 plus事件处理
+        function plusReady(){
+            deviceListRecovery();
+            getDevStatus();
+            getAPInfo();
+        }
+        document.addEventListener("plusready",plusReady,false);
+    </script>
+</html>

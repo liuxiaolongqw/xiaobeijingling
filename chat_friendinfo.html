@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <style type="text/css">
+    		.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+				display: none;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			/*p img {
+				max-width: 100%;
+				height: auto;
+			}*/
+    </style> 
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 id="title" class="mui-title">详细资料</h1>
+	</header>
+	<div class="mui-content">
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell mui-media" onclick="mui.trigger(document.getElementById('chat_me_headimg'),'tap')">
+				<p>
+					<img id="chat_me_headimg" class="mui-media-object mui-pull-left" style="border-radius: 4px;" data-preview-src="">
+				</p>
+				<div class="mui-media-body">
+					<span id="chat_friend_name" style="	top:22px;position: absolute;font-size: 17px;">jixiaokai</span>
+				</div>
+			</li>
+		</ul>
+		<ul class="mui-table-view" style="margin-top: 15px;">
+			<li class="mui-table-view-cell">
+				<label>个性签名:</label>
+				<span id="chat_me_signatrue" style="font-size: 15px; color: rgb(99, 101, 107);">世界上最遥远的距离不是生与死，而是我在我身边你却想着别人</span>
+			</li>
+		</ul>
+		<!--<ul class="mui-table-view" style="margin-top: 15px;">
+			<li class="mui-table-view-cell">
+				<span>消息免打扰</span>
+				<div class="mui-switch mui-switch-blue">
+					<div class="mui-switch-handle"></div>
+				</div>
+			</li>
+		</ul>-->
+		<div class="mui-content-padded" style="margin-top: 40px;">
+			<button id="send" type="button" class="mui-btn mui-btn-primary mui-btn-block" style="height: 45px;line-height: 0.4;">发送消息</button>
+		 	<button id="delete" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="height: 45px;line-height: 0.4;">删除好友</button>
+		</div>
+		
+	</div>
+</body>
+<script src="js/mui.min.js"></script>
+<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="js/mui.zoom.js"></script>
+<script src="js/mui.previewimage.js"></script>
+<script type="text/javascript" charset="UTF-8">
+	(function($,mui){
+		var myUid;
+		var thisSid;
+		var uid;
+		var name;
+		
+		mui.init();
+		mui.previewImage();
+		
+		var self;
+		mui.plusReady(function(){
+			self = plus.webview.currentWebview();
+			myUid = self.myUid;
+			uid = self.uid;
+			name = self.name;
+			thisSid = self.sid;
+			
+			$("#chat_friend_name").text(self.name);
+			$("#chat_me_headimg").attr("src",self.headImg);
+			if(name == "系统"){
+				$("#delete").addClass("mui-disabled");
+			}
+		})
+		document.getElementById('delete').addEventListener('tap',function(){
+			var btnArray = ['确认', '取消'];
+			mui.confirm('确认删除该好友？', '小贝温馨提示', btnArray, function(e) {
+				if(0 == e.index){
+				 	plus.nativeUI.showWaiting("",{back:"close",padlock:true});
+				 	mui.fire(plus.webview.getWebviewById("chat.html"),"deleteFriend",{name:name,uid:uid,sid:thisSid});
+				 }
+			});
+		})
+		window.addEventListener("deleteFriendResp",function(e){
+			plus.nativeUI.closeWaiting();
+			
+			if(e.detail.result && e.detail.result == "disconnect"){
+				plus.nativeUI.toast("请检查网络连接！");
+				return;
+			}
+			if(e.detail.body == "success"){
+				plus.nativeUI.closeWaiting();
+				mui.back();
+			}else{
+				plus.nativeUI.toast("删除失败！");
+			}
+			
+		})
+		document.getElementById('send').addEventListener('tap',function(){
+			var nw = mui.openWindow({
+				id:'chat_chat.html',
+				url:'chat_chat.html',
+				styles:{
+					popGesture:"close",
+					render:"always"
+				},
+				show:{
+			    	autoShow:false,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:false
+				},
+				extras:{
+					title:name,
+					sid:thisSid,
+					type:"couple",
+					myUid:myUid
+				}
+			})
+			nw.addEventListener( "loaded", function(e){
+				plus.webview.show(nw,"slide-in-right");
+//				waitting.close();
+			}, false );
+			nw.addEventListener("popGesture", function(e){
+				mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"closeChat",{});
+			}, false );
+		})
+ 
+	})(jQuery,mui)
+ 
+</script>
+</html>

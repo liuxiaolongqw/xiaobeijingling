@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <title></title>
+	    <link href="css/mui.min.css" rel="stylesheet"/>
+	    <link href="css/chat_common.css" rel="stylesheet"/>
+	    <link href="css/chat_me.css" rel="stylesheet"/>
+	    <!--<link rel="stylesheet" href="css/bootstrap.min.css" />-->  
+		<!--<link rel="stylesheet" href="css/cropper.css" />-->  
+	   
+	    
+	    <style>
+	    	.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+				display: none;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+	    </style>
+	</head>
+	<body>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<img class="mui-media-object mui-pull-left" id="chat_me_headimg" src="./images/chat/test_xiaozhu.jpg" onerror=this.src='./images/chat/test_xiaozhu.jpg' data-preview-src=""/>
+						<!--<img id="chat_me_headimg" class="mui-media-object mui-pull-left"  onerror=this.src='./images/chat/test_xiaozhu.jpg' data-preview-src="">-->
+						<div class="mui-media-body">
+							<span id="chat_me_name"></span>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 15px;">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">个性签名：<span id="chat_me_signatrue">世界上最遥远的距离不是生与死，而是我在我身边你却想着别人</span></a>
+				</li>
+			</ul>
+			<!--<ul class="mui-table-view" style="margin-top: 15px;">
+				<li class="mui-table-view-cell">
+					<a href="chat_account" class="mui-navigate-right">账号与安全</a>
+				</li>
+			</ul>-->
+		
+			<ul class="mui-table-view" style="margin-top: 15px;">
+				<li class="mui-table-view-cell">
+					<a id="newMsgNotice" class="mui-navigate-right">新消息通知</a>
+				</li>
+				<!--<li class="mui-table-view-cell">
+					<a href="privacy" class="mui-navigate-right">隐私</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="general" class="mui-navigate-right">通用</a>
+				</li>-->
+			</ul>
+		</div>
+		
+		<div id="addTopPopover" class="mui-popover">
+			<div class="mui-popover-arrow mui-pull-right"></div>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="chat_newdialog.html"><span class="mui-icon iconfont mui-icon mui-icon-chatbubble" style= "font-size: 22px;margin-right: 6px;"></span>新建会话</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="chat_finduser.html"><span class="mui-icon iconfont mui-icon mui-icon-personadd" style= "font-size: 22px;margin-right: 6px;"></span>添加好友</a>
+				</li>
+			</ul>
+		</div>
+	</body>
+	
+	<script src="js/mui.min.js"></script>
+	<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+	<script src="js/mui.zoom.js"></script>
+	<script src="js/mui.previewimage.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/chat_base.js"></script>
+	<script src="js/chat_websql.js"></script>
+	<!--<script src="libs/bootstrap.min.js"></script>-->
+	<!--<script src="libs/cropper.min.js"></script>-->
+	<script type="text/javascript" charset="UTF-8">
+	(function($,mui){
+		var self;
+		var myuid;
+		var beep;
+		var vibrate;
+		var uploadHeadImgTimer;
+		var uploadHeadImgFlag = false;
+		mui.init();
+		
+		mui.plusReady(function(){
+			self = plus.webview.currentWebview();
+			recover()
+		})
+		
+		function recover(){
+			chatDb.query('select * from selfInfo where key = "base"', function(res){
+				if(res.rows.length == 0){
+					return;
+				}
+				var info = res.rows.item(0).info;
+    			info = JSON.parse(info);
+				myuid = info.uid;
+				var name = info.name;
+				$("#chat_me_name").text(unescape(name));
+				$("#chat_me_headimg").attr("src", "../doc/"+myuid+".jpg").attr("uid",myuid);
+				mui.previewImage();
+			})
+			
+			setTimeout(function(){
+				chatDb.query('select * from selfInfo where key = "noticeOpt"',function(res){
+					if(res.rows.length == 0){
+						return;
+					}
+					var info = res.rows.item(0).info;
+	    			info = JSON.parse(info);
+					beep = info.beep;
+					vibrate = info.vibrate;
+					mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"setNoticeOpt",{beep:beep,vibrate:vibrate});
+				})
+			},1000)
+		}
+		
+//		$(document).on("tap",".mui-media",function(){
+//			plus.nativeUI.actionSheet( {cancel:"取消",buttons:[{title:"拍照"},{title:"从手机相册选取"},{title:"保存图片"},]}, function(e){
+//	//				 if(1 == e.index){
+//	
+//			});
+//		})
+		
+	    function notifyUpdateHeadImg(uid){
+    		/*通知me,concat和group页面更新头像*/
+			if(uid == myuid){
+				mui.fire(plus.webview.getWebviewById("chat_me.html"),"updateHeadImg");
+				mui.fire(plus.webview.getWebviewById("index-menu"),"updateHeadImg",{uid:uid});
+			}
+			mui.fire(plus.webview.getWebviewById("chat_contact.html"),"updateHeadImg",{uid:uid});
+			mui.fire(plus.webview.getWebviewById("chat_group.html"),"updateHeadImg",{uid:uid});
+			mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"updateHeadImg",{uid:uid});
+	    }
+		
+		function compressImage(entry){
+			console.log("开始压缩图片：");
+			plus.zip.compressImage({
+				src:entry.toLocalURL(),
+				dst:"_doc/"+myuid+"_temp.jpg",
+				quality:100,
+				overwrite:true,
+				width:'200px',
+				height:"200px"
+			},
+			function(i){
+				console.log("写入成功");
+				plus.nativeUI.showWaiting();
+				mui.fire(plus.webview.getWebviewById("chat.html"),"setSelfHeadImg");
+				
+				/*启动超时定时器，后台老是不回应 没有办法 SOCKET.IO也不TM提供一个超时的机制   也是醉了*/
+				uploadHeadImgTimer = setInterval(function(){
+					plus.nativeUI.closeWaiting();
+					plus.nativeUI.toast("上传头像超时");
+					if(uploadHeadImgTimer){
+						clearInterval(uploadHeadImgTimer);
+					}
+				},15000)
+				console.log("压缩图片成功："+JSON.stringify(i));
+			},function(e){
+				plus.nativeUI.closeWaiting();
+				console.log("压缩图片失败: "+JSON.stringify(e));
+			});
+		}
+		
+		function getImage() {
+			var c = plus.camera.getCamera();
+			c.captureImage(function(e) {
+				plus.io.resolveLocalFileSystemURL(e, function(entry) {
+					compressImage(entry);
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(s) {
+				console.log("error" + s);
+			}, {
+				filename: "_doc/head.jpg"
+			})
+		}
+
+		function galleryImg() {
+			plus.gallery.pick(function(a) {
+				plus.io.resolveLocalFileSystemURL(a, function(entry) {
+					compressImage(entry);
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(a) {}, {
+				filter: "image"
+			})
+		};
+		
+		mui("#addTopPopover").on("tap","a",function(){
+			var href = $(this).attr('href')
+			mui.fire(self.parent(),"addLinkResp",href);
+			mui('#addTopPopover').popover("hide");
+		})
+		
+		$(document).on("tap","#newMsgNotice",function(){
+			mui.openWindow({
+				url:"chat_newmsgnotice.html",
+			    id:"chat_newmsgnotice.html",
+			    styles:{
+			    	popGesture:"close",
+			    },
+			    show:{
+			    	autoShow:true,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:true
+				},
+				extras:{
+					beep:beep,
+					vibrate:vibrate
+				}
+			})
+		})
+		
+		$(document).on("tap","#chat_me_headimg",function(e){
+			e.stopPropagation();
+		})
+		$(document).on("tap",".mui-media",function(){
+			if(mui.os.plus){
+				var a = [{
+					title: "拍照"
+				}, {
+					title: "从手机相册选择"
+				}];
+				plus.nativeUI.actionSheet({
+					title: "修改头像",
+					cancel: "取消",
+					buttons: a
+				}, function(b) {
+					switch (b.index) {
+						case 0:
+							break;
+						case 1:
+							getImage();
+							break;
+						case 2:
+							galleryImg();
+							break;
+						default:
+							break
+					}
+				})	
+			}
+			
+		});
+		
+		window.addEventListener("setSelfHeadImgResp",function(e){
+			if(uploadHeadImgTimer){
+				clearInterval(uploadHeadImgTimer);
+			}
+			
+			plus.nativeUI.closeWaiting();
+			if(e.detail.result == "disconnect"){
+				plus.nativeUI.toast("请检查网络连接！");
+			}else if(e.detail.result == "success"){
+				plus.zip.compressImage({
+					src:"_doc/"+myuid+"_temp.jpg",
+					dst:"_doc/"+myuid+".jpg",
+					quality:100,
+					overwrite:true,
+					width:'200px',
+					height:"200px"
+				},function(i){
+					$("#chat_me_headimg").attr("src", "../doc/"+myuid+".jpg?"+new Date().getTime());
+					notifyUpdateHeadImg(myuid);
+					plus.nativeUI.toast("修改头像成功！");
+					console.log("压缩图片成功："+JSON.stringify(i));
+				},function(){
+					plus.nativeUI.toast("上传头像成功了但本地处理失败");
+				})
+				
+			}else{
+				plus.nativeUI.toast("修改头像失败！");
+			}
+		})
+
+		window.addEventListener('changeSignature',function(event){
+		    var newSig = event.detail;
+		    $("#chat_me_signatrue").text(newSig);
+		});
+		window.addEventListener('updateHeadImg',function(event){
+			
+		   	$("#chat_me_headimg").attr("src", "../doc/"+myuid+".jpg?"+new Date().getTime());
+		});
+		
+		/*弹出菜单处理*/
+		window.addEventListener("tapAddLink",function(event){
+			if(self.isVisible()){
+				mui('#addTopPopover').popover('toggle');
+			}
+		})
+		window.addEventListener("hidePopView",function(event){
+			mui('#addTopPopover').popover('hide');
+		})
+
+		window.addEventListener("setNameAndUid",function(event){
+			$("#chat_me_name").text(event.detail.name);
+			myuid = event.detail.uid;
+		})
+		window.addEventListener("changeNewMsgNoticeOpt",function(e){
+			beep = e.detail.beep;
+			vibrate = e.detail.vibrate;
+			var info = {};
+			info.beep = beep;
+			info.vibrate = vibrate;
+			chatDb.updateMe("noticeOpt",JSON.stringify(info),function(){
+				mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"setNoticeOpt",{beep:beep,vibrate:vibrate});
+				console.log("update noticeOpt success");
+			},function(){
+				console.log("ERROR update noticeOpt failed");
+			})
+		})
+
+	})(jQuery,mui);
+		
+	</script>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>摇帮手</title>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/common.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript">
+			var p = null;
+			var iLast = 2,
+				MAX = 50;
+			var up = null,
+				down = null,
+				offset = 50;
+			var t = null;
+			var wid = null,
+				wids = null;
+			var timeOut = null;
+			// H5 plus事件处理
+			function plusReady() {
+				function geoinf(position) {
+					var str = "";
+				}
+				plus.geolocation.getCurrentPosition(geoinf, function(e) {
+					
+				}, {
+					provider: 'baidu'
+				});
+				var w = plus.nativeUI.showWaiting("正在定位");
+				w.onclose = function() {
+					clearInterval(t);
+				}
+				var t = setInterval(function() {
+					w.setTitle("正在定位");
+					w.close();
+					clearInterval(t);
+				}, 2000);
+				// 锁定只能竖屏显示
+				plus.screen.lockOrientation("portrait-primary");
+				// 监听加速度
+				wids = plus.accelerometer.watchAcceleration(function(a) {
+					if (!up) {
+						return;
+					}
+					if (!p && (Math.abs(a.xAxis) + Math.abs(a.yAxis) + Math.abs(a.zAxis) > MAX)) {
+						// Play audio
+						p = plus.audio.createPlayer("_www/audio/shake.wav");
+						p.play();
+						setTimeout(function() {
+							p.stop();
+							delete p;
+							p = null;
+
+							function geoInf(position) {
+								var str = "";
+								str += position.address.province; //获取地址信息
+								str += position.address.city;
+								str += position.address.district;
+								if (position.address.street == null) {
+									position.address.street = '';
+								}
+								str += position.address.street;
+								str += '附近的代维企业及人员';
+								plus.storage.setItem("address", str);
+							}
+							wid = plus.geolocation.getCurrentPosition(geoInf, function(e) {
+								mui.toast('获取定位信息失败');
+								clearTimeout(timeOut);
+							}, {
+								provider: 'baidu'
+							});
+							waiting();
+							timeOut = setTimeout(function() {
+								//								plus.geolocation.clearWatch(wid);//关闭定位、
+								//								plus.accelerometer.clearWatch(wids);
+								//								wid = null;
+								//								wids = null;
+								mui.openWindow({
+									url: 'shake-home.html',
+									waiting: {
+										autoShow: true, //自动显示等待框，默认为true
+										title: '正在搜索', //等待对话框上显示的提示内容
+									}
+								});
+							}, 2000);
+						}, 2000);
+						// Animation
+						offset = up.offsetHeight / 3;
+						up.style.webkitTransform = "translateY(-" + offset + "px)";
+						up.style.msTransform = "translateY(-" + offset + "px)";
+						down.style.webkitTransform = "translateY(" + offset + "px)";
+						down.style.msTransform = "translateY(" + offset + "px)";
+						if (t) {
+							clearTimeout(t);
+						}
+						t = setTimeout(function() {
+							t = null;
+							up.style.webkitTransform = "";
+							up.style.msTransform = "";
+							down.style.webkitTransform = "";
+							down.style.msTransform = "";
+						}, 1000);
+					}
+				}, function(e) {
+					//outSet( "Watch failed: "+e.message );
+				}, {
+					frequency: 100
+				});
+			}
+			if (window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+			// 监听DOMContentLoaded事件
+			document.addEventListener("DOMContentLoaded", function() {
+				up = document.getElementById("up");
+				down = document.getElementById("down");
+				offset = up.offsetHeight / 2;
+			}, false);
+			// 解锁并关闭
+			var _back = window.back;
+
+			function unlockback() {
+				plus.screen.unlockOrientation();
+				_back();
+			}
+			window.back = unlockback;
+
+			function waiting() {
+				var w = plus.nativeUI.showWaiting("正在搜索");
+				w.onclose = function() {
+					clearInterval(t);
+				}
+				var t = setInterval(function() {
+					w.setTitle("正在搜索");
+					w.close();
+					clearInterval(t);
+				}, 2000);
+			}
+		</script>
+		<link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+	</head>
+
+	<body style="background-image: url(images/shake_bg.png);background-position:center;background-size: 100%;">
+		<header class="mui-bar mui-bar-nav">
+			<a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">摇帮手</h1>
+		</header>
+		<div style="height:100%;text-align:center;overflow:hidden;">
+			<div id="up" style="width:100%;height:50%;-webkit-transition:all .5s ease-in-out;-ms-transition:all .5s ease-in-out;">
+				<img style="width:100%;height:100%;" src="images/shakeup.png" />
+			</div>
+			<div id="down" style="width:100%;height:50%;-webkit-transition:all .5s ease-in-out;-ms-transition:all .5s ease-in-out;">
+				<img style="width:100%;height:100%;" src="images/shakedown.png" />
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/immersed.js"></script>
+
+</html>

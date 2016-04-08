@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    
+    <link href="css/mui.min.css" rel="stylesheet"/>
+     <link href="css/chat_common.css" rel="stylesheet" />
+    <style type="text/css">
+    	html,
+		body {
+			height: 100%;
+		}
+		.mui-content{
+			height: 100%;
+			padding: 44px 0px 0px 0px;
+			overflow: auto;
+		}
+		#list {
+			height: 100%;
+			overflow: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+		.mui-table-view .mui-media-object{
+			width: 35px;
+			height: 35px;
+			border-radius: 2px;
+		}
+		.mui-media-body span{
+			top: 18px;
+			position: absolute;	
+			font-size: 15px;
+			left: 62px;
+		}
+		
+    </style>
+
+
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<form>
+			<div class="mui-input-row mui-search" style="margin-right: 45px;">
+			<input id="search" type="search" maxlength=27 class="mui-input-clear" placeholder="点击输入查找新朋友" style="background-color: white;">
+		</div>
+		</form>
+	 
+		<button id="cancel" type="button" class="mui-btn mui-btn-link mui-action-back" style="position: absolute;top:0px;right: 10px">
+			取消
+		</button>
+	</header>
+	<div id="content" class="mui-content">
+		<div id="list">
+			<ul class="mui-table-view">
+			
+			<!--<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaolong</span>
+						<button type="button" class="mui-btn mui-pull-right mui-btn-primary">
+							添加
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>刘超</span>
+						<button type="button" class="mui-btn mui-pull-right mui-disabled">
+							等待验证
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaolong</span>
+						<button type="button" class="mui-btn mui-pull-right mui-btn-primary">
+							添加
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>刘超</span>
+						<button type="button" class="mui-btn mui-pull-right mui-disabled">
+							等待验证
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaolong</span>
+						<button type="button" class="mui-btn mui-pull-right mui-btn-primary">
+							添加
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>刘超</span>
+						<button type="button" class="mui-btn mui-pull-right mui-disabled">
+							等待验证
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaolong</span>
+						<button type="button" class="mui-btn mui-pull-right mui-btn-primary">
+							添加
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>刘超</span>
+						<button type="button" class="mui-btn mui-pull-right mui-disabled">
+							等待验证
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaolong</span>
+						<button type="button" class="mui-btn mui-pull-right mui-btn-primary">
+							添加
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>刘超</span>
+						<button type="button" class="mui-btn mui-pull-right mui-disabled">
+							等待验证
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaolong</span>
+						<button type="button" class="mui-btn mui-pull-right mui-btn-primary">
+							添加
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>刘超</span>
+						<button type="button" class="mui-btn mui-pull-right mui-disabled">
+							等待验证
+						</button>
+					</div>
+				</a>
+			</li>-->
+			
+		</ul>
+		</div>
+		
+	</div>
+</body>
+	<script src="js/mui.min.js"></script>
+	<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+	<script src="js/chat_base.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/chat_websql.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+    (function($,mui){
+    	var self;
+    	var myuid;
+      	mui.init();
+      	mui.plusReady(function(){
+      		self = plus.webview.currentWebview();
+			self.setStyle({scrollIndicator:'none'});
+			myuid = self.myuid;
+			
+			//自动打开软键盘，搜索框获取焦点
+			showKeyBoard();
+      	})
+      	function showKeyBoard() {
+      		setTimeout(function(){
+      			if (mui.os.ios) {
+					var webView = plus.webview.currentWebview().nativeInstanceObject();
+					webView.plusCallMethod({
+						"setKeyboardDisplayRequiresUserAction": false
+					});
+				} else {
+					var Context = plus.android.importClass("android.content.Context");
+					var InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
+					var main = plus.android.runtimeMainActivity();
+					var imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+					//var view = ((ViewGroup)main.findViewById(android.R.id.content)).getChildAt(0);
+	//				imm.showSoftInput(main.getWindow().getDecorView(), InputMethodManager.SHOW_IMPLICIT);
+					//alert("ll");
+				}
+				$("#search").focus();
+      		},100)
+			
+		};
+ 
+       	$(document).on('input',"#search",function(){
+       		var inputMsg = $(this).val();
+       		$(".mui-table-view").children().remove();
+     
+			var li = $("<li id='searchButton' class='mui-table-view-cell mui-media'></li>");
+			var a = $("<a></a>");
+			var img = $("<img class='mui-media-object mui-pull-left' src='./images/chat/search.png' style='margin-right: 15px'>")
+			var div = $("<div class='mui-media-body'></div>");
+			var span = $("<span></span>");
+
+			span.text(inputMsg);
+			div.append(span);
+			a.append(img,div);
+			li.append(a);
+			$(".mui-table-view").append(li);
+       	})
+       	function getNewUserListFromServer(){
+       		var name = $("#search").val();
+       		$("#search").val("");
+       		$("#search").blur();
+       		mui.fire(plus.webview.getWebviewById("chat.html"),"findUser",{name:name});
+       		$(".mui-table-view").children().remove();
+       		plus.nativeUI.showWaiting("",{back:"close",padlock:true});
+       		
+		  	return false;
+       	}
+       	$(document).on("tap","#searchButton",function(){
+       		getNewUserListFromServer();
+       	})
+    
+       	$("form").submit(function(e){
+       		getNewUserListFromServer();
+       		return false;
+		});
+		function makeHtmlStringNewUser(name, uid){
+			var li = $('<li class="mui-table-view-cell mui-media" uid="'+uid+'"></li>')
+			var a = $('<a href="javascript:;"></a>');
+			var img = $('<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">');
+			var div = $('<div class="mui-media-body"></div>');
+			var span = $('<span class="mui-ellipsis mui-col-xs-7"></span>');
+			var btn = $('<button type="button" class="mui-btn mui-pull-right mui-btn-primary">添加</button>');
+			
+			span.text(name);
+			div.append(span,btn);
+			a.append(img,div);
+			li.append(a);
+			
+			return li;
+		}
+		function setThisUserState(uid){
+			chatDb.query("select * from friendList WHERE uid='"+uid+"'", function(res){
+				if(res.rows.length != 0){
+					var info = res.rows.item(0).info;
+					info = info = JSON.parse(info);
+					var state = info.state;
+					if(state == "wait_me"){
+//						$(".mui-table-view").find("li[uid='"+uid+"']").find("button").text("接受");
+					}else if(state == "ready"){
+						$(".mui-table-view").find("li[uid='"+uid+"']").find("button").text("好友").addClass("mui-disabled").removeClass("mui-btn-primary");
+					}
+				}
+			})
+		}
+		function getThisUserHeadImg(uid,pid){
+			if(pid && pid!=""){
+				mui.fire(plus.webview.getWebviewById("chat.html"),"findUserHeadImg",{uid:uid});
+			}
+		}
+		window.addEventListener("findUserHeadImgResp",function(e){
+			var img = e.detail.img;
+			var uid = e.detail.uid;
+			convertHeadImg(img,function(img){
+				$(".mui-table-view").find("li[uid='"+uid+"']").find("img").attr("src",img);
+			})
+		})
+		window.addEventListener("findUserResp",function(e){
+			plus.nativeUI.closeWaiting();
+			
+			if(e.detail.result && e.detail.result == "disconnect"){
+				plus.nativeUI.toast("请检查网络连接！");
+				return;
+			}
+			var body = e.detail.body;
+			if(body && (body.length == 0)){
+				plus.nativeUI.toast("未找到该用户");
+			}else{
+				for(var i in body){
+					if(i>=12){
+						break;
+					}
+					var oneUser = body[i];
+					var name = oneUser.name;
+					var uid = oneUser.uid;
+					var pid = oneUser.photoid;
+					if(uid == myuid){
+						continue;
+					}
+					var us = makeHtmlStringNewUser(unescape(name), uid);
+					$(".mui-table-view").append(us);
+					setThisUserState(uid);
+					getThisUserHeadImg(uid,pid);
+				}
+			}
+		})
+		window.addEventListener("addUserResp",function(e){
+			
+			plus.nativeUI.closeWaiting();
+			if(e.detail.result && e.detail.result == "disconnect"){
+				plus.nativeUI.toast("请检查网络连接！");
+				return;
+			}
+			var uid = e.detail.uid;
+			$(".mui-table-view").find("li[uid='"+uid+"']").find("button").text("等待验证").addClass("mui-disabled").removeClass("mui-btn-primary");
+		})
+		$(document).on("tap", ".mui-table-view button",function(){
+			plus.nativeUI.showWaiting("",{back:"close",padlock:true});
+			var uid = $(this).parent().parent().parent().attr("uid");
+			var name = $(this).prev().text();
+			mui.fire(plus.webview.getWebviewById("chat.html"),"addUser",{uid:uid,name:name});
+		})
+
+	})(jQuery,mui)
+    </script>
+</html>

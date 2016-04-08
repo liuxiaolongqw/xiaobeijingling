@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>WiFi信道</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+		    .chart {
+				margin: auto;
+				padding: 0px;
+			}
+			.mui-control-content {
+				background-color: white
+			}
+			.mui-control-content .mui-loading {
+				margin-top: 50px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1  class="mui-title" id="environmentHeaderTitle"></h1>
+	    </header>
+		<div class="mui-content">
+			<div id="slider" class="mui-slider">
+				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<a class="mui-control-item" href="#item1mobile">
+						2.4G
+					</a>
+					<a class="mui-control-item" href="#item2mobile">
+						5G
+					</a>
+				</div>
+				<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-6"></div>
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll1" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="mui-content-padded">
+									<div class="chart" id="channel_2.4"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="item2mobile" class="mui-slider-item mui-control-content">
+						<div id="scroll2" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div class="mui-content-padded">
+									<div class="chart" id="channel_5"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="libs/echarts-all.js"></script>
+		<script>
+		    //页面初始化
+			mui.init({
+				swipeBack: true
+			});
+			
+			mui.plusReady(function () {
+				//高度初始化
+				var chartHeight = screen.height*0.75;
+				if (mui.os.android) {
+					if (plus.screen.resolutionHeight!=0)
+					{
+						chartHeight = plus.screen.resolutionHeight*0.75;
+					}
+					else{
+						chartHeight = (screen.height)/4;
+					}
+				}
+	
+				document.getElementById("item1mobile").style.height=chartHeight+"px";
+				document.getElementById("item2mobile").style.height=chartHeight+"px";
+				document.getElementById("channel_2.4").style.height=chartHeight+"px";
+				document.getElementById("channel_5").style.height=chartHeight+"px";
+				
+				showApChannel();
+			});
+			
+			
+			
+			function drawRadioQualityChart2_4G(dataInfo) {
+		        // 基于准备好的dom，初始化echarts图表
+		        var myChart = echarts.init(document.getElementById('channel_2.4'));
+		        var data = dataInfo.ChlList;
+		        myChart.clear();
+		
+		        var clientData = [];
+		        var len = data.length;
+		        for (var i = len-1; i >=0; i--) {
+		            clientData.push(data[i].ChlQualScore);
+		        }
+		
+		        var option = {
+		            grid: {borderWidth: 0, x: '15%', y: '2%', y2: '5%', x2: '12%'},
+		            xAxis: [
+		                {
+		                    show: false,
+		                    type: 'value',
+		                    min: -10,
+		                    max: 100
+		                }
+		            ],
+		            yAxis: [
+		                {
+		                    type: 'category',
+		                    axisLine: {show: false},
+		                    axisTick: {show: false},
+		                    splitArea: {show: false},
+		                    splitLine: {show: false},
+		                    data : (function (){
+		                        var res = [];
+		                        for (var i = len-1; i >= 0; i--) {
+		
+		                            var colorChannel = '#131a2d';
+		                            if (data[i].ChlNum === dataInfo.CurChannel)
+		                            {
+		                                colorChannel = '#69c4c5';
+		                            }
+		
+		                            var item={
+		                                value:'信道'+ data[i].ChlNum,
+		                                textStyle: {
+		                                    color: colorChannel,
+		                                    fontFamily: 'Arial'
+		                                }
+		                            };
+		                            res.push(item);
+		                        }
+		                        return res;
+		                    })()
+		                }
+		            ],
+		            series: [
+		                {
+		
+		                    name: '2.4G',
+		                    barCategoryGap: (40+(13-len)*4) + '%',
+		                    type: 'bar',
+		                    barHeight: 30,
+		                    itemStyle: {
+		                        normal: {
+		                            color: function (params) {
+		                                if (params.data >= 90) {
+		                                    return '#69d0d1'
+		                                }
+		                                else if (params.data >= 50) {
+		                                    return '#F5B638'
+		                                }
+		                                else {
+		                                    return '#e64c65'
+		                                }
+		                            },
+		                            barBorderRadius: [15, 15, 15, 15],
+		                            label: {
+		                                show: true,
+		                                position: 'right',
+		                                formatter: '{c}分',
+		                                textStyle: {
+		                                    fontFamily: 'arial',
+		                                    fontSize: 11
+		                                }
+		                            }
+		                        }
+		                    },
+		                    data: clientData,
+		                    markLine: {
+		                        symbol: 'circle',
+		                        symbolSize: 0,
+		                        itemStyle: {
+		                            normal: {
+		                                color: '#000',
+		                                lineStyle: {
+		                                    color: '#000',
+		                                    type: 'dashed',
+		                                    width: 0.5
+		                                }
+		                            }
+		                        },
+		                        data: [
+		                            [
+		                                {name: '标线1起点', xAxis: -5, yAxis: len-1},      // 当xAxis为类目轴时，数值1会被理解为类目轴的index，通过xAxis:-1|MAXNUMBER可以让线到达grid边缘
+		                                {name: '标线1终点', xAxis: -5, yAxis: 0},             // 当xAxis为类目轴时，字符串'周三'会被理解为与类目轴的文本进行匹配
+		                            ]
+		                        ]
+		                    },
+		                    markPoint: {
+		                        symbol: 'circle',
+		                        symbolSize: 3,
+		                        itemStyle: {
+		                            normal: {
+		                                color: function (params) {
+		                                    if (clientData[params.dataIndex] >= 90) {
+		                                        return '#69d0d1'
+		                                    }
+		                                    else if (clientData[params.dataIndex] >= 50) {
+		                                        return '#F5B638'
+		                                    }
+		                                    else {
+		                                        return '#e64c65'
+		                                    }
+		                                },
+		                                borderWidth: 0,
+		                                label: {show: false}
+		                            }
+		                        },
+		                        data : (function (){
+		                            var point = [];
+		                            for (var i = 0; i < len; i++) {
+		
+		                                var element={
+		                                    xAxis:-5,
+		                                    yAxis: i,
+		                                    name: '信道'+ data[len-i-1].ChlNum
+		                                };
+		                                point.push(element);
+		                            }
+		                            return point;
+		                        })()
+		                    }
+		                },
+		            ]
+		        };
+	
+		        // 为echarts对象加载数据
+		        myChart.setOption(option);
+		    }
+			
+		    function drawRadioQualityChart5G(dataInfo) {
+		        // 基于准备好的dom，初始化echarts图表
+		        var myChart = echarts.init(document.getElementById('channel_5'));
+		        var data = dataInfo.ChlList;
+		        myChart.clear();
+		        
+		        var clientData = [];
+		        var len = data.length;
+		        for (var i = len-1; i >= 0; i--) {
+		            clientData.push(data[i].ChlQualScore);
+		        }
+		
+		        var option = {
+		            grid: {borderWidth: 0, x: '15%', y: '2%', y2: '5%', x2: '12%'},
+		            xAxis: [
+		                {
+		                    show: false,
+		                    type: 'value',
+		                    min: -10,
+		                    max: 100
+		                }
+		            ],
+		            yAxis: [
+		                {
+		                    type: 'category',
+		                    axisLine: {show: false},
+		                    axisTick: {show: false},
+		                    splitArea: {show: false},
+		                    splitLine: {show: false},
+		                    data : (function (){
+		                        var res = [];
+		                        for (var i = len-1; i >= 0; i--) {
+		
+		                            var colorChannel = '#131a2d';
+		                            if (data[i].ChlNum === dataInfo.CurChannel)
+		                            {
+		                                colorChannel = '#69c4c5';
+		                            }
+		
+		                            var item={
+		                                value:'信道'+ data[i].ChlNum,
+		                                textStyle: {
+		                                    color: colorChannel,
+		                                    fontFamily: 'Arial'
+		                                }
+		                            };
+		                            res.push(item);
+		                        }
+		                        return res;
+		                    })()
+		                }
+		            ],
+		            series: [
+		                {
+		                    name: '5G',
+		                    barCategoryGap: (40+(13-len)*4) + '%',
+		                    type: 'bar',
+		                    barWidth: 20,
+		                    itemStyle: {
+		                        normal: {
+		                            color: function (params) {
+		                                if (params.data >= 90) {
+		                                    return '#69d0d1'
+		                                }
+		                                else if (params.data >= 50) {
+		                                    return '#F5B638'
+		                                }
+		                                else {
+		                                    return '#e64c65'
+		                                }
+		                                /*
+		                                 var colorList = ['#69c4c5','#e64c65','#69c4c5','#69c4c5','#69c4c5',
+		                                 '#e64c65','#69c4c5','#69c4c5','#69c4c5','#69c4c5',
+		                                 '#69c4c5','#69c4c5','#69c4c5'];
+		                                 return colorList[params.dataIndex]
+		                                 */
+		                            },
+		                            barBorderRadius: [15, 15, 15, 15],
+		                            label: {
+		                                show: true,
+		                                position: 'right',
+		                                formatter: '{c}分',
+		                                textStyle: {
+		                                    fontFamily: 'arial',
+		                                    fontSize: 11
+		                                }
+		                            }
+		                        }
+		                    },
+		                    data: clientData,
+		                    markLine: {
+		                        symbol: 'circle',
+		                        symbolSize: 0,
+		                        itemStyle: {
+		                            normal: {
+		                                color: '#000',
+		                                lineStyle: {
+		                                    color: '#000',
+		                                    type: 'dashed',
+		                                    width: 0.5
+		                                }
+		                            }
+		                        },
+		                        data: [
+		                            [
+		                                {name: '标线1起点', xAxis: -5, yAxis: len-1},      // 当xAxis为类目轴时，数值1会被理解为类目轴的index，通过xAxis:-1|MAXNUMBER可以让线到达grid边缘
+		                                {name: '标线1终点', xAxis: -5, yAxis: 0},             // 当xAxis为类目轴时，字符串'周三'会被理解为与类目轴的文本进行匹配
+		                            ]
+		                        ]
+		                    },
+		                    markPoint: {
+		                        symbol: 'circle',
+		                        symbolSize: 3,
+		                        itemStyle: {
+		                            normal: {
+		                                color: function (params) {
+		                                    if (clientData[params.dataIndex] >= 90) {
+		                                        return '#69d0d1'
+		                                    }
+		                                    else if (clientData[params.dataIndex] >= 50) {
+		                                        return '#F5B638'
+		                                    }
+		                                    else {
+		                                        return '#e64c65'
+		                                    }
+		                                    /*
+		                                     var colorList = ['#69c4c5','#e64c65','#69c4c5','#69c4c5','#69c4c5',
+		                                     '#e64c65','#69c4c5','#69c4c5','#69c4c5','#69c4c5',
+		                                     '#69c4c5','#69c4c5','#69c4c5'];
+		                                     return colorList[params.dataIndex]
+		                                     */
+		                                },
+		                                borderWidth: 0,
+		                                label: {show: false}
+		                            }
+		                        },
+		                        data : (function (){
+		                            var point = [];
+		                            for (var i = 0; i < len; i++) {
+		
+		                                var element={
+		                                    xAxis:-5,
+		                                    yAxis: i,
+		                                    name: '信道'+ data[len-i-1].ChlNum
+		                                };
+		                                point.push(element);
+		                            }
+		                            return point;
+		                        })()
+		                    }
+		                },
+		            ]
+		        };
+		        // 为echarts对象加载数据
+		        myChart.setOption(option);
+		    }
+
+		    function getHomeEnvChannelList(acSN, apName, radioType, callback) {
+		
+		        mui.ajax({
+		            url:"https://lvzhouv3.h3c.com/v3/rrmserver",
+		            type:"post",
+		            timeout: 5000,
+		            data:(
+		            {
+		             Method:'GetChlRpt',
+		             Param:{
+		                 ACSN: acSN,
+		                 ApName: apName,
+		                 RadioType: radioType
+		             }
+		            }),
+		            dataType:"json",
+		            success: function (data) {
+		                if (data.retCode){
+		                    callback(data.message, 0);
+		                }
+		                else{
+		                    callback("", 1);
+		                }
+		            },
+		            error: function(data,err){
+		
+		                callback("", 1);
+		            }
+		        });
+		    }
+
+			function ShowOneApChannelList(acSN, apName, radioType) {
+			
+	            var container = document.getElementById("environmentHeaderTitle");
+	            container.innerText = apName;
+            
+		        getHomeEnvChannelList(acSN, apName, radioType, function(data, err){
+		            if(0 == err){
+		
+		                if (radioType == "2.4G")
+		                {
+		                    drawRadioQualityChart2_4G(data);
+		                }
+		                else if (radioType == "5G")
+		                {
+		                    drawRadioQualityChart5G(data);
+		                }
+		            }
+		        });
+		    }
+			
+			function showApChannel(acSN, apname){
+				
+				var urlinfo = window.location.href;                                                                //获取url
+				var mode = urlinfo.split("?")[1].split("&")[1];                                                    //获取url
+				var acSN = urlinfo.split("?")[1].split("&")[2];                                                    //获取url
+				var apname = urlinfo.split("?")[1].split("&")[3];  
+				console.log(mode); 
+				console.log(acSN); 
+				console.log(apname);
+				
+				ShowOneApChannelList(acSN, apname, "2.4G");
+				
+				ShowOneApChannelList(acSN, apname, "5G");
+			}
+			
+			
+			/*
+			var data = {ACSN: "210235A1CWC155900098", ApName: "wa2620i", CurChannel: 161, ChlList: [{ChlNum: 149,ChlQualScore: 100},{ChlNum: 161,ChlQualScore: 50},{ChlNum: 111,ChlQualScore: 30}]};
+			drawRadioQualityChart2_4G(data);
+			drawRadioQualityChart5G(data);
+			*/
+			
+			
+		</script>
+	</body>
+
+</html>

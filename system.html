@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>系统</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="css/mui.min.css">
+    	<link rel="stylesheet" href="css/iconfont.css">
+        <style type="text/css">
+			#list {
+				/*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+				
+				margin-top: -1px;
+			}
+			.inlineViewLeftDiv {
+			    display: inline;
+			    white-space: nowrap;
+			    float: left;
+			}
+			.inlineViewRightDiv {
+			    display: inline;
+			    white-space: nowrap;
+			    float: right;
+			    color: #b0b6bd;
+			}
+			* {
+			    -webkit-user-select:text;
+			}
+		</style>
+		<script src="js/mui.min.js"></script>
+		<script src="js/base.js"></script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+            <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 id="title" class="mui-title">系统</h1>
+        </header>
+        <hr style="margin:0; padding:0; border:0; height:2px; background-color:#e6e7e8"/>
+        <div class="mui-content">
+        	<ul id="list" class="mui-table-view">
+ 				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">系统运行时间</div>
+	  				<div id="onlineTime" class="inlineViewRightDiv"></div>
+				 </li>
+				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">CPU利用率</div>
+	  				<div id="cpu" class="inlineViewRightDiv"></div>
+				 </li>
+				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">内存利用率</div>
+	  				<div id="memory" class="inlineViewRightDiv"></div>
+				 </li>
+				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">剩余硬盘空间</div>
+	  				<div id="disk" class="inlineViewRightDiv"></div>
+				 </li>
+				 <hr style="margin:0; padding:0; border:0; height:1px; background-color:#c9ccd0"/>
+                 <hr style="margin:0; padding:0; border:0; height:1px; background-color:#e2e5e9"/>
+				 <hr style="margin:0; padding:0; border:0; height:10px; background-color:#eff2f6"/>
+				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">设备名称</div>
+                	<div id="devName" class="inlineViewRightDiv"></div>
+				 </li>
+				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">软件版本</div>
+                	<div id="softVer" class="inlineViewRightDiv"></div>
+				 </li>
+				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">硬件版本</div>
+                	<div id="hardVer" class="inlineViewRightDiv"></div>
+				 </li>
+				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">序列号</div>
+                	<div id="serial" class="inlineViewRightDiv"></div>
+				 </li>
+				 <hr style="margin:0; padding:0; border:0; height:1px; background-color:#c9ccd0"/>
+                 <hr style="margin:0; padding:0; border:0; height:1px; background-color:#e2e5e9"/>
+				 <hr style="margin:0; padding:0; border:0; height:10px; background-color:#eff2f6"/>
+				 <li class="mui-table-view-cell">
+				 	<div class="inlineViewLeftDiv">当前配置</div>
+				 </li>
+			</ul>
+		</div>
+		<script>
+	        mui.init({
+	            swipeBack:true//启用右滑关闭功能
+	        });
+	        
+	        mui.plusReady(function() {
+	        	updateSystemInfo(baseAPI.getCurrentACSN());
+			});
+			
+			var updateTime = 0;
+			
+			// 格式化秒数到时间格式
+			Number.prototype.formatTime=function(){
+				// 计算
+				var day=0,h=0,i=0,s=parseInt(this);
+				if(s>60){
+					i=parseInt(s/60);
+					s=parseInt(s%60);
+					 if(i > 60) {
+						h=parseInt(i/60);
+						 i = parseInt(i%60);
+					}
+				}
+				// 补零
+				 var zero=function(v){
+				 return (v>>0)<10?"0"+v:v;
+				};
+				if (h >= 24)
+				{
+					day = parseInt(h/24);
+
+					return  day + "天";
+				}
+				 return [zero(h),zero(i),zero(s)].join(":");
+			}; 
+			
+			
+			function getSystemInfo(acSN, callBack) {
+				
+				mui.ajax('https://lvzhouv3.h3c.com/v3/devmonitor/app/system?devSN=' + acSN,{
+					dataType:'json',
+					type:'get',
+					timeout:5000,
+					success:function(sysInfo){
+						//获得服务器响应
+						callBack(sysInfo);
+					},
+					error:function(){
+						//异常处理；
+						mui.toast('请求系统信息失败');
+					}
+				});
+		    }
+			
+			
+			function updateSystemTime(){
+		        updateTime++;
+		        
+		        document.getElementById("onlineTime").innerHTML = Number(updateTime).formatTime();
+	        }
+	         
+	        function updateSystemInfo(acSN){
+		        getSystemInfo(acSN, function(sysInfo){
+		        	
+		        	if(sysInfo.devOnlineTime == null){sysInfo.devOnlineTime = 0}
+		        	if(sysInfo.cpuRatio == null){sysInfo.cpuRatio = 0}
+		        	if(sysInfo.memoryRatio == null){sysInfo.memoryRatio = 0}
+		        	if(sysInfo.diskRemain == null){sysInfo.diskRemain = 0}
+		        	if(sysInfo.devName == null){sysInfo.devName = 0}
+		        	if(sysInfo.devSoftVersion == null){sysInfo.devSoftVersion = 0}
+		        	if(sysInfo.devHardVersion == null){sysInfo.devHardVersion = 0}
+		        	
+		        	updateTime = sysInfo.devOnlineTime;
+		        	var onlineTime = Number(sysInfo.devOnlineTime).formatTime();
+
+		        	document.getElementById("onlineTime").innerHTML = onlineTime;
+		        	document.getElementById("cpu").innerHTML = sysInfo.cpuRatio+' %';
+		        	document.getElementById("memory").innerHTML = sysInfo.memoryRatio+' %';
+		        	document.getElementById("disk").innerHTML = (sysInfo.diskRemain/(1024*1024)).toFixed(2)+' MB';
+		        	document.getElementById("devName").innerHTML = sysInfo.devName;
+		        	document.getElementById("softVer").innerHTML = sysInfo.devSoftVersion;
+		        	document.getElementById("hardVer").innerHTML = sysInfo.devHardVersion; 
+		        	document.getElementById("serial").innerHTML = acSN; 
+		        	
+		        	if (sysInfo.devOnlineTime != 0)
+		        	{
+		        		setInterval(updateSystemTime, 1000);
+		        	}
+		        	
+	        	});
+	        }
+	    </script>
+	</body>
+</html>

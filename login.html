@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/login.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/iconfont.css">
+		<style>
+			.area {
+				margin: 20px auto 0px auto;
+			}
+
+			.head{
+				height: 70px;
+			    width: 70px;
+			    display: block;
+			    margin: auto;
+			}
+
+			#user-photo {
+				/*line-height: 40px;*/
+				position: relative;
+				padding: 15px 15px 0 15px;
+				text-align:center;
+			}
+
+			#head-img {
+			    width: 80px;
+			    height: 80px;
+			    margin-top: 15px;
+			    border-radius: 5px; 
+			}
+
+			.mui-input-group {
+				margin-top: 50px;
+			}
+			.mui-input-group:first-child {
+				margin-top: 20px;
+			}
+			.mui-input-group label {
+				width: 22%;
+			}
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				width: 78%;
+			}
+			.mui-checkbox input[type=checkbox],
+			.mui-radio input[type=radio] {
+				top: 6px;
+			}
+			.mui-content-padded {
+				margin-top: 20px;
+			}
+			.mui-btn {
+				padding: 10px;
+			}
+			.link-area {
+				display: block;
+				margin-top: 15px;
+				text-align: center;
+			}
+			.spliter {
+				color: #bbb;
+				padding: 0px 8px;
+			}
+			.oauth-area {
+				position: absolute;
+				bottom: 20px;
+				left: 0px;
+				text-align: center;
+				width: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+			.oauth-area .oauth-btn {
+				display: inline-block;
+				width: 50px;
+				height: 50px;
+				background-size: 30px 30px;
+				background-position: center center;
+				background-repeat: no-repeat;
+				margin: 0px 20px;
+				/*-webkit-filter: grayscale(100%); */
+
+				border: solid 1px #ddd;
+				border-radius: 25px;
+			}
+			.oauth-area .oauth-btn:active {
+				border: solid 1px #aaa;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">登录绿洲云账号</h1>
+		</header>
+		<div class="mui-content">
+			<div id="user-photo">
+				<a id="head" class="head">
+					<span>
+						<img class="head-img mui-action-preview" id="head-img" src="images/user-photo.png" />
+					</span>
+				</a>
+			</div>
+			<form id='login-form' class="mui-input-group">
+				<div class="mui-input-row">
+					<label><span class="mui-icon iconfont icon-zhanghao" style="color: #69c4c5;font-size:22px;padding-left: 50%;"></span></label>
+					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入绿洲云账号" style="font-size:16px;padding-left: 8%;">
+				</div>
+				<div class="mui-input-row">
+					<label><span class="mui-icon iconfont icon-iconfontmima" style="color: #69c4c5;font-size:22px;padding-left: 50%;"></span></label>
+					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入绿洲云密码" style="font-size:16px;padding-left: 8%;">
+				</div>
+			</form>
+
+			<div class="mui-content-padded">
+				<button id='login' class="mui-btn mui-btn-block mui-btn-primary" style="margin-top: 40px;">登录</button>
+				<div class="link-area"><a id='reg' style="color: #93A0B1">注册账号</a> <span class="spliter">|</span> <a id='forgetPassword' style="color: #95A1B1">忘记密码</a>
+				</div>
+			</div>
+			<!--<div class="mui-content-padded oauth-area">
+			</div>-->
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mui.enterfocus.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/base.js"></script>
+		<script src="js/data.js"></script>
+		<script>
+			(function($, doc) {
+				defaultImg();
+			    var serverUrl = baseAPI.serverUrl;
+			    var sessionid = null;
+				var aniShow = "pop-in";
+				 //只有ios支持的功能需要在Android平台隐藏；
+				if (mui.os.android) {
+					var list = document.querySelectorAll('.ios-only');
+					if (list) {
+						for (var i = 0; i < list.length; i++) {
+							list[i].style.display = 'none';
+						}
+					}
+					//Android平台暂时使用slide-in-right动画
+					if(parseFloat(mui.os.version)<4.4){
+						aniShow = "slide-in-right";
+					}
+				}
+
+				$.init({
+					statusBarBackground: '#69C4C5'
+				});
+				$.plusReady(function() {
+					var showGuide = plus.storage.getItem("lauchFlag");
+					if(showGuide){
+						loginInit();
+						//有值，说明已经显示过了，无需显示；
+						//关闭splash页面；
+						plus.navigator.closeSplashscreen();
+						plus.navigator.setFullscreen(false);
+					}else{
+						//显示启动导航
+						mui.openWindow({
+							id:'guide',
+							url:'guide.html',
+							show:{
+								aniShow:'none'
+							},
+							waiting:{
+								autoShow:false
+							}
+						});
+						//延迟的原因：优先打开启动导航页面，避免资源争夺
+						setTimeout(function () {
+							loginInit();
+							plus.storage.setItem("lauchFlag", "true");
+						},600);
+					}
+				});
+
+				function getImage() {
+					var c = plus.camera.getCamera();
+					c.captureImage(function(e) {
+						plus.io.resolveLocalFileSystemURL(e, function(entry) {
+							var s = entry.toLocalURL() + "?version=" + new Date().getTime();
+							console.log(s);
+							document.getElementById("head-img").src = s;
+							//变更大图预览的src
+							//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+							document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();
+						}, function(e) {
+							console.log("读取拍照文件错误：" + e.message);
+						});
+					}, function(s) {
+						console.log("error" + s);
+					}, {
+						filename: "_doc/head.jpg"
+					})
+				}
+
+				function galleryImg() {
+					plus.gallery.pick(function(a) {
+						plus.io.resolveLocalFileSystemURL(a, function(entry) {
+							plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
+								root.getFile("head.jpg", {}, function(file) {
+									//文件已存在
+									file.remove(function() {
+										console.log("file remove success");
+										entry.copyTo(root, 'head.jpg', function(e) {
+												var e = e.fullPath + "?version=" + new Date().getTime();
+												console.log(e);
+												document.getElementById("head-img").src = e;
+												//变更大图预览的src
+												//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+												document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" + new Date().getTime();;
+											},
+											function(e) {
+												console.log('copy image fail:' + e.message);
+											});
+									}, function() {
+										console.log("delete image fail:" + e.message);
+									});
+								}, function() {
+									//文件不存在
+									entry.copyTo(root, 'head.jpg', function(e) {
+											var path = e.fullPath + "?version=" + new Date().getTime();
+											document.getElementById("head-img").src = path;
+											//变更大图预览的src
+											//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+											document.querySelector("#__mui-imageview__group .mui-slider-item img").src = path;
+										},
+										function(e) {
+											console.log('copy image fail:' + e.message);
+										});
+								});
+							}, function(e) {
+								console.log("get _www folder fail");
+							})
+						}, function(e) {
+							console.log("读取拍照文件错误：" + e.message);
+						});
+					}, function(a) {}, {
+						filter: "image"
+					})
+				};
+
+				function defaultImg() {
+//					plus.io.resolveLocalFileSystemURL("_doc/head.jpg", function(entry) {
+//						var s = entry.fullPath + "?version=" + new Date().getTime();;
+//						document.getElementById("head-img").src = s;
+//					}, function(e) {
+//						document.getElementById("head-img").src = 'images/user-photo.png';
+//					})
+					var uid = localStorage.getItem('uid');
+					if(uid && uid !=""){
+						document.getElementById("head-img").src = "../doc/"+uid+".jpg?"+new Date().getTime();
+					}
+				}
+
+				function loginInit(){
+					plus.screen.lockOrientation("portrait-primary");
+					var settings = app.getSettings();
+					var state = app.getState();
+
+					//检查 "登录状态/锁屏状态" 开始
+					if (settings.autoLogin && state.token && settings.gestures) {
+						$.openWindow({
+							url: 'unlock.html',
+							id: 'unlock',
+							show: {
+								aniShow: aniShow
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					} else if (settings.autoLogin) {
+					    var loginForm = document.getElementById("login-form");
+					    loginForm.style.visibility='hidden';
+					    var w = plus.nativeUI.showWaiting("登录中");
+					    autoLoginOnServer(function(err){
+					        if (!err) {
+					            var username = localStorage.getItem('$users');
+					            getManageACList(username,function(err){
+					                if (baseAPI.getCurrentACSN()) {
+                                        notifyHomeRefresh();
+                                    }
+                                    notifyLoginSuccess();
+                                    w.close();
+                                    plus.webview.close(plus.webview.currentWebview(),"slide-out-left");
+                                    setTimeout(function(){loginForm.style.visibility= 'visible';},1000);
+                                    //console.log("autoLogin");
+                                });
+					        }
+					        else{
+					            w.close();
+					            loginForm.style.visibility= 'visible';
+					        }
+
+					    });
+					} else {
+						//第三方登录
+						var auths = {};
+						var oauthArea = doc.querySelector('.oauth-area');
+						plus.oauth.getServices(function(services) {
+							for (var i in services) {
+								var service = services[i];
+								auths[service.id] = service;
+								var btn = document.createElement('div');
+								btn.setAttribute('class', 'oauth-btn');
+								btn.authId = service.id;
+								btn.style.backgroundImage = 'url("images/' + service.id + '.png")'
+									//alert(service.id);
+									//btn.innerText = service.description + "登录";
+								//oauthArea.appendChild(btn);
+							}
+							$(oauthArea).on('tap', '.oauth-btn', function() {
+								var auth = auths[this.authId];
+								var waiting = plus.nativeUI.showWaiting();
+								auth.login(function() {
+									waiting.close();
+									plus.nativeUI.toast("登录认证成功");
+									//alert(JSON.stringify(auth.authResult));
+									auth.getUserInfo(function() {
+										plus.nativeUI.toast("获取用户信息成功");
+										//alert(JSON.stringify(auth.userInfo));
+										var name = auth.userInfo.nickname || auth.userInfo.name;
+										app.createState(name, function() {
+
+											plus.webview.close(plus.webview.currentWebview(),"slide-out-left");
+										});
+									}, function(e) {
+										plus.nativeUI.toast("获取用户信息失败：" + e.message);
+									});
+								}, function(e) {
+									waiting.close();
+									plus.nativeUI.toast("登录认证失败：" + e.message);
+								});
+							});
+						}, function(e) {
+							oauthArea.style.display = 'none';
+							plus.nativeUI.toast("获取登录认证失败：" + e.message);
+						});
+					}
+
+
+
+                    function loginOnServer(username, password,callBack){
+                        var err = 0;
+                        var errMsg = null;
+                        var xhr = new plus.net.XMLHttpRequest();
+                        xhr.onreadystatechange = function () {
+                            switch ( xhr.readyState ) {
+                                case 0:
+                                    //mui.toast( "xhr请求已初始化" );
+                                break;
+                                case 1:
+                                    //mui.toast( "xhr请求已打开" );
+                                break;
+                                case 2:
+                                    //mui.toast( "xhr请求已发送" );
+                                break;
+                                case 3:
+                                    //mui.toast( "xhr请求已响应");
+                                    break;
+                                case 4:
+                                    if ( xhr.status == 200 ) {
+                                        var data=JSON.parse(xhr.responseText);
+                                        casServerUrl = data.cas_url;
+                                        if(casServerUrl){
+                                            getCasTGT(username,password,callBack);
+                                        }
+                                        else{
+                                            callBack(0);
+                                        }
+                                    } else {
+                                        callBack(99, "登录失败");
+                                    }
+                                    break;
+                                default :
+                                    break;
+                            }
+                        }
+                        xhr.open( "GET", serverUrl + '/app/login');
+                        xhr.setRequestHeader('Content-Type','application/json');
+                        xhr.send();
+                    }
+
+                    function getCasTGT(username,password,callBack){
+                        var err = 0;
+                        var errMsg = null;
+                        var data = "username="+username+"&password="+password+"&service="+serverUrl + '/app/login';
+                        var xhr = new plus.net.XMLHttpRequest();
+                        xhr.onreadystatechange = function () {
+                            switch ( xhr.readyState ) {
+                                case 0:
+                                    //mui.toast( "xhr请求已初始化" );
+                                break;
+                                case 1:
+                                    //mui.toast( "xhr请求已打开" );
+                                break;
+                                case 2:
+                                    //mui.toast( "xhr请求已发送" );
+                                break;
+                                case 3:
+                                    //mui.toast( "xhr请求已响应");
+                                    break;
+                                case 4:
+                                    if ( xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+                                        var str = new Array();
+                                        str = xhr.responseText.split('tickets/');
+                                        str = str[1].split("\" ");
+                                        TGT = str[0];
+                                        getCasST(TGT, callBack);
+                                    } else if(xhr.status === 400) {
+                                        callBack(1, "用户名或密码错误");
+                                    }
+                                    else {
+                                        callBack(99, "登录失败");
+                                    }
+                                    break;
+                                default :
+                                    break;
+                            }
+                        }
+                        xhr.open( "POST", casServerUrl);
+                        xhr.setRequestHeader('Content-Type','application/json');
+                        xhr.send(data);
+                    }
+
+                    function getCasST(TGT, callBack){
+                        var err = 0;
+                        var errMsg = null;
+                        var data = "service="+serverUrl + '/app/login';
+                        var xhr = new plus.net.XMLHttpRequest();
+                        xhr.onreadystatechange = function () {
+                            switch ( xhr.readyState ) {
+                                case 0:
+                                    //mui.toast( "xhr请求已初始化" );
+                                break;
+                                case 1:
+                                    //mui.toast( "xhr请求已打开" );
+                                break;
+                                case 2:
+                                    //mui.toast( "xhr请求已发送" );
+                                break;
+                                case 3:
+                                    //mui.toast( "xhr请求已响应");
+                                    break;
+                                case 4:
+                                    if ( xhr.status == 200 ) {
+                                        casST = xhr.responseText;
+                                        getSession(casST,callBack);
+                                    } else {
+                                        callBack(99, "登录失败");
+                                    }
+                                    break;
+                                default :
+                                    break;
+                            }
+                        }
+                        xhr.open( "POST", casServerUrl + '/'+TGT);
+                        xhr.setRequestHeader('Content-Type','application/json');
+                        xhr.send(data);
+                    }
+
+                    function getSession(casST,callBack){
+                        var err = 0;
+                        var errMsg = null;
+                        var data = 'ticket='+casST;
+                        var xhr = new plus.net.XMLHttpRequest();
+                        xhr.onreadystatechange = function () {
+                            switch ( xhr.readyState ) {
+                                case 0:
+                                    //mui.toast( "xhr请求已初始化" );
+                                break;
+                                case 1:
+                                    //mui.toast( "xhr请求已打开" );
+                                break;
+                                case 2:
+                                    //mui.toast( "xhr请求已发送" );
+                                break;
+                                case 3:
+                                    //mui.toast( "xhr请求已响应");
+                                    break;
+                                case 4:
+                                    if ( xhr.status == 200 ) {
+                                        sessionid = JSON.parse(xhr.responseText).sessionid;
+                                        callBack(0);
+                                    } else {
+                                        callBack(99, "登录失败");
+                                    }
+                                    break;
+                                default :
+                                    break;
+                            }
+                        }
+                        xhr.open( "GET", serverUrl + '/app/login?ticket='+casST);
+                        xhr.setRequestHeader('Content-Type','application/json');
+                        xhr.send();
+                    }
+
+                    function autoLoginOnServer(callBack){
+                        var errCode = 99;
+                        mui.ajax({
+                            url: serverUrl + '/app/login',
+                            type: 'get',
+                            contentType:'application/json; charset=utf-8',//指定POST提交的数据类型
+                            dataType:'json',
+                            timeout: 10000,
+                            success: function(data,status){
+                                if(status == 'success'){
+                                    var casUrl = data.cas_url;
+                                    errCode = 0;
+
+                                    if(casUrl){errCode = 3;}
+                                    callBack(errCode);
+                                }
+                            },
+                            error: function(data,err){
+                                errCode = 3;
+                                callBack(errCode);
+                            }
+                        });
+                    }
+
+                    function getManageACList(username, callBack){
+                        dataAPI.getUserACList(username, function(acList,err){
+                            if(err == 0){
+                                baseAPI.setLocalACList(acList, true);
+                            }
+                            callBack(err);
+                        });
+                    }
+
+					//登陆成功后通知home页刷新页面
+					function notifyHomeRefresh(){
+						var HealthPage = plus.webview.getWebviewById('health.html');
+						var DashboardPage = plus.webview.getWebviewById('dashboard.html');
+						var DiaPage = plus.webview.getWebviewById('diagnose.html');
+						var EnvPage = plus.webview.getWebviewById('environment.html');
+						var SecurityPage = plus.webview.getWebviewById('security.html');
+
+                        mui.fire(HealthPage,'Refresh');
+                        mui.fire(DashboardPage,'Refresh');
+                        mui.fire(DiaPage,'Refresh');
+                        mui.fire(EnvPage,'Refresh');
+                        mui.fire(SecurityPage,'Refresh');
+					}
+
+					function notifyLoginSuccess(){
+					    var indexPage = plus.webview.getLaunchWebview();
+					    var menuPage = plus.webview.getWebviewById('index-menu');
+					    mui.fire(indexPage,'LoginSuccess');
+					    mui.fire(menuPage,'LoginSuccess');
+					}
+
+					//检查 "登录状态/锁屏状态" 结束
+					var loginButton = doc.getElementById('login');
+					var accountBox = doc.getElementById('account');
+					var passwordBox = doc.getElementById('password');
+					var regButton = doc.getElementById('reg');
+					var forgetButton = doc.getElementById('forgetPassword');
+					loginButton.addEventListener('tap', function(event) {
+						var loginInfo = {
+							account: accountBox.value,
+							password: passwordBox.value
+						};
+						app.login(loginInfo, function(err) {
+							if (err) {
+								plus.nativeUI.toast(err);
+								return;
+							}
+							//ios主动收起键盘
+							if (mui.os.ios) {
+								document.activeElement.blur();
+							}
+
+                            var w = plus.nativeUI.showWaiting("登录中");
+
+                            loginOnServer(loginInfo.account, loginInfo.password,function(err, errMsg){
+                                if (err) {
+                                    w.close();
+                                    plus.nativeUI.toast(errMsg);
+                                }
+                                else {
+                                    var settings = app.getSettings();
+                                    settings.autoLogin = true;
+                                    app.setSettings(settings);
+                                    
+                                    //通过sessionid获取租户名
+                                    dataAPI.getTenantName(function(data,err){
+			                            if(err == 0){
+			                                loginInfo.account = data.attributes.name;
+			                            }
+			                            //如果获取租户名失败也需要通过user名获取aclist
+	                                    getManageACList(loginInfo.account,function(err){
+	                                        app.saveUser(loginInfo.account, sessionid, function(error){});
+	                                        if (baseAPI.getCurrentACSN()) {
+	                                        	notifyHomeRefresh();
+	                                        }
+	                                        notifyLoginSuccess();
+	                                        w.close();
+	                                        plus.webview.close(plus.webview.currentWebview(),"slide-out-left");
+	                                    });
+			                        });
+                                }
+                            });
+						});
+					});
+					$.enterfocus('#login-form input', function() {
+						$.trigger(loginButton, 'tap');
+					});
+
+					regButton.addEventListener('tap', function(event) {
+						$.openWindow({
+							url: 'reg.html',
+							id: 'reg',
+							show: {
+								aniShow: aniShow
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					}, false);
+					forgetButton.addEventListener('tap', function(event) {
+						$.openWindow({
+							url: 'forget-password.html',
+							id: 'forget-password',
+							show: {
+								aniShow: aniShow
+							},
+							styles: {
+								popGesture: 'hide'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					}, false);
+					//
+					//window.addEventListener('resize', function() {
+					//    var oauthArea = doc.querySelector('.oauth-area');
+					//	oauthArea.style.display = document.body.clientHeight > 400 ? 'block' : 'none';
+					//}, false);
+					//
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+
+//					 //更换头像
+//					mui("#user-photo").on("tap", "#head", function(e) {
+//						var a = [{
+//							title: "拍照"
+//						}, {
+//							title: "从手机相册选择"
+//						}];
+//						plus.nativeUI.actionSheet({
+//							title: "修改头像",
+//							cancel: "取消",
+//							buttons: a
+//						}, function(b) {
+//							switch (b.index) {
+//								case 0:
+//									break;
+//								case 1:
+//									getImage();
+//									break;
+//								case 2:
+//									galleryImg();
+//									break;
+//								default:
+//									break
+//							}
+//						})
+//					});
+
+					 //首页返回键处理
+					 //处理逻辑：1秒内，连续两次按返回键，则退出应用；
+					var first = null;
+					mui.back = function() {
+						//首次按键，提示‘再按一次退出应用’
+						if (!first) {
+							first = new Date().getTime();
+							mui.toast('再按一次退出应用');
+							setTimeout(function() {
+								first = null;
+							}, 1000);
+						} else {
+							if (new Date().getTime() - first < 1000) {
+								plus.runtime.quit();
+							}
+						}
+					};
+				}
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

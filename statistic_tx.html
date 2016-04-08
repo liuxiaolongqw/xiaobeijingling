@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>终端协商速率分布</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+		    .chart {
+				margin: auto;
+				padding: 0px;
+			}
+			#tips
+			{
+				width: 25px;
+				height: 35px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 id="title" class="mui-title">终端协商速率分布</h1>
+	    </header>
+		<div class="mui-content" style="top:20%">
+			<hr style="margin:0; padding:0; border:0; height:2px; background-color:#e6e7e8"/>
+			<div class="mui-content-padded">
+				<h4 style="font-size: 14px;"><img id="tips" class="mui-media-object mui-pull-left" src="images/tips.png">小贴士：</h4>
+				<div class="mui-content-padded">
+					<p>协商速率低使用效果一般不太会好，如下行协商速率 TX<11 占比高 ，说明网络不太好使，可能是信号弱或者干扰导致，该指标为网络健康的结果指标</p>
+				</div>
+				<hr style="margin-bottom: 2%; padding:0; border:0; height:2px; background-color:#69C4C5" />
+				<div id="cj_Details">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div id="chart">
+							
+						</div>
+					</div>
+			    </div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="libs/echarts-all.js"></script>
+		<script src="js/base.js"></script>
+		<script>
+		    //页面初始化
+			mui.init({
+				swipeBack: true
+			});
+			
+			var chartHeight = (screen.height)/3*1.9;
+			if (mui.os.android) {
+				if ((screen.height/10) < 130)
+				{
+					chartHeight = (screen.height)/5*1.9;
+				}
+				else{
+					chartHeight = (screen.height)/9*1.9;
+				}
+			}
+			document.getElementById("cj_Details").style.height=chartHeight+18+"px";
+			document.getElementById("chart").style.height=chartHeight+12+"px";
+			
+			mui.plusReady(function () {
+				
+        	    drawTxChange();
+			});
+		    
+			function drawTxChange(){
+	            getTxChange(function(result){
+
+			        var TxChart = echarts.init(document.getElementById('chart'));
+			        var aData=[];
+			        var showFlag = true;
+			        var count = 0;
+			        var labelDefault = {
+	                    normal : {
+	                        color: '#ccc',
+	                        label : {
+	                            show : true,
+	                            position : 'center',
+	                            formatter : '{b}',
+	                            textStyle: {
+	                                color: '#ccc',
+	                                baseline : 'bottom'
+	                            }
+	                        },
+	                        labelLine : {
+		                        show : false
+		                    }
+	                    }
+	                };
+	                
+	                var label1 = {
+	                    normal : {
+	                        color: '#ff9c9e',
+	                        label : {
+		                        show : false
+		                    },
+		                    labelLine : {
+		                        show : false
+		                    }
+	                    }
+	                };
+	                var label2 = {
+	                    normal : {
+	                        color: '#f5b638',
+	                        label : {
+		                        show : false
+		                    },
+		                    labelLine : {
+		                        show : false
+		                    }
+	                    }
+	                };
+	                var label3 = {
+	                    normal : {
+	                        color: '#f7dae9',
+	                        label : {
+		                        show : false
+		                    },
+		                    labelLine : {
+		                        show : false
+		                    }
+	                    }
+	                };
+	                var label4 = {
+	                    normal : {
+	                        color: '#fbceb1',
+	                        label : {
+		                        show : false
+		                    },
+		                    labelLine : {
+		                        show : false
+		                    }
+	                    }
+	                };
+	                var label5 = {
+	                    normal : {
+	                        color: '#c8c3e1',
+	                        label : {
+		                        show : false
+		                    },
+		                    labelLine : {
+		                        show : false
+		                    }
+	                    }
+	                };
+	                var label6 = {
+	                    normal : {
+	                        color: '#69c3c5',
+	                        label : {
+		                        show : false
+		                    },
+		                    labelLine : {
+		                        show : false
+		                    }
+	                    }
+	                };
+	                
+	                if ((result.totalCount == 0) || (result == -1)) {
+	                	aData = [{name:"无数据",value:"1",itemStyle:labelDefault}];
+	                	showFlag = false;
+	           
+               		}else{
+               			count = result.totalCount;
+               			aData=[
+				        	{value:result.tx6, name:"11>TX",itemStyle:label1},
+			                {value:result.tx5, name:"36>TX>11",itemStyle:label2},
+			                {value:result.tx4, name:"56>TX>36",itemStyle:label3},
+			                {value:result.tx3, name:"100>TX>56",itemStyle:label4},
+			                {value:result.tx2, name:"300>TX>100",itemStyle:label5},
+			                {value:result.tx1, name:"TX>300",itemStyle:label6}
+				        ];
+               		}
+
+			        var Tx_option = {
+					    title : {
+					        text: '协商速率分布图',
+					        subtext: '设备已连接终端数：'+count+' 个',
+					        x:'center'
+					    },
+					    legend: {
+					    	show:showFlag,
+					        x : 'center',
+					        y : 'bottom',
+					        data:['11>TX','36>TX>11','56>TX>36','100>TX>56','300>TX>100','TX>300']
+					    },
+					    calculable : false,
+					    series : [
+					        {
+					            name:'半径模式',
+					            type:'pie',
+					            radius : ['45%', '64%'],
+					            center : ['50%', '50%'],
+					            label: {
+					                normal: {
+					                    show: false
+					                },
+					                emphasis: {
+					                    show: false
+					                }
+					            },
+					            lableLine: {
+					                normal: {
+					                    show: false
+					                },
+					                emphasis: {
+					                    show: false
+					                }
+					            },
+					            data:aData
+					        }
+					    ]
+					};
+	
+			        // 为echarts对象加载数据
+			        TxChart.setOption(Tx_option);
+	            });
+		    }
+
+		    function getTxChange(callback){
+		
+		        mui.ajax('https://lvzhouv3.h3c.com/v3/diagnosis/statistic/client/tx?devSN=' + baseAPI.getCurrentACSN(), {
+					dataType: 'json',
+					type: 'get',
+					timeout: 5000,
+					success: function(data) {
+						//获得服务器响应
+						callback(data);
+					},
+					error: function() {
+						//异常处理；
+						mui.toast('请求终端协商数据失败');
+					}
+				});
+			   
+		    }		    
+		</script>
+	</body>
+
+</html>

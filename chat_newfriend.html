@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+
+    <link href="css/mui.min.css" rel="stylesheet"/>
+
+    <style type="text/css">
+	.mui-table-view .mui-media-object{
+		width: 35px;
+		height: 35px;
+		border-radius: 2px;
+	}
+	.mui-media-body span{
+		top: 18px;
+		position: absolute;	
+		font-size: 15px;
+	}
+
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 id="title" class="mui-title">新的朋友</h1>
+	</header>
+	<div class="mui-content">
+
+		<ul class="mui-table-view">
+			<!--<li class="mui-table-view-cell mui-media" uid="xxxx">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="mui-ellipsis mui-col-xs-7" >新的ddddddddddddddddddddddddddd朋友</span>
+						<button type="button" class="mui-btn mui-pull-right mui-btn-primary">
+							接受
+						</button>
+					</div>
+				</a>
+			</li>
+				<li class="mui-table-view-cell mui-media" uid="eeeee">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="mui-ellipsis mui-col-xs-7" >新的ddddddddddddddddddddddddddd朋友</span>
+						<button type="button" class="mui-btn mui-pull-right mui-btn-primary">
+							接受
+						</button>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media" uid="ddddd">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="mui-ellipsis mui-col-xs-7" >群聊</span>
+						<button type="button" class="mui-btn mui-pull-right mui-disabled">
+							已接受
+						</button>
+					</div>
+				</a>
+			</li>-->
+		</ul>
+		
+	</div>
+</body>
+
+    <script src="js/mui.min.js"></script>
+
+    <script src="libs/jquery/jquery-1.11.3.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/chat_websql.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    (function($,mui){
+    	var self;
+    	var wait;
+    	mui.init();
+
+    	mui.plusReady(function(){
+    		self=plus.webview.currentWebview();
+    		$(".mui-table-view").children().remove();
+    		
+    		chatDb.query('select * from friendList', function(res){
+    			for (i = 0; i < res.rows.length; i++) {
+					var info=res.rows.item(i).info;
+					info = JSON.parse(info);
+					if(info.state == "wait_me"){
+						var ft = makeHtmlStringFriendWaitMe(info.uid,escape(info.name));
+						$(".mui-table-view").append(ft);
+						mui.fire(plus.webview.getWebviewById("chat_contact.html"),"addARFriendList",{uid:info.uid});
+					}
+				}
+    		})
+    		mui.fire(plus.webview.getWebviewById("chat_contact.html"),"opendChatNewFriendPage",{});
+    	})
+	   	$(document).on("tap",".mui-btn",function(){
+			var name = $(this).parent().parent().parent().find("span").text();
+			var uid = $(this).parent().parent().parent().attr("uid");
+			var chatPage = plus.webview.getWebviewById("chat.html");
+			mui.fire(chatPage, "acceptFriend",{uid:uid,name:name});
+			wait = plus.nativeUI.showWaiting("",{back:"close",padlock:true});
+		})
+    	
+    	window.addEventListener("acceptFriendResp",function(event){
+    		console.log("acceptFriendResp");
+    		plus.nativeUI.closeWaiting();
+	
+			if(event.detail.result && event.detail.result == "disconnect"){
+				plus.nativeUI.toast("请检查网络连接！");
+			}else if (event.detail.result == "success"){
+    			var button = $(".mui-table-view").find("li[uid='"+event.detail.uid+"']").find("button");
+    			button.addClass("mui-disabled");
+    			button.text("已接受");
+    			mui.fire(plus.webview.getWebviewById("chat_contact.html"),"DelARFriendList",{uid:event.detail.uid});
+    		}else{
+    			plus.nativeUI.toast("接受失败！");
+    		}
+    	})
+
+    	function makeHtmlStringFriendWaitMe(uid,name){
+			var li = $("<li class='mui-table-view-cell mui-media' uid='"+uid+"'></li>");
+			var a = $("<a></a>");
+			var img = $("<img class='mui-media-object mui-pull-left' style='margin-right: 15px;'  onerror=this.src='./images/chat/test_xiaozhu.jpg'>");
+			var div = $("<div class='mui-media-body'></div>");
+			var span = $("<span class='mui-ellipsis mui-col-xs-7'></span>");
+			var button1 = $("<button type='button' class='mui-btn mui-pull-right  mui-btn-primary'>接受</button>");
+			
+			img.attr("src", "../doc/"+uid+".jpg").attr("uid",uid);;
+			span.text(name);
+			div.append(span,button1);
+			a.append(img,div);
+			li.append(a);
+			
+			return li;
+    	}
+   
+    })(jQuery,mui)
+    </script>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/chat_common.css" rel="stylesheet" />
+   	<style type="text/css">
+
+   	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 id="title" class="mui-title">个性签名</h1>
+	    <button id="okBtn" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">完成</button>
+	</header>
+	<div id="content" class="mui-content">
+		<div class="mui-content-padded" style="margin: 5px;">
+			<div class="mui-input-row" style="margin: 10px 5px;">
+				<textarea id="signatrueinput" rows="5" placeholder="请输入你的个性签名" maxlength='40' style="font-size: 15px; color: rgb(99, 101, 107);"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="js/mui.min.js"></script>
+<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" charset="UTF-8">
+	(function($,mui){
+		mui.init();
+		var self;
+		mui.plusReady(function(){
+			self = plus.webview.currentWebview();
+			self.setStyle({scrollIndicator:'none'});
+			$("#signatrueinput").val(self.oldSignature);
+			if('iOS'==plus.os.name){
+				$("#content").addClass("iosScrollIndicator");
+				$("#content").removeClass("mui-content");
+			}
+			var allwebVeiw = plus.webview.all();
+			for(var i in allwebVeiw){
+				allwebVeiw[i].setStyle({scrollsToTop:false});
+				self.setStyle({scrollsToTop:true});
+			}
+		})
+    	document.getElementById('okBtn').addEventListener("tap",function(){
+    		var newSig = $("#signatrueinput").val();
+    		var father = self.opener();
+    		mui.fire(father,"changeSignature",newSig);
+    		mui.back();
+		});
+	})(jQuery,mui)
+ 
+</script>
+</html>

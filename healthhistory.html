@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>健康历史</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+		    .chart {
+				margin: auto;
+				padding: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 id="title" class="mui-title">健康历史</h1>
+	    </header>
+		<div class="mui-content" style="top:20%">
+			<div class="mui-content-padded">
+				<h5 style="font-size: 16px;color:#131a2d;">健康趋势</h5>
+				<hr style="margin-bottom: 2%; padding:0; border:0; height:2px; background-color:#69C4C5" />
+				<div id="cj_Details">
+			        <div id="slider" class="mui-slider">
+						<div class="mui-slider-group">
+							<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+								<div id="chart1">
+									
+								</div>
+							</div>
+							<div id="item2mobile" class="mui-slider-item mui-control-content">
+								<div id="chart2">						
+								</div>
+							</div>
+							<div id="item3mobile" class="mui-slider-item mui-control-content">
+								<div id="chart3">	
+								</div>	
+							</div>
+						</div>
+					</div>
+			    </div>
+				<h5 style="font-size: 16px;color:#131a2d;">健康异常时段分布</h5>
+				<hr style="margin-bottom: 2%; padding:0; border:0; height:2px; background-color:#69C4C5" />
+				<div class="chart" id="nowdayinfo"></div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="libs/echarts.min.js"></script>
+		<script src="js/base.js"></script>
+		<script>
+		    //页面初始化
+			mui.init({
+				swipeBack: false
+			});
+			
+			
+			
+			mui.plusReady(function () {
+				var chartHeight = (screen.height)/3;
+
+				if (mui.os.android) {
+					
+					if (plus.screen.resolutionHeight!=0)
+					{
+						chartHeight = plus.screen.resolutionHeight/3;
+					}
+					else{
+						chartHeight = (screen.height)/9;
+					}
+				}
+				document.getElementById("cj_Details").style.height=chartHeight+18+"px";
+				document.getElementById("chart1").style.height=chartHeight+12+"px";
+				document.getElementById("chart2").style.height=chartHeight+12+"px";
+				document.getElementById("chart3").style.height=chartHeight+12+"px";
+				document.getElementById("nowdayinfo").style.height=chartHeight+"px";
+				
+        	    drawHistoryChange(0);
+			    drawHistoryChange(1);
+			    drawHistoryChange(2);
+			    drawNowdayInfo();
+
+			});
+		
+		    var weeklist  = ["周一","周二","周三","周四","周五","周六","周日"];//["周日","周六","周五","周四","周三","周二","周一"];
+		    var monthlist = ["近四周","近三周","近二周","近一周"];
+		    var yearlist  = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+		    function getTimeList(mode){
+		        var myDate = new Date(); 
+		        var resultlist = new Array();
+		        if (mode == 1){
+		            var startindex = myDate.getDay();
+		            for (var i = startindex; i<(startindex + 7); i++){
+		                var curindex = i % 7;
+		                resultlist.push(weeklist[curindex]);
+		            }
+		        }else {
+		            var startindex = myDate.getMonth() + 12;
+		            for (var i = (startindex - 6); i< startindex; i++){
+		                var curindex = i % 12;
+		                resultlist.push(yearlist[curindex]);
+		            }
+		
+		        }
+		
+		        return resultlist;
+		    }
+		    
+			function drawHistoryChange(index){
+		        if (index == 0){
+		        
+		            getHistoryChange(1, function(result, err){
+		
+		                var weekdata = {h_title: "近一周小贝健康状况",  
+		                                h_time: weeklist, h_score:[0,0,0,0,0,0,0]};
+		
+		                if ((err == 0) && (result.length != 0)){
+		                    var timelist = getTimeList(1);
+		                    var scorelist = new Array();
+		                    for (var i = (result.length - 1); i >= 0; i--){
+		                        scorelist.push(result[i].finalscore);
+		                    }
+		                    weekdata.h_time = timelist;
+		                    weekdata.h_score = scorelist;
+		                }else{
+	                		mui.toast("请求健康历史失败");
+		                }
+		
+		                drawHistoryChart("chart1", weekdata);
+		            });
+		        }
+		        
+		        if (index == 1){
+		            getHistoryChange(2, function(result, err){
+		
+		                var monthdata = {h_title: "近一个月小贝健康状况",  
+		                                h_time: monthlist, h_score:[0,0,0,0]};
+		
+		                if ((err == 0) && (result.length != 0)){
+		                    var timelist = monthlist;
+		                    var scorelist = new Array();
+		                    for (var i = (result.length - 1); i >= 0; i--){
+		                        scorelist.push(result[i].finalscore);
+		                    }
+		                    monthdata.h_time = timelist;
+		                    monthdata.h_score = scorelist;
+		                }else{
+	                		mui.toast("请求健康历史失败");
+		                }
+		
+		                drawHistoryChart("chart2", monthdata);
+		            });
+		        }
+		        
+		        if (index == 2){
+		            getHistoryChange(3, function(result, err){
+		
+		                var yeardata = {h_title: "近半年小贝健康状况", 
+		                                h_time:yearlist, h_score:[0,0,0,0,0,0]};
+		
+		
+		                if ((err == 0) && (result.length != 0)){
+		                    var timelist = getTimeList(3);
+		                    var scorelist = new Array();
+		                    for (var i = (result.length - 1); i >= 0; i--){
+		                        scorelist.push(result[i].finalscore);
+		                    }
+		                    yeardata.h_time = timelist;
+		                    yeardata.h_score = scorelist;
+		                }else{
+	                		mui.toast("请求健康历史失败");
+		                }
+		
+		                drawHistoryChart("chart3", yeardata);
+		            });
+		        }
+		        
+		    }
+					
+		    function drawHistoryChart(chartname, newdata){
+		        var weekChart = echarts.init(document.getElementById(chartname));
+		       
+		        var week_option = {
+		            title : {
+		                text: newdata.h_title,
+		                textStyle: {
+		                    fontSize: 13,
+		                    fontWeight: 'normal',
+		                    fontFamily: 'arial',
+		                }
+		            },
+		            grid: {
+		                y :'22%',
+		                y2 :'13%',
+		                x :'10%',
+		                x2 :'10%'
+		            },
+		    
+		            type: 'macarons',
+		            legend: {
+		                data:['体检分数'],
+		                x :'right'
+		            },
+		            xAxis : [
+		                {
+		                    type : 'category',
+		                    boundaryGap : false,
+		                    data : newdata.h_time//['周一','周二','周三','周四','周五','周六','周日']
+		                }
+		            ],
+		            yAxis : [
+		                {
+		                    type : 'value',
+		                    name:'(分)',
+		                    nameLocation:'end',
+		                    nameGap:15,
+		                    axisLabel : {
+		                        formatter: '{value}'
+		                    }
+		                }
+		            ],
+		            series : [
+		                {
+		                    name:'体检分数',
+		                    type:'line',
+		                    smooth : true,
+                            areaStyle: {normal: {color:'rgba(105, 196, 197, 0.4)'}},
+		                    data: newdata.h_score,
+		                    itemStyle: {
+							    normal: {
+							        color:'#69c4c5'
+							    }
+							},
+		                    markPoint : {
+		                        data : [
+		                            {type : 'max', name: '最高分'},
+		                            {type : 'min', name: '最低分'}
+		                        ],
+		                        symbolSize:[35,35],
+		                        itemStyle: {
+								    normal: {
+								        color:'#ff8686'
+								    }
+								}
+		                    },
+		                    markLine : {
+		                        data : [
+		                            {type : 'average', name: '平均'}
+		                        ],
+		                        itemStyle: {
+								    normal: {
+								        color:'#ffd961'
+								    }
+								}
+		                    }
+		                }
+		            ]
+		        };
+		        // 为echarts对象加载数据
+		        weekChart.setOption(week_option);
+		    }
+
+		    function getHistoryChange(mode, callback){
+		
+				var url_t = "https://lvzhouv3.h3c.com/v3/health/home/history/change";
+		        var para = {'acSN':baseAPI.getCurrentACSN(), 'mode':mode};
+		
+		        mui.ajax({
+		            url:url_t,
+		            dataType:'json',
+		            timeout: 5000,
+		            data: para,
+		            success:function(data) {
+		                var result = mui.parseJSON(data);
+		                err = 0;
+		                callback(result,err);
+		            },
+		            error:function(request, status, err){
+		                if (status == "timeout")
+		                {
+		                    err = 1;
+		                    callback("",err);
+		                }
+		            }
+		        });
+		        
+		       /*
+		        var para = {acSN:"210235A1CWC155900098"};
+				var url = "http://h3crd-lvzhou6.chinacloudapp.cn/v3/health/home/history/change";
+				var type = "GET";
+				var dataType = "json";
+				//发送数据
+				mui.getJSON(url, para, function(response) {
+					var result = mui.parseJSON(response);
+					callback(result);
+				});
+		        */
+		       /*
+			   if (mode == 2){
+			   	callback([{finalscore:45},{finalscore:68},{finalscore:98},{finalscore:97}]);
+			   }else if(mode == 3){
+			   	callback([{finalscore:44},{finalscore:58},{finalscore:68},{finalscore:68},{finalscore:98},{finalscore:88}]);
+			   }else{
+			   		callback([{finalscore:48},{finalscore:68},{finalscore:98},{finalscore:58},{finalscore:98},{finalscore:48},{finalscore:88}]);
+			   }
+			   */
+			   
+		    }
+		    
+		    var nowdayChart, nowday_option;
+		    function drawNowdayInfo(){
+		    	nowdayChart = echarts.init(document.getElementById("nowdayinfo"));
+		    	
+		        nowdayChart.setOption(nowday_option);
+		    }
+		    
+		    var hours = ['12a', '1a', '2a', '3a', '4a', '5a', '6a',
+			        '7a', '8a', '9a','10a','11a',
+			        '12p', '1p', '2p', '3p', '4p', '5p',
+			        '6p', '7p', '8p', '9p', '10p', '11p'];
+			var days = ['周六', '周五', '周四',
+			        '周三', '周二', '周一', '周日'];
+			
+			var data = [[0,0,5],[0,1,1],[0,2,0],[0,3,0],[0,4,0],[0,5,0],[0,6,0],[0,7,0],[0,8,0],[0,9,0],[0,10,0],[0,11,2],[0,12,4],[0,13,1],[0,14,1],[0,15,3],[0,16,4],[0,17,6],[0,18,4],[0,19,4],[0,20,3],[0,21,3],[0,22,2],[0,23,5],[1,0,7],[1,1,0],[1,2,0],[1,3,0],[1,4,0],[1,5,0],[1,6,0],[1,7,0],[1,8,0],[1,9,0],[1,10,5],[1,11,2],[1,12,2],[1,13,6],[1,14,9],[1,15,11],[1,16,6],[1,17,7],[1,18,8],[1,19,12],[1,20,5],[1,21,5],[1,22,7],[1,23,2],[2,0,1],[2,1,1],[2,2,0],[2,3,0],[2,4,0],[2,5,0],[2,6,0],[2,7,0],[2,8,0],[2,9,0],[2,10,3],[2,11,2],[2,12,1],[2,13,9],[2,14,8],[2,15,10],[2,16,6],[2,17,5],[2,18,5],[2,19,5],[2,20,7],[2,21,4],[2,22,2],[2,23,4],[3,0,7],[3,1,3],[3,2,0],[3,3,0],[3,4,0],[3,5,0],[3,6,0],[3,7,0],[3,8,1],[3,9,0],[3,10,5],[3,11,4],[3,12,7],[3,13,14],[3,14,13],[3,15,12],[3,16,9],[3,17,5],[3,18,5],[3,19,10],[3,20,6],[3,21,4],[3,22,4],[3,23,1],[4,0,1],[4,1,3],[4,2,0],[4,3,0],[4,4,0],[4,5,1],[4,6,0],[4,7,0],[4,8,0],[4,9,2],[4,10,4],[4,11,4],[4,12,2],[4,13,4],[4,14,4],[4,15,14],[4,16,12],[4,17,1],[4,18,8],[4,19,5],[4,20,3],[4,21,7],[4,22,3],[4,23,0],[5,0,2],[5,1,1],[5,2,0],[5,3,3],[5,4,0],[5,5,0],[5,6,0],[5,7,0],[5,8,2],[5,9,0],[5,10,4],[5,11,1],[5,12,5],[5,13,10],[5,0,5],[5,15,7],[5,16,11],[5,0,6],[5,18,0],[5,19,5],[5,20,3],[5,21,4],[5,22,2],[5,23,0],[6,0,1],[6,1,0],[6,2,0],[6,3,0],[6,4,0],[6,5,0],[6,6,0],[6,7,0],[6,8,0],[6,9,0],[6,10,1],[6,11,0],[6,12,2],[6,13,1],[6,14,3],[6,15,4],[6,16,0],[6,17,0],[6,18,0],[6,19,0],[6,20,1],[6,21,2],[6,22,2],[6,23,6]];
+			
+			data = data.map(function (item) {
+			    return [item[1], item[0], item[2] || '-'];
+			});
+			
+			nowday_option = {
+	
+			    animation: true,
+			    grid: {
+			        height: '64%',
+			        y :'12%',
+	                y2 :'20%',
+	                x :'10%',
+	                x2 :'8%'
+			    },
+			    xAxis: {
+			        type: 'category',
+			        data: hours
+			    },
+			    yAxis: {
+			        type: 'category',
+			        data: days
+			    },
+			    visualMap: {
+			        min: 1,
+			        max: 10,
+			        calculable: false,
+			        text:['重度','轻度'],
+			        orient: 'horizontal',
+			        left: 'center',
+			        bottom: '-4%'
+			    },
+			    series: [{
+			        name: 'Punch Card',
+			        type: 'heatmap',
+			        data: data,
+			        label: {
+			            normal: {
+			                show: false
+			            }
+			        },
+			        itemStyle: {
+			            emphasis: {
+			                shadowBlur: 10,
+			                shadowColor: 'rgba(0, 0, 0, 0.5)'
+			            }
+			        }
+			    }]
+			};
+					    
+		</script>
+	</body>
+
+</html>

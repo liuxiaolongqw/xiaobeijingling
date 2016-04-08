@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+
+</head>
+ <style type="text/css">
+ 	html,
+	body {
+		height: 100%;
+		/*margin: 0px;*/
+		/*padding: 0px;*/
+		/*overflow: hidden;*/
+		/*-webkit-touch-callout: none;*/
+		/*-webkit-user-select: none;*/
+	}
+ 	.chat_member_c{
+ 	}
+ 	.chat_member{
+ 		width: 25%;
+		/*width: 24%;*/
+		/*position: relative;*/
+		margin: 0px;
+		text-align: center;
+		float: left;
+		margin-top: 15px;
+		display: inline-block;
+ 	}
+ 	.chat_member img{
+ 		height: 50px;
+ 		width: 50px;
+ 		border-radius: 4px;
+ 	}
+ 	.chat_member span{
+ 		font-size: 11px;
+ 		display: block;
+ 	}
+ 	.mui-scroll-wrapper{
+ 		top:45px
+ 	}
+	.mui-content{
+		height: 100%;
+		padding: 44px 0px 0px 0px;
+		overflow: auto;
+		/*-webkit-overflow-scrolling: touch;*/
+	}
+	#content {
+		height: 100%;
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+ 	
+ </style>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 id="title" class="mui-title">聊天信息</h1>
+	</header>
+	<div class="mui-content">
+		<div id="content">
+			<div id="chat_member_c">
+				<!--<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+					<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+					<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+					<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+					<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+					<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+				<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">s00000000000</span>
+				</div>
+	
+				<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+					<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+					<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">s00000000000</span>
+				</div><div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">s00000000000</span>
+				</div>
+	
+				<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+					<div class="chat_member">
+					<img src="images/chat/test_xiaozhu.jpg"/>
+					<span class="mui-ellipsis">liuxiaolong</span>
+				</div>
+				<div id="add" class="chat_member">
+					<img src="images/chat/add.png"/>
+					<span class="mui-ellipsis">&nbsp</span>
+				</div>
+				<div id="del" class="chat_member">
+					<img src="images/chat/del.png"/>
+					<span class="mui-ellipsis">&nbsp</span>
+				</div>
+				<div style="clear:both;"></div>-->
+				
+			</div>
+		
+	
+			<ul class="mui-table-view" style="margin-top: 15px;">
+				<li class="mui-table-view-cell" style="padding: 3px 0px 0px 0px;">
+					<div class="mui-input-row">
+						<label style="width: 28%;padding-right: 0px;">群聊名称:</label>
+						<input id="group_name" maxlength='15' type="text" style="width: 72%;">
+					</div>
+				</li>
+				<!--<li id="group_name" class="mui-table-view-cell">
+					<a href="javascript:;" class="mui-navigate-right">群聊名称<span class="mui-pull-right mui-ellipsis" style="margin-right: 20px;max-width: 200px"> ssssssssssssssssssssssssssssssss</span></a>
+				</li>-->
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">群公告</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 15px;">
+				<li id="calm" class="mui-table-view-cell">
+					<span>消息免打扰</span>
+					<div class="mui-switch mui-switch-blue">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 15px;">
+				<li id="clean_msgrecord" class="mui-table-view-cell">
+					<a href="javascript:;" class="mui-navigate-right">清空聊天记录</a>
+				</li>
+			</ul>
+			<div class="mui-content-padded" style="margin-top: 40px;margin-bottom: 60px;">
+			 	<button id="delete" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="height: 45px;line-height: 0.4;">删除并退出</button>
+			</div>
+		</div>
+	</div>
+	
+</body>
+    <script src="js/mui.min.js"></script>
+    <script src="libs/jquery/jquery-1.11.3.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/chat_websql.js"></script>
+	<script src="js/chat_base.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+    (function($,mui){
+    	var self;
+    	var sid;
+    	var title;
+    	var myUid;
+    	var ownerUid;
+    	var groupMembers;
+    	var oldName;
+    	mui.init();
+      	mui.plusReady(function(){
+      		self = plus.webview.currentWebview();
+      		sid = self.sid;
+      		title = self.title;
+      		myUid = self.myUid;
+      		
+      		$("#group_name").val(title);
+      		recoverMembers();
+      	})
+      	function makeHtmlStringGroupMembers(uid,name){
+			var div = $('<div class="chat_member"></div>');
+			var img = $('<img  onerror=this.src="./images/chat/test_xiaozhu.jpg" />');
+			var span = $('<span class="mui-ellipsis"></span>');
+			
+			img.attr("src","../doc/"+uid+".jpg");
+			span.text(name);
+			div.append(img,span);
+			return div;
+
+      	}
+      	function makeHtmlStringAddLink(){
+			var div = $('<div id="add" class="chat_member"></div>');
+			var img = $('<img src="images/chat/chatgroupadduser.png"/>');
+			var span = $('<span class="mui-ellipsis">&nbsp</span>');
+			
+			div.append(img,span);
+			return div;
+      	}
+      	function makeHtmlStringDelLink(){
+			var div = $('<div id="del" class="chat_member"></div>');
+			var img = $('<img src="images/chat/chatgroupdeluser.png"/>');
+			var span = $('<span class="mui-ellipsis">&nbsp</span>');
+			
+			div.append(img,span);
+			return div;
+      	}
+      	function recoverMembers(){
+      		$("#chat_member_c").children().remove();
+      		chatDb.query('select * from groupList where sid = "'+ sid +'"', function(res){
+				if(res.rows.length != 0){
+					var info=res.rows.item(0).info;
+		
+					info = JSON.parse(info);
+					var members = info.members;
+					groupMembers = members;
+			
+					var owner = info.owner;
+					ownerUid = owner;
+					/*OWNER*/
+					for(var i in members){
+						if(owner == members[i]["uid"]){
+							var uid = members[i]['uid'];
+							var name =  members[i]['nickname'];
+							var ms = makeHtmlStringGroupMembers(uid,name);
+							
+							$("#chat_member_c").append(ms);
+							break;
+						}
+					}
+					/*其余MEMBERS*/
+					for(var i in members){
+						if(owner != members[i]["uid"]){
+							var uid = members[i]['uid'];
+							var name =  members[i]['nickname'];
+							var ms = makeHtmlStringGroupMembers(uid,name);
+							$("#chat_member_c").append(ms);
+						}
+					}
+					/*功能链接*/
+					var as = makeHtmlStringAddLink();
+					$("#chat_member_c").append(as);
+					if(owner == myUid){
+						var ds = makeHtmlStringDelLink();
+						$("#chat_member_c").append(ds);
+					}
+					
+					$("#chat_member_c").append('<div style="clear:both;"></div>');
+				}
+			})
+      	}
+      	$(document).on("tap","#clean_msgrecord",function(){
+      		var btnArray = ['确认', '取消'];
+			mui.confirm('确认删除聊天记录？', '小贝温馨提示', btnArray, function(e) {
+				if(0 == e.index){
+				 	chatDb.cleanMrTable(msgRecord+sid);
+				 	mui.fire(plus.webview.getWebviewById("chat_chat.html"),"cleanMsgRecord");
+				 	mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"cleanMsgRecord");
+				 	plus.nativeUI.toast("聊天记录已清除");
+				}
+			});
+      	})
+      	$(document).on("tap","#delete",function(){
+      		var btnArray = ['确认', '取消'];
+			mui.confirm('确认退出该群？', '小贝温馨提示', btnArray, function(e) {
+				if(0 == e.index){
+					var w = plus.nativeUI.showWaiting();
+				 	mui.fire(plus.webview.getWebviewById("chat.html"),"deleteGroup",{sid:sid});
+				}
+			});
+      	})
+      	$(document).on("tap","#add",function(){
+      		mui.openWindow({
+				id:"chat_groupadduser.html",
+				url:"chat_groupadduser.html",
+				styles:{
+					popGesture:"close"
+				},
+				show:{
+			    	autoShow:true,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:true
+				},
+				extras:{
+					g:groupMembers,
+					sid:sid
+				}
+			})
+      	})
+      	window.addEventListener("deleteGroupResp",function(e){
+      		var result = e.detail.result;
+      		plus.nativeUI.closeWaiting();
+			
+			if(result == "disconnect"){
+				plus.nativeUI.toast("请检查网络连接！");
+				return;
+			}
+			if(result == "success"){
+				chatDb.cleanMrTable(msgRecord+sid);
+				mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"deleteGroup",{sid:sid});
+				mui.fire(plus.webview.getWebviewById("chat_group.html"),"recoverGroupList");
+				mui.fire(plus.webview.getWebviewById("chat_chat.html"),"close");
+				mui.back();
+			}else{
+				plus.nativeUI.toast("退群失败！");
+			}
+      	})
+      	$(document).on("tap","#del",function(){
+      		mui.openWindow({
+				id:"chat_groupdeluser.html",
+				url:"chat_groupdeluser.html",
+				styles:{
+					popGesture:"close"
+				},
+				show:{
+			    	autoShow:true,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:true
+				},
+				extras:{
+					g:groupMembers,
+					sid:sid,
+					myUid:myUid
+				}
+			})
+      	})
+      	$(document).on("focus","#group_name",function(e){
+      		if(ownerUid != myUid){
+      			plus.nativeUI.toast("只能由群主修改群名称");
+      			$(this).blur();
+      		}
+      		oldName = $(this).val();
+      		
+      	})
+      	$(document).on("blur","#group_name",function(e){
+      		if(ownerUid != myUid){
+      			return;
+      		}
+      		var newName = $(this).val();
+      		newName = newName.trim();
+      		if(oldName == newName || newName == ""){
+      			$(this).val(oldName);
+      			return;
+      		}
+      		plus.nativeUI.showWaiting("",{back:"close",padlock:true});
+      		mui.fire(plus.webview.getWebviewById("chat.html"),"changeTitle",{sid:sid,title:newName});
+      	})
+      	
+      	window.addEventListener("changeTitleResp",function(e){
+			plus.nativeUI.closeWaiting();
+			if(e.detail.result && e.detail.result == "disconnect"){
+				plus.nativeUI.toast("请检查网络连接！");
+				return;
+			}else if(e.detail.result == "success"){
+				plus.nativeUI.toast("修改群名成功");
+			}else{
+				plus.nativeUI.toast("修改群名失败");
+			}
+		})
+    })(jQuery,mui)
+      
+
+    </script>
+</html>

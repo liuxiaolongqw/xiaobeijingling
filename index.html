@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>index</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/iconfont.css">
+		<style>
+        .ui-select {
+            text-align: center;
+            width: 140px;
+            left: 50%;
+            margin-left: -70px;
+            position: absolute;
+        }
+        .ui-select .mui-title{
+            position: relative;
+            float: left;
+            width: 120px;
+            right: 0;
+            left: 0;
+        }
+        .ui-select select.mui-btn-block{
+            position: absolute;
+            top: 0px;
+            height: 45px;
+            padding: 0;
+            opacity: 0;
+            z-index: 20;
+        }
+        .ui-select .mui-icon.select-icon{
+            font-size: 20px;
+            line-height: 45px;
+            position: relative;
+            padding: 0;
+            float: left;
+            color: #FFFFFF;
+            margin: 0;
+        }
+        #chatBadge{
+			position: absolute;
+			top: 8px;
+			right: 9px;
+			z-index: 99;
+			width: 11px;
+			height: 11px;
+			display: none;
+        }
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-bars mui-pull-left" style="color: #fff"></a>
+			<a id = "device" class="mui-icon mui-icon-chatbubble mui-pull-right" style="color: #fff" onclick="openChatPage();"></a>
+			<img id="chatBadge" src="images/chat/redpoint.png">
+			<a id = "device" class="mui-icon mui-icon-plusempty mui-pull-right" style="color: #fff" onclick="devmanage();"></a>
+		    <div class="ui-select">
+    			<h1 id="title" class="mui-title">无设备</h1><span class="mui-icon mui-icon-arrowdown select-icon"></span>
+    			<select id="device_select" class="mui-btn-block" onchange="changeCurDevice(this.options[this.options.selectedIndex])">
+                </select>
+		    </div>
+		</header>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/base.js"></script>
+		<script src="js/data.js"></script>
+		<script>
+		    var title = document.getElementById('title');
+		    title.curACSN = "";
+
+		    var refreshDevStatusTimer = null;
+		    var refreshDevListTimer = null;
+			var menu = null,
+				main = null;
+			var showMenu = false;
+
+			mui.init({
+				swipeBack: false,
+				statusBarBackground: '#69C4C5',
+				gestureConfig: {
+					doubletap: true
+				},
+				subpages: [{
+				    id:'home',
+					url: 'home.html',
+					styles: {
+						top: '45px',
+						bottom: 0
+					}
+				}]
+			});
+			mui.plusReady(function() {
+				//仅支持竖屏显示
+				plus.screen.lockOrientation("portrait-primary");
+				main = plus.webview.currentWebview();
+				main.addEventListener('maskClick', closeMenu);
+				//处理侧滑导航，为了避免和子页面初始化等竞争资源，延迟加载侧滑页面；
+				setTimeout(function() {
+					menu = mui.preload({
+						id: 'index-menu',
+						url: 'index-menu.html',
+						styles: {
+							left: 0,
+							width: '70%',
+							zindex: -1
+						},
+						show: {
+							aniShow: 'none'
+						}
+					});
+				}, 200);
+				//getDeviceList();
+				mui("#device_select option").each(function(){
+				    this.parentNode.removeChild(this);
+				});
+			});
+			var isInTransition = false;
+			/**
+			 * 显示侧滑菜单
+			 */
+			function openMenu() {
+				if (isInTransition) {
+					return;
+				}
+				if (!showMenu) {
+					//侧滑菜单处于隐藏状态，则立即显示出来；
+					isInTransition = true;
+					menu.setStyle({
+						mask: 'rgba(0,0,0,0)'
+					}); //menu设置透明遮罩防止点击
+					menu.show('none', 0, function() {
+						//主窗体开始侧滑并显示遮罩
+						main.setStyle({
+							mask: 'rgba(0,0,0,0.4)',
+							left: '70%',
+							transition: {
+								duration: 150
+							}
+						});
+						mui.later(function() {
+							isInTransition = false;
+							menu.setStyle({
+								mask: "none"
+							}); //移除menu的mask
+						}, 160);
+						showMenu = true;
+					});
+				}
+			};
+			/**
+			 * 关闭菜单
+			 */
+			function closeMenu() {
+				if (isInTransition) {
+					return;
+				}
+				if (showMenu) {
+					//关闭遮罩；
+					//主窗体开始侧滑；
+					isInTransition = true;
+					main.setStyle({
+						mask: 'none',
+						left: '0',
+						transition: {
+							duration: 200
+						}
+					});
+					showMenu = false;
+					//等动画结束后，隐藏菜单webview，节省资源；
+					mui.later(function() {
+						isInTransition = false;
+						menu.hide();
+					}, 300);
+				}
+			};
+
+            function setTitle(deviceId, placeName){
+                title.curACSN = deviceId;
+                if (deviceId) {
+                	title.innerText = placeName;
+                } else{
+                	title.innerText = "无设备";
+                }
+            }
+
+            function clearOptions(){
+                var devSelect=document.getElementById('device_select');
+                while(devSelect.hasChildNodes())
+                {
+                    devSelect.removeChild(devSelect.firstChild);
+                }
+            }
+
+            function removeOption(deviceId){
+                var devSelect=document.getElementById('device_select');
+                mui("#device_select option").each(function () {
+                    if(this.value == deviceId){
+                        devSelect.options.remove(this.index);
+                        return false;
+                    }
+                });
+            }
+
+            function addOption(text, value){
+                //根据id查找对象，
+                var devSelect = document.getElementById('device_select');
+                //添加一个选项
+                devSelect.options.add(new Option(text,value));
+            }
+
+            var deviceList = [];
+            function getDeviceList(){
+                var curIndex = 0;
+                var display_name = "";
+
+                clearOptions();
+                title.innerText = "无设备";
+                var devices = baseAPI.getLocalACList();
+                if (devices.length > 0){
+                    for(var i = 0; i<devices.length; i++){
+                        if (devices[i].valided == "valid") {
+                            deviceList[curIndex] = devices[i];
+                            display_name = deviceList[i].placeName ? deviceList[i].placeName:deviceList[i].acSN;
+                            addOption(display_name, devices[i].acSN);
+                            curIndex ++;
+                        }
+                    }
+                    baseAPI.setCurrentACSN(deviceList[0].acSN);
+                    dataAPI.getDevStatus(app.getUser(), deviceList[0].acSN,function(err, devStatusList){
+                        if (!err) {
+                        	titleText = (deviceList[0].placeName? deviceList[0].placeName:deviceList[0].acSN);
+                        	if (devStatusList[0].dev_status != 1) {
+                        		titleText = "(离线)" + titleText;
+                        	}
+
+                            setTitle(deviceList[0].acSN, titleText);
+                            baseAPI.setCurDevStatus(devStatusList[0].dev_status);
+                        }
+
+                    });
+
+                }
+                else{
+                    setTitle("", "");
+                    setTimeout(function(){
+                        plus.nativeUI.confirm( "当前账户无绑定设备，是否添加设备？", function(e){
+                            if (e.index==0) {
+                                devmanage();
+                            }
+                        }, "小贝精灵", ["马上添加","稍后再说"] );
+                    },2000);
+                }
+            }
+            //暂时放这里，后续放小贝聊聊时删除
+            function devmanage(){
+            	var webview_style = {
+					popGesture: "close",
+			        scrollIndicator:"none"//去除滚动条
+				};
+
+            	mui.openWindow({
+					id:'device-topo',
+					url:'device-topo.html',
+					styles: webview_style,
+					show:{
+						aniShow:'none'
+					},
+					waiting:{
+						autoShow:true
+					}
+				});
+            }
+            
+            function openChatPage(){
+				plus.webview.show(chat,"slide-in-right");
+            }
+
+            function refreshDevList(callback){
+                var newDevSNList = [];
+                var localDevSNList = [];
+                var invalidDevs = [];
+                var username = app.getUser();
+                var curDevSN = baseAPI.getCurrentACSN();
+
+                //get local devices list
+                var localList = baseAPI.getLocalACList();
+                localList.forEach(function(e){
+                    localDevSNList.push(e.acSN);
+                });
+                //get remote devices list
+                dataAPI.getUserACList(username, function(acList,err){
+                    if(err == 0){
+                        baseAPI.setLocalACList(acList, false);
+                        var newList = baseAPI.getLocalACList();
+
+                        //add new devices
+                        newList.forEach(function(e){
+                            var devSN = e.acSN;
+                            newDevSNList.push(devSN);
+                            if (localDevSNList.indexOf(devSN) == -1) {
+                                var display_name = e.placeName ? e.placeName:devSN;
+                                addOption(display_name, devSN);
+                            }
+                        });
+
+                        //delete invalid devices
+                        localDevSNList.forEach(function(e){
+                            if (newDevSNList.indexOf(e) == -1) {
+                                invalidDevs.push(e);
+                                removeOption(e);
+                            }
+                        });
+
+                        if (invalidDevs.length > 0) {
+                            plus.nativeUI.alert("以下设备已解除绑定或不是小贝设备，设备序列号："+ invalidDevs.join(),null,"无效设备","确认");
+                        }
+
+                        //set current device
+                        if (newDevSNList.indexOf(curDevSN) == -1) {
+                            if (newList.length > 0) {
+                                setTitle(newList[0].acSN, newList[0].placeName);
+                                baseAPI.setCurrentACSN(newList[0].acSN);
+                            }
+                            else{
+                                setTitle("", "");
+                                baseAPI.setCurrentACSN("");
+                            }
+                        }
+
+                        if (callback && (typeof callback == 'function')) {
+                        	callback();
+                        }
+                    }
+                });
+            }
+
+            function refreshDevStatus(){
+                var devSN = baseAPI.getCurrentACSN();
+                if (!devSN) return;
+                dataAPI.getDevStatus(app.getUser(), devSN,function(err, devStatusList){
+                    if (!err && (baseAPI.getCurrentACSN() == devSN) && (devStatusList.length > 0)) {
+                        if ( devStatusList[0].dev_status == 1) {
+                            var titleText = title.innerText.indexOf("(离线)") >= 0 ? title.innerText.split("(离线)")[1] : title.innerText;
+                        }
+                        else{
+                            var titleText = title.innerText.indexOf("(离线)") >= 0 ? title.innerText : "(离线)" + title.innerText;
+                        }
+                        setTitle(devSN, titleText);
+                        baseAPI.setCurDevStatus(devStatusList[0].dev_status);
+                    }
+                });
+            }
+
+            function changeCurDevice(curOption){
+                var curDevSN = curOption.value;
+                var curPlaceName = curOption.text;
+
+                setTitle(curDevSN, curPlaceName);
+                baseAPI.setCurrentACSN(curDevSN);
+
+                refreshDevList(function(){
+                    //get devices status
+                    var curACSN = baseAPI.getCurrentACSN();
+                    if (!curACSN) return;
+                    dataAPI.getDevStatus(app.getUser(), curACSN,function(err, devStatusList){
+                        if (!err && (devStatusList.length > 0)) {
+                            if ( devStatusList[0].dev_status != 1) {
+                                var titleText = title.innerText.indexOf("(离线)") >= 0 ? title.innerText : "(离线)" + title.innerText;
+                                plus.nativeUI.alert("请确认是否已连接绿洲云",null,"设备已离线","确认");
+                            }
+                            else{
+                                var titleText = title.innerText.indexOf("(离线)") >= 0 ? title.innerText.split("(离线)")[1] : title.innerText;
+
+                                var HealthPage = plus.webview.getWebviewById('health.html');
+                                var DashboardPage = plus.webview.getWebviewById('dashboard.html');
+                                var DiaPage = plus.webview.getWebviewById('diagnose.html');
+                                var EnvPage = plus.webview.getWebviewById('environment.html');
+                                var SecurityPage = plus.webview.getWebviewById('security.html');
+
+                                //触发pickDevice事件
+                                mui.fire(HealthPage,'Refresh');
+                                mui.fire(DiaPage,'Refresh');
+                                mui.fire(EnvPage,'Refresh');
+                                mui.fire(SecurityPage,'Refresh');
+                                mui.fire(DashboardPage,'Refresh');
+                            }
+                            setTitle(curACSN, titleText);
+
+                            baseAPI.setCurDevStatus(devStatusList[0].dev_status);
+                        }
+                    });
+                });
+            }
+
+            //添加deviceAdd自定义事件监听
+            window.addEventListener('deviceAdd',function(event){
+              //获得事件参数
+              var deviceId = event.detail.deviceId;
+              var placeName = event.detail.placeName;
+              addOption(placeName, deviceId);
+            });
+
+            //添加deviceDelete自定义事件监听
+            window.addEventListener('deviceDelete',function(event){
+              //获得事件参数
+                var deviceId = event.detail.deviceId;
+                var placeName = event.detail.placeName;
+                removeOption(deviceId);
+            });
+
+            //添加deviceAdd自定义事件监听
+            window.addEventListener('updateTitle',function(event){
+              //获得事件参数
+                var deviceId = event.detail.deviceId;
+                var placeName = event.detail.placeName;
+                setTitle(deviceId, placeName);
+            });
+            
+            /*初始化聊聊页面*/
+            function initChatPage(){
+				chat = mui.preload({
+					id:'chat.html',
+        			url:'chat.html',
+        			styles:{
+        				popGesture:"none",
+        				scrollIndicator:"none",
+        			},
+        			show: {
+						aniShow: 'none'
+					}
+				})
+            }
+            
+            /*去初始化聊聊页面*/
+            function finiChatPage(){
+            	mui.fire(plus.webview.getWebviewById("chat.html"),"logout");
+            }
+            window.addEventListener("setChatBadge",function(e){
+            	var count = e.detail.count;
+            	if(count != 0){
+            		document.getElementById("chatBadge").style.display = "block";
+            	}else{
+            		document.getElementById("chatBadge").style.display = "none";
+            	}
+            	plus.runtime.setBadgeNumber( count );
+            })
+
+            window.addEventListener('LoginSuccess',function(event){
+                //获得事件参数
+                getDeviceList();
+                refreshDevStatusTimer = setInterval(function(){
+                    refreshDevStatus();
+                }, 60000);
+                refreshDevListTimer = setInterval(function(){
+                    refreshDevList();
+                }, 300000);
+                setTimeout(function(){
+                	initChatPage();
+                },2000);
+                
+            });
+
+            window.addEventListener('LogoutSuccess',function(event){
+                baseAPI.clearACList();
+                if (refreshDevStatusTimer) {
+               	    clearInterval(refreshDevStatusTimer);
+               	    refreshDevStatusTimer = null;
+                }
+
+                if (refreshDevListTimer) {
+                    clearInterval(refreshDevListTimer);
+                    refreshDevListTimer = null;
+                }
+                finiChatPage();
+            });
+
+			 //点击左上角侧滑图标，打开侧滑菜单；
+			document.querySelector('.mui-icon-bars').addEventListener('tap', function(e) {
+				if (showMenu) {
+					closeMenu();
+				} else {
+					openMenu();
+				}
+			});
+			 //敲击顶部导航，内容区回到顶部
+			document.querySelector('header').addEventListener('doubletap', function() {
+				main.children()[0].evalJS('mui.scrollTo(0, 100)');
+			});
+			 //主界面向右滑动，若菜单未显示，则显示菜单；否则不做任何操作
+			window.addEventListener("swiperight", openMenu);
+			 //主界面向左滑动，若菜单已显示，则关闭菜单；否则，不做任何操作；
+			window.addEventListener("swipeleft", closeMenu);
+			 //侧滑菜单触发关闭菜单命令
+			window.addEventListener("menu:close", closeMenu);
+			window.addEventListener("menu:open", openMenu);
+			 //重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
+			mui.menu = function() {
+				if (showMenu) {
+					closeMenu();
+				} else {
+					openMenu();
+				}
+			}
+
+			 //首页返回键处理
+			 //处理逻辑：1秒内，连续两次按返回键，则退出应用；
+			var first = null;
+			mui.back = function() {
+				if (showMenu) {
+					closeMenu();
+				} else {
+					//首次按键，提示‘再按一次退出应用’
+					if (!first) {
+						first = new Date().getTime();
+						mui.toast('再按一次退出应用');
+						setTimeout(function() {
+							first = null;
+						}, 1000);
+					} else {
+						if (new Date().getTime() - first < 1000) {
+							plus.runtime.quit();
+						}
+					}
+				}
+			};
+		</script>
+	</body>
+</html>

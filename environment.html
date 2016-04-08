@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>无线环境</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #ffffff;
+			}
+			.title {
+				padding: 5px 10px 0px 0px;
+				color: #6d6d72;
+				font-size: 16px;
+				background-color: #fff;
+			}
+			.sub-title{
+                text-shadow: none;
+                text-align:left;
+                width:93%; 
+                margin:10px 0 20px 10px;
+                padding: 5px 0px 5px 0px;
+                font-size:16px;
+                color:#131a2d;
+                font-family:华文细黑;
+                background-color: #FAFAFA;
+                
+            }
+            .sta_h_a {
+			    color: #131a2d;
+			    font-size: 16px;
+			    font-weight: 500;
+			    text-shadow: none;
+			    font-family: 'arial', '华文细黑';
+			    height:20px;
+			    padding-bottom:6px;
+			    padding-left: 5%;
+			}
+			.sta_sub_a {
+			    color: #131a2d;
+			    font-size: 16px;
+			    width: 20%;
+			    text-shadow: none;
+			    font-family: 'arial', '华文细黑';
+			    height:20px;
+			    padding-bottom:6px;
+			}
+			
+			.sta_h_b {
+			    color: #131a2d;
+			    font-size: 16px;
+			    width: 120px;
+			    left: 39%;
+			    text-shadow: none;
+			    font-weight: 500;
+			    font-family: 'arial', '华文细黑';
+			    position: absolute;
+			    padding-bottom:6px;
+			}
+			.sta_sub_b {
+			    color: #131a2d;
+			    font-size: 16px;
+			    width: 120px;
+			    left: 39%;
+			    text-shadow: none;
+			    font-family: 'arial', '华文细黑';
+			    position: absolute;
+			    padding-bottom:6px;
+			}
+			
+			.sta_h_c {
+			    color: #131a2d;
+			    font-size: 16px;
+			    width: 20%;
+			    left: 70%;
+			    text-shadow: none;
+			    font-weight: 500;
+			    font-family: 'arial', '华文细黑';
+			    text-align: center;
+			    position: absolute;
+			    padding-bottom:6px;
+			}
+			.sta_sub_c {
+			    color: #131a2d;
+			    font-size: 16px;
+			    width: 20%;
+			    left: 70%;
+			    text-shadow: none;
+			    font-family: 'arial', '华文细黑';
+			    text-align: center;
+			    position: absolute;
+			    padding-bottom:6px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="sub-title">无线环境</div>
+				<table style="width: 95%;">
+                    <tr>
+                        <td class="sta_h_a" >AP</td>
+                        <td class="sta_h_b" >2.4G</td>
+                        <td class="sta_h_c" >5G</td>
+                    </tr>
+            	</table>
+				<ul id = "listdata" class="mui-table-view ">
+					
+				</ul>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/base.js"></script>
+		<script>
+		    var domready = false;
+			mui.init({
+				swipeBack: false,
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					}
+				}
+			});
+			
+			//获取AP列表
+			function getApList(AcSN, callback){
+				mui.ajax('https://lvzhouv3.h3c.com/v3/apmonitor/app/aplist?devSN=' + AcSN + '&startNum=0',{
+					dataType:'json',
+					type:'get',
+					timeout:5000,
+					success:function(data){
+						//获得服务器响应
+						callback(data.apList, 0);
+					},
+					error:function(){
+						//异常处理；
+						callback("请求AP列表失败", 1);
+					}
+				});
+			}
+			
+			//获取rrm列表
+			function getEnvApList(data, callback){
+		        mui.ajax('https://lvzhouv3.h3c.com/v3/rrmserver',{
+					data:data,
+					dataType:'json',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					timeout:10000,
+					success:function(data){
+						//获得服务器响应
+						if (data.retCode) {
+                        	callback(data.message,0);
+                        } else {
+                        	callback("", 1);
+                    	}
+					},
+					error:function(){
+						//异常处理；
+						callback("请求rrm列表失败", 1);
+					}
+				});
+		    }
+			
+			//显示rrm列表
+		    function showEnvAplist(Aplist){
+		        if (!Aplist.APList) {
+		        	return;
+		        }
+		        var i=0;
+		        var data = Aplist.APList;
+		        var len=data.length;
+		        for(i=0;i<len;i++)
+		        {
+		            var acSN = Aplist.ACSN;
+		            var apname = data[i].ApName;
+		            var src1 = "images/question.png";
+		            var src2 = "images/question.png";
+		
+		            if (data[i].EnableRrm == 1){
+		                if (data[i].curChlScore1 >= 90)
+		                {
+		                    src1='images/grin.png';
+		                }
+		                else if (data[i].curChlScore1 >= 50 && data[i].curChlScore1 < 90)
+		                {
+		                    src1='images/smile.png';
+		                }
+		                else
+		                {
+		                    src1='images/sad.png';
+		                }
+		
+		                if (data[i].curChlScore2 >= 90)
+		                {
+		                    src2='images/grin.png';
+		                }
+		                else if (data[i].curChlScore2 >= 50 && data[i].curChlScore2 < 90)
+		                {
+		                    src2='images/smile.png';
+		                }
+		                else
+		                {
+		                    src2='images/sad.png';
+		                }
+		            }
+		            
+		            var table = document.body.querySelector('.mui-table-view');
+					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+	
+					var li = document.createElement('li');
+					li.className = 'mui-table-view-cell';
+					var a = document.createElement('a');
+					
+					if (data[i].EnableRrm == 1){
+		                (function(acSN, apname){
+		                	/*
+		                    li.onclick = function(){
+		                    	
+		                        //window.open(encodeURI("#environmentDetail.html" + "?mode=" + "2.4G"));
+		                        console.log(acSN);
+								showdetailPage("2.4G", acSN, apname);
+		                    }
+		                    */
+		                    var para = "&2.4G" + "&" + acSN + "&"+ apname;
+	               			a.href = "environmentdetail.html?" + para;//encodeURI("environmentdetail.html?" + para);
+		            
+		                })( acSN, apname);
+		            }
+					a.className = 'mui-navigate-right';
+					a.innerHTML = '<table><tr><td class="sta_sub_a">' +apname+ '</td><td class="sta_sub_b"><img height="28px" src="' +src1+ '"></td><td class="sta_sub_c"><img height="28px" src="' +src2+ '"></td></tr></table>';
+					li.appendChild(a);
+					//li.innerHTML = '<a class="mui-navigate-right"><table><tr><td class="sta_h_a">' +apname+ '</td><td class="sta_h_b"><img height="28px" src="' +src1+ '"></td><td class="sta_h_c"><img height="28px" src="' +src2+ '"></td></tr></table></a>';
+					table.appendChild(li);
+			
+			        //refresh completed
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); 
+				}
+		    }
+		    /*
+		    function showdetailPage(mode, acSN, apname){
+		    	var para = "&" + mode + "&" + acSN + "&"+ apname;
+		    	console.log(para);
+		    	//window.open(encodeURI("environmentdetail.html?" + para));
+		        openEnviPage(encodeURI("environmentdetail.html?" + para));
+		    }
+				*/		
+			//下拉刷新具体业务实现
+			function pulldownRefresh() {
+		        
+		        //先获取所有的APLIST，再获取时能rrm扫描的APLIST
+		        getApList(baseAPI.getCurrentACSN(), function(apData,err){
+
+		            if (!err) {
+		            	var sendAplist = new Array();
+    	                var EnvAp = {Method:'GetApList',Param:{ACSN:baseAPI.getCurrentACSN(), APList:sendAplist}};
+    	                var ApInfo = [{ApName:"NoAP", EnableRrm:0,  curChlScore1:0, curChlScore2:0}];
+
+    	                for (var i=0; i<apData.length; i++){
+    	                    ApInfo = {ApName:"NoAp", EnableRrm:0,  curChlScore1:0, curChlScore2:0};
+    	                    ApInfo.ApName = apData[i].apName;
+
+    	                    sendAplist.push(ApInfo);
+    	                }
+
+    	                getEnvApList(EnvAp, function(envData, err){
+    	                    if (!err) {
+    	                    	//先清空列表，再重新生成
+        			      		var parent = document.getElementById("listdata");
+        				        while(parent.firstChild) parent.removeChild(parent.firstChild);
+
+        				    	showEnvAplist(envData);
+    	                    } else {
+    	                        mui.toast(envData);
+    	                    }
+                        	mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+    	                });
+		            } else {
+		                mui.toast(apData);
+		                mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+		            }
+		        });
+		        
+			}
+			
+			//添加登陆成功后页面刷新事件监听
+			window.addEventListener('Refresh',function(event){
+			   pulldownRefresh();
+			});
+			
+			mui('.mui-table-view').on('tap', 'a', function() {
+				var id = this.getAttribute("href");
+				var type = 'common';
+				var href = this.href;
+				
+				if (this.href == ""){
+					return;
+				}
+				
+				if (type == "common" || mui.os.ios) {
+					var webview_style = {
+						popGesture: "close",
+						scrollIndicator: "none" //去除滚动条
+					};
+					mui.openWindow({
+						id: id,
+						url: href,
+						styles: webview_style,
+						show: {
+							aniShow: "slide-in-right"
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				} else {
+					var href = this.href;
+					var title = this.getElementsByClassName("sub-config-title")[0].innerText;
+					template = plus.webview.getWebviewById("default-main");
+					//获得共用子webview
+					subWebview = template.children()[0];
+					//通知模板修改标题，并显示隐藏右上角图标；
+					mui.fire(template, 'updateHeader', {
+						title: title,
+						showMenu: false
+					});
+					if (subWebview.getURL() != href) {
+						subWebview.loadURL(href);
+					} else {
+						subWebview.show();
+					}
+					template.show('slide-in-right', 150);
+				}
+			});
+			
+			//window.open(encodeURI("environmentdetail.html" + "?userName=" + 23));
+			//showdetailPage("2.4G", "acSN", "apname");
+
+			function plusReady(){
+                if(!window.plus||!domready){
+                    return;
+                }
+
+                var curView = plus.webview.currentWebview();
+                curView.addEventListener( "show", function(e){
+                    setTimeout(function(){
+                        pulldownRefresh();
+                    },0);
+                }, false );
+            }
+
+            if(window.plus){
+                plusReady();
+            }else{
+                document.addEventListener("plusready",plusReady,false);
+            }
+
+            // 监听DOMContentLoaded事件
+            document.addEventListener("DOMContentLoaded",function(){
+                domready=true;
+                plusReady();
+            },false);
+		</script>
+	</body>
+</html>

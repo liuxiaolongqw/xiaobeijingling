@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>WiFi信道</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title"></h1>
+		</header>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/base.js"></script>
+	<script>
+	    //页面初始化
+		mui.init({
+			swipeBack: true
+		});
+		
+		mui.plusReady(function(){
+			drawAchievement();
+		});
+		
+	    var curduration = 0;
+	    
+	    function drawAchievement(){
+	    	
+	        getAchievement(function(result, err){
+	
+	            if (err == 0){
+	                curduration = result.h_duration;
+	                
+	                if((15 < curduration)&&(curduration<30)){
+
+	                    document.body.style.backgroundImage = "url('images/niubei.png')";
+	                    document.body.style.backgroundSize= "100%";
+	                }
+	                else if(curduration > 30){
+  	
+	                    document.body.style.backgroundImage = "url('images/shenbei.png')";
+	                    document.body.style.backgroundSize = "100%";
+	                }
+	                else
+	                {
+	                	document.body.style.backgroundImage = "url('images/mengbei.png')";
+	                    document.body.style.backgroundSize = "100%";
+	                }
+	            }else{
+                	mui.toast("请求小贝成就失败");
+                	document.body.style.backgroundImage = "url('images/mengbei.png')";
+                    document.body.style.backgroundSize = "100%";
+	            }
+	        });
+	    }
+	    
+	    function getAchievement(callback){
+			var para = {acSN:baseAPI.getCurrentACSN()};
+			var url_t = "https://lvzhouv3.h3c.com/v3/health/home/history/achievement";
+			
+	        mui.ajax({
+	            url:url_t,
+	            dataType:'json',
+	            timeout: 5000,
+	            data: para,
+	            success:function(data) {
+	                var result = mui.parseJSON(data);
+	                err = 0;
+	                callback(result,err);
+	            },
+	            error:function(request, status, err){
+	                if (status == "timeout")
+	                {
+	                    err = 1;
+	                    callback("",err);
+	                }
+	            }
+	        });
+	    }
+	</script>
+</html>

@@ -1,0 +1,36 @@
+.chat_dialog_sum_headimg{
+	border-radius: 4px;
+}
+.chat_dialog_sum_msg{
+	font-size: 15px;
+	margin: 0px;
+	color: #8f8f94;
+	top: 36px;
+	position: absolute;
+	height: 24px;
+}
+.chat_dialog_sum_time{
+	position: absolute;
+	right: 14px;
+	top:10px;
+	font-size: 13px;
+}
+.chat_dialog_sum_badge{
+	position: absolute;
+	top:20px;
+	left:20px;
+	width: auto;
+}
+.mui-table-view-cell a .mui-badge{
+	right:initial;
+	top: 12px;
+	left: 47px;
+}
+.chat_dialog_sum_title{
+	display: block;
+}
+.mui-media-body .mui-icon{
+	position: absolute;
+	right:14px;
+	top:30px
+}

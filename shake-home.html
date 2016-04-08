@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>摇帮手</title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style>
+			html,
+			.mui-content {
+				background-color: #efeff4;
+			}
+			
+			#addr {
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title">摇帮手</h1>
+		</header>
+		<div class="mui-content">
+			<div id="addr"></div>
+			<ul id="OA_task" class="mui-table-view"></ul>
+		</div>
+		<div class="mui-content-padded">
+			<p>当前页demo仅用于摇帮手演示，敬请期待摇帮手上线</p>
+		</div>
+		<script>
+			mui.plusReady(function() {
+				var value = plus.storage.getItem("address");
+				document.getElementById("addr").innerHTML = value;
+				if (value.indexOf('杭州') == '-1') {
+					add('images/h3c.png', '华三通信', '主要提供IT基础架构产品及方案的研究、开发、生产、销售及服务');
+					add('images/gwzx.png', '格物资讯', '格物资讯致力于行业信息化与IT技术发展的研究与跟踪');
+					add('images/ruijie.png', '锐捷网络', '我们强调团队，提倡共赢，善于学习和拼搏，勇于创新和坚持，真诚服务');
+				} else {
+					add('images/h3c.png', '华三通信', '主要提供IT基础架构产品及方案的研究、开发、生产、销售及服务');
+					add('images/huawei.png', '华为', '专业代维,关注IT,专注于服务器维护、服务器代维、网站安全加固、网站建设、网站优化,服务器托管租用');
+				}
+			});
+			document.getElementById("back").addEventListener('tap', function() {
+				plus.storage.clear();
+			});
+
+			function add(dw_picurl, name, describe) {
+				var ul = document.getElementById('OA_task');
+				var li = document.createElement("li");
+				li.setAttribute("class", "mui-table-view-cell mui-media");
+				var html = [];
+				html.push('<a href="javascript:;"><img class="mui-media-object mui-pull-left" src="' + dw_picurl + '"><div class="mui-media-body">' + name + '<p class="mui-ellipsis">' + describe + '</p></div></a>');
+				li.innerHTML += html.join('');
+				ul.appendChild(li);
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Internet</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="css/mui.min.css">
+        <!--<link rel="stylesheet" href="css/app.css">-->
+        <!--<link rel="stylesheet" href="css/iconfont.css">-->
+        <style type="text/css">
+            #WAN_list {
+                /*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+                margin-top: -1px;
+            }
+            .data-table{
+                width: 100%;
+            }
+            .data-type {
+                color: #616e7f;
+                font-size: 15px;
+                font-weight: normal;
+                font-family: 'arial', '华文细黑';
+            }
+            .data-content {
+                color: #131a2d;
+                font-size: 15px;
+                font-weight: normal;
+                font-family: 'arial', '华文细黑';
+                padding-left: 5%;
+            }
+            .mui-badge{
+                background-color: #CACACA;
+            }
+            .mui-badge-success {
+                background-color: #69c4c5;
+            }
+            .history-img{
+                height: 23px;
+                width: 26px;
+            }
+            * {
+			    -webkit-user-select:text;
+			}
+        </style>
+    </head>
+    <body>
+        <header class="mui-bar mui-bar-nav">
+            <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 id="title" class="mui-title">Internet</h1>
+        </header>
+        <hr style="margin:0; padding:0; border:0; height:2px; background-color:#e6e7e8"/>
+        <div class="mui-content">
+            <ul id="WAN_list" class="mui-table-view">
+
+            </ul>
+        </div>
+        <div id="WAN_history" class="mui-popover">
+            <div id="OpenHistoryWindow">
+                <div id="chart-fld"></div>
+            </div>
+        </div>
+    </body>
+    <script src="js/mui.min.js"></script>
+    <script src="libs/echarts-all.js"></script>
+    <script src="js/base.js"></script>
+    <script>
+        var serverUrl = "https://lvzhouv3.h3c.com/v3";
+        var wannum = 0;
+        var history_img;
+        var speed_UP = [];
+        var speed_DOWN = [];
+        var x_TIME = ["1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"];
+
+        mui.init({
+            swipeBack:true//启用右滑关闭功能
+        });
+
+        var g_apStartNum = 0;
+
+        mui.plusReady(function() {
+            initHistoryDiv();
+            updateInternetInfo(baseAPI.getCurrentACSN());
+        });
+
+        function updateInternetInfo(devSN){
+//          console.log("updateInternetInfo");
+            removeAllChildren("WAN_list");
+            getWanInfo(devSN, addWANList);
+        }
+
+        function addWANList(WANList) {
+            if (WANList.wan_list) {
+                var WANNum = WANList.wan_list.length;
+                var WANInfo;
+
+                for (var i = WANNum - 1; i >= 0; i--) {
+                    WANInfo = WANList.wan_list[i];
+
+                    var WANData = {
+                        interfacename: ["接口", (WANInfo.interfaceName !== undefined)?WANInfo.interfaceName:""],
+                        description: ["描述", (WANInfo.description !== undefined) ?WANInfo.description:""],
+                        type: ["类型", (WANInfo.type !== undefined)?WANInfo.type:""],
+                        ip: ["IP地址", (WANInfo.ip !== undefined) ?WANInfo.ip:""],
+                        //gateway: ["网关", (WANInfo.gateway !== undefined) ?WANInfo.gateway:""],
+                        //dns: ["DNS", WANInfo.dns],
+                        status: ["状态", (WANInfo.status !== undefined) ?WANInfo.status:""]
+                    };
+                    var interFaceName = WANInfo.interfaceName;
+                    addOneWan(WANData);
+                }
+            }
+        }
+
+        /* 增加一个wan口显示 */
+        function addOneWan(WANData) {
+//          console.log("addOneWan");
+            var WANList = document.getElementById('WAN_list');
+
+            var WANElement = document.createElement('li');
+            WANElement.className = 'mui-table-view-cell mui-collapse';
+
+            wanInfoProc(WANData);
+
+            //apend title
+            var WANHeader = document.createElement('a');
+            WANHeader.className = "mui-navigate-right";
+
+            var title = document.createElement('span');
+            title.innerText = WANData.description[1];
+
+            var status = document.createElement('span');
+            status.style.fontSize="14px";
+            status.classList.add("mui-badge");
+            if (WANData.status[1] == "up") {
+            	status.classList.add("mui-badge-success");
+            }
+            status.innerText = WANData.status[1];
+
+            WANHeader.appendChild(title);
+            WANHeader.appendChild(status);
+            WANElement.appendChild(WANHeader);
+
+            appendTable(WANElement, WANData);
+            WANList.appendChild(WANElement);
+        }
+
+        /*增加一个表格*/
+        function appendTable(ele, WANData) {
+            var div = document.createElement("div");
+            div.className = "mui-collapse-content";
+            var table = document.createElement("table");
+            table.className = "data-table";
+
+            for (var valName in WANData) {
+                var line = document.createElement("tr");
+                var tdHead = document.createElement("td");
+                tdHead.className = "data-type";
+                tdHead.innerText = WANData[valName][0];
+                var tdContent = document.createElement("td");
+                tdContent.className = "data-content";
+                tdContent.innerText = WANData[valName][1];
+                line.appendChild(tdHead);
+                line.appendChild(tdContent);
+                table.appendChild(line);
+            }
+
+            var WANHistory = document.createElement("tr");
+            var history_text = document.createElement("td");
+            history_text.className = "data-type";
+            history_text.innerText = "WAN历史";
+
+            var history_content = document.createElement("td");
+            history_content.className = "data-content";
+            history_link = document.createElement("a");
+            history_link.href = "#WAN_history";
+            history_link.name = WANData.interfacename[1];
+            history_link.addEventListener("tap",function () {
+                showWANHistory(this.name);
+//              console.log("tap event trigger");
+                return false;
+            });
+
+            history_img = document.createElement("img");
+            history_img.src = "images/wan-history.png";
+            history_img.className = "history-img";
+            history_link.appendChild(history_img);
+            history_content.appendChild(history_link);
+
+            WANHistory.appendChild(history_text);
+            WANHistory.appendChild(history_content);
+
+            table.appendChild(WANHistory);
+
+            div.appendChild(table);
+            ele.appendChild(div);
+            return;
+        }
+
+        function wanInfoProc(wanData) {
+            var headIndex = '0';
+            var valueIndex = '1';
+            var status = ['', 'up', 'down', 'testing', 'unknown', 'dormant', 'notPresent', 'lowerLayerDown'];
+            var type = ["", "拨号上网(PPPoE)", "DHCP", "静态IP"];
+
+            wanData.status[valueIndex] = ((wanData.status[valueIndex] >= 0) && (wanData.status[valueIndex]< status.length)) ? status[wanData.status[valueIndex]] : "";
+            wanData.type[valueIndex] = ((wanData.type[valueIndex] >= 0) && (wanData.type[valueIndex] < type.length)) ? type[wanData.type[valueIndex]] : "";
+        }
+
+        function initHistoryDiv() {
+            var contentheight = plus.screen.resolutionHeight - plus.navigator.getStatusbarHeight()-110;
+            var contentwidth = plus.screen.resolutionWidth;
+
+            document.getElementById("WAN_history").style.width = contentwidth * 0.9 + 'px';
+            document.getElementById("WAN_history").style.height = contentheight * 0.7 + 'px';
+            document.getElementById("chart-fld").style.width = contentwidth * 0.85 + 'px';
+            document.getElementById("chart-fld").style.height = contentheight * 0.65 + 'px';
+        }
+
+        function getWANHistoryData(callback) {
+            
+            getWanHistoryInfo( function (result, err) {
+                if (err == 0) {
+                    callback(result);
+                } else {
+                    callback("");
+                }
+            });
+        }
+
+        function showWANHistory(interFaceName) {
+            getWANHistoryData(function (result) {
+                var myDate = new Date();
+                var resultlist = new Array();
+
+             	var aWan_traffic = result.trafficList || [];
+             	var updateTime =0;
+            	var upvalue = 0;
+                var downvalue = 0;
+                var flowdate  = 0;
+                var Hour = "00";
+                var Minute = "00";
+                var Second = "00";
+                speed_UP = [];
+                speed_DOWN = [];
+                
+                for (var i = 0; i < aWan_traffic.length; i++) {
+                	updateTime = new Date(aWan_traffic[i].updateTime);
+                	
+                	if (updateTime.getHours() != 0){
+                		Hour = updateTime.getHours();
+                		if (9>Hour>0)
+                		{
+                			Hour = "0"+Hour;
+                		}
+                	}
+					if (updateTime.getMinutes() != 0){
+						Minute = updateTime.getMinutes();
+						if (9>Minute>0)
+                		{
+                			Minute = "0"+Minute;
+                		}
+					}
+					if (updateTime.getSeconds() != 0){
+						Second = updateTime.getSeconds();
+						if (9>Second>0)
+                		{
+                			Second = "0"+Second;
+                		}
+					}
+					
+                	flowdate = Hour+":"+Minute+":"+Second;
+                	upvalue = aWan_traffic[i].speed_up/1024;
+                    downvalue = aWan_traffic[i].speed_down/1024;
+             
+                    resultlist.push(flowdate);
+                    speed_UP.push(upvalue.toFixed(2));
+                    speed_DOWN.push(downvalue.toFixed(2));
+                }
+
+               
+                drawWANHistoryChart(speed_UP, speed_DOWN, resultlist);
+
+            });
+        }
+
+        function drawWANHistoryChart(speed_up, speed_down, resultlist) {
+            var wanChart = echarts.init(document.getElementById('chart-fld'));
+            wanChart.clear();
+            var wan_option = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                
+                legend: {
+                    data: ['上行', '下行'],
+                    x: '40%',
+                    y: '5%'
+                },
+                dataZoom: {
+                    show: true,
+                    realtime: true,
+                    start: 0,
+                    end: 40
+                },
+                grid: {
+                    y: '15%',
+                    y2: '24%',
+                    x: '15%',
+                    x2: '1%'
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: true,
+                        data: resultlist
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'(单位：MB)',
+	                    nameLocation:'end',
+	                    nameGap:5,
+                    }
+                ],
+                series: [
+                    {
+                        name: '上行',
+                        type: 'line',
+                        data: speed_up,
+                        smooth:true,
+                    },
+                    {
+                        name: '下行',
+                        type: 'line',
+                        data: speed_down,
+                        smooth:true,
+                    }
+                ]
+            };
+            wanChart.setOption(wan_option);
+        }
+
+        function removeAllChildren(elementId) {
+            var ele = document.getElementById(elementId);
+            if (!ele) {
+            	return;
+            }
+            while(ele.hasChildNodes())
+            {
+                ele.removeChild(ele.firstChild);
+            }
+        }
+
+        function getWanInfo(acSN, callBack) {
+            var dataUrl = '/devmonitor/app/waninfo?devSN=' + acSN;
+            mui.ajax({
+                url: serverUrl + dataUrl,
+                type: 'get',
+                dataType:'json',
+                timeout: 5000,
+                success: function(data,status){
+                    if(status == 'success') {
+                        callBack && callBack(data);
+                    }
+                },
+                error: function(data,err){
+                    callBack && callBack(data);
+                }
+            });
+        }
+        
+        function getdate(flag) {
+	        var tNow = new Date();
+	        var nYear = tNow.getFullYear();
+	        var nMonth = tNow.getMonth() +1;
+	        var nDay = tNow.getDate() + 1;
+	        if (flag)
+	        {
+	        	nDay -= 1;
+	        }
+	        var oNowEndTime = nYear + "-" + nMonth + "-" + nDay;
+	        return oNowEndTime;
+	   }
+
+        function getWanHistoryInfo(callback){
+        	var date = new Date();
+	        var startTime = date.setHours(0, 0, 0);
+	        var endTime = date.setHours(24, 0, 0);
+	        var  currentDate = getdate(0);
+	        var oneBefore = getdate(1);
+            mui.ajax({
+                url: serverUrl + '/devmonitor/web/hiswantraffic',
+                dataType: 'json',
+                timeout: 5000,
+                data: {
+	                devSN: baseAPI.getCurrentACSN(),
+	                startTime: oneBefore,
+	                endTime: currentDate
+	            },
+                success:function(data) {
+                
+                    err = 0;
+                    callback(data,err);
+                }
+            });
+        }
+
+    </script>
+</html>
+

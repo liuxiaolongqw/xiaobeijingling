@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>高级</title>
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/iconfont.css">
+		<style type="text/css">
+			body,.mui-content{
+			  	background-color: #383e4e;
+			  	color:#fff;
+			}
+			.head{
+                height: 50px;
+                width: 50px;
+                display: block;
+                margin: auto;
+            }
+            .username{
+            	 margin: auto;
+            	 display: block;
+            	 height: 30px;
+            	 width: 58px;
+            }
+            .user-info{
+                padding: 10px 10px 10px 10px;
+            }
+            #user-info *{
+                position: relative;
+                vertical-align:middle;
+            }
+            #head-img {
+                width: 50px;
+                height: 50px;
+				border-radius: 5px; 
+            }
+			.title{
+			    margin: 12px 15px 30px;
+			    font-size: 19px;
+			}
+			.title+.content{
+			  	margin: 10px 15px 35px;
+			  	color: #bbb;
+			  	text-indent: 1em;
+			  	font-size: 14px;
+			  	line-height: 24px;
+			}
+			.mui-table-view{
+			  	margin-bottom: 35px;
+			}
+
+			.mui-table-view-inverted
+			{
+			    color: #ddd;
+			    background: #383e4e;
+			}
+			.mui-table-view-inverted:after
+			{
+			    background-color: #222;
+			}
+			.mui-table-view-inverted:before
+			{
+			    background-color: #ddd;
+			}
+			.mui-table-view-inverted .mui-table-view-cell:after
+			{
+			    background-color: #222;
+			}
+			.mui-table-view-inverted .mui-table-view-cell.mui-active
+			{
+			    background-color: #303544;
+			}
+			.mui-table-view-inverted .mui-table-view-cell > a:not(.mui-btn).mui-active
+			{
+			    background-color: #303544;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content">
+            <div id="user-info" class="user-info">
+				<a id="head" class="head">
+					 <img class="head-img" id="head-img" src="images/user-head.png"/> 
+				</a>
+			</div>
+			<span id="username" class="username"></span>
+			<ul class="mui-table-view mui-table-view-chevron mui-table-view-inverted">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" style="font-size: 16px;" href="net-monitor.html">
+						<span class="mui-icon iconfont icon-shipinjiankong" style= "font-size: 22px;margin-right: 20px;"></span>
+						网络监控
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" style="font-size: 16px;" href="device-manage.html">
+						<span class="mui-icon iconfont icon-icluyouqi" style= "font-size: 22px;margin-right: 20px;"></span>
+						设备管理
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" style="font-size: 16px;" href="im-chat.html">
+						<span class="mui-icon iconfont icon-kefu" style= "font-size: 22px;margin-right: 20px;"></span>
+						小贝客服
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" style="font-size: 16px;" href="shake.html">
+						<span class="mui-icon iconfont icon-yaoyiyao" style= "font-size: 22px;margin-right: 20px;"></span>
+						摇帮手
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" style="font-size: 16px;" href="webview_embed.html">
+						<span class="mui-icon iconfont icon-luntan" style= "font-size: 22px;margin-right: 20px;"></span>
+						小贝论坛
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" style="font-size: 16px;" href="about.html">
+						<span class="mui-icon iconfont icon-guanyu" style= "font-size: 22px;margin-right: 20px;"></span>
+						关于小贝
+					</a>
+				</li>
+			</ul>
+			<p style="margin: 10px 15px;">
+                <button id="exit-btn" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="padding: 5px 20px;font-size: 16px;">退出登录</button>
+            </p>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript" src="js/common.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			var aniShow = "slide-in-right";
+			//关于backbutton和menubutton两个按键的说明，在iOS平台不存在，故需隐藏
+			if(!mui.os.android){
+				var span = document.getElementById("android-only")
+				if(span){
+					span.style.display = "none";
+				}
+				aniShow = "pop-in";
+			}
+			var subWebview=null,template=null,index=null;
+			mui.plusReady(function () {
+				//获得主页面webview引用；
+				index = plus.webview.currentWebview().opener();
+			})
+			mui('.mui-table-view').on('tap', 'a', function() {
+//			    mui.fire(plus.webview.getLaunchWebview(),"menu:close");
+				var id = this.getAttribute("href");
+				var type = this.getAttribute("open-type");
+				var href = this.href;
+				clicked(href,true, false,{render:'always'});
+
+//				if(type=="common"||mui.os.ios){
+//					var webview_style = {
+//						popGesture: "close"
+//					};
+//					mui.openWindow({
+//						id: id,
+//						url: href,
+//						styles: webview_style,
+//						show: {
+//							aniShow: aniShow
+//						}
+//					});
+//				}else{
+//					var href = this.href;
+//					var title = this.innerText;
+//					template = plus.webview.getWebviewById("default-main");
+//					//获得共用子webview
+//					subWebview = template.children()[0];
+//
+//					//通知模板修改标题，并显示隐藏右上角图标；
+//					mui.fire(template,'updateHeader',{title:title,showMenu:false});
+//					if (subWebview.getURL() != href) {
+//						subWebview.loadURL(href);
+//					} else {
+//						 subWebview.show();
+//					}
+//					template.show('slide-in-right', 150);
+//				}
+			});
+
+             //退出操作******************
+            document.getElementById('exit-btn').addEventListener('tap', function() {
+                var exitBtn = this;
+                exitBtn.disabled = true;
+                var indexPage = plus.webview.getLaunchWebview();
+                if (mui.os.ios) {
+                    app.logout(function(err){
+                        exitBtn.disabled = false;
+                        if (!err) {
+                            app.setState({});
+                            setTimeout(function() {
+                                mui.fire(indexPage,"menu:close");
+                                mui.fire(indexPage,"LogoutSuccess");
+                            },500);
+							localStorage.setItem('uid', "");
+                            var styles = {render:"always"};
+                            plus.webview.open("login.html", 'login', styles, 'slide-in-left', 300);
+                        }
+                        else{
+                            plus.nativeUI.toast('网络错误');
+                        }
+                    });
+                    return;
+                }
+                var btnArray = [{
+                    title: "注销当前账号"
+                }, {
+                    title: "直接关闭应用"
+                }];
+                plus.nativeUI.actionSheet({
+                    cancel: "取消",
+                    buttons: btnArray
+                }, function(event) {
+                    var index = event.index;
+                    switch (index) {
+                        case 1:
+                            app.logout(function(err){
+                                exitBtn.disabled = false;
+                                if (!err) {
+                                    app.setState({});
+                                    var settings = app.getSettings();
+                                    settings.autoLogin = false;
+                                    app.setSettings(settings);
+                                    setTimeout(function() {
+                                        mui.fire(indexPage,"menu:close");
+                                        mui.fire(indexPage,"LogoutSuccess");
+                                    },500);
+									localStorage.setItem('uid', "");
+                                    mui.openWindow({
+                                        url: 'login.html',
+                                        id: 'login',
+                                        show: {
+                                            aniShow: 'slide-in-left',
+                                            duration: 300
+                                        },
+                                        waiting: {
+                                            autoShow: false
+                                        }
+                                    });
+                                }
+                                else{
+                                    plus.nativeUI.toast('网络错误');
+                                }
+                            });
+                            break;
+                        case 2:
+                            exitBtn.disabled = false;
+                            plus.runtime.quit();
+                            break;
+                        default:
+                            exitBtn.disabled = false;
+                            break;
+                    }
+                });
+            }, false);
+
+			/**
+			 * 关闭侧滑菜单
+			 */
+			function close() {
+				mui.fire(mui.currentWebview.opener(),"menu:close");
+			}
+
+			//在android4.4.2中的swipe事件，需要preventDefault一下，否则触发不正常
+			window.addEventListener('dragstart',function(e){
+				mui.gestures.touch.lockDirection = true; //锁定方向
+				mui.gestures.touch.startDirection = e.detail.direction;
+			});
+			window.addEventListener('dragleft', function(e) {
+				if(!mui.isScrolling){
+					e.detail.gesture.preventDefault();
+				}
+			});
+			//监听左滑事件，若菜单已展开，左滑要关闭菜单；
+			window.addEventListener("swipeleft",function (e) {
+				if(Math.abs(e.detail.angle)>170){
+					close();
+				}
+			});
+
+			window.addEventListener('LoginSuccess',function(event){
+                //获得事件参数
+                document.getElementById("username").innerText = app.getUser();
+//              plus.io.resolveLocalFileSystemURL("_doc/head.jpg", function(entry) {
+//                      var s = entry.fullPath + "?version=" + new Date().getTime();;
+//                      document.getElementById("head-img").src = s;
+//                  }, function(e) {
+//                      document.getElementById("head-img").src = 'images/user-head.png';
+//                  })
+            });
+            
+            window.addEventListener("updateHeadImg",function(e){
+            	var uid = e.detail.uid;
+            	console.log("index_"+uid)
+            	document.getElementById("head-img").src = "../doc/"+uid+".jpg?"+new Date().getTime();
+            })
+            
+            function getImage() {
+					var c = plus.camera.getCamera();
+					c.captureImage(function(e) {
+						plus.io.resolveLocalFileSystemURL(e, function(entry) {
+							var s = entry.toLocalURL() + "?version=" + new Date().getTime();
+							console.log(s);
+							document.getElementById("head-img").src = s;
+							//变更大图预览的src
+							//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+							document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();
+						}, function(e) {
+							console.log("读取拍照文件错误：" + e.message);
+						});
+					}, function(s) {
+						console.log("error" + s);
+					}, {
+						filename: "_doc/head.jpg"
+					})
+				}
+
+				function galleryImg() {
+					plus.gallery.pick(function(a) {
+						plus.io.resolveLocalFileSystemURL(a, function(entry) {
+							plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
+								root.getFile("head.jpg", {}, function(file) {
+									//文件已存在
+									file.remove(function() {
+										console.log("file remove success");
+										entry.copyTo(root, 'head.jpg', function(e) {
+												var e = e.fullPath + "?version=" + new Date().getTime();
+												console.log(e);
+												document.getElementById("head-img").src = e;
+												//变更大图预览的src
+												//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+												document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" + new Date().getTime();;
+											},
+											function(e) {
+												console.log('copy image fail:' + e.message);
+											});
+									}, function() {
+										console.log("delete image fail:" + e.message);
+									});
+								}, function() {
+									//文件不存在
+									entry.copyTo(root, 'head.jpg', function(e) {
+											var path = e.fullPath + "?version=" + new Date().getTime();
+											document.getElementById("head-img").src = path;
+											//变更大图预览的src
+											//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+											document.querySelector("#__mui-imageview__group .mui-slider-item img").src = path;
+										},
+										function(e) {
+											console.log('copy image fail:' + e.message);
+										});
+								});
+							}, function(e) {
+								console.log("get _www folder fail");
+							})
+						}, function(e) {
+							console.log("读取拍照文件错误：" + e.message);
+						});
+					}, function(a) {}, {
+						filter: "image"
+					})
+				};
+
+				function defaultImg() {
+					plus.io.resolveLocalFileSystemURL("_doc/head.jpg", function(entry) {
+						var s = entry.fullPath + "?version=" + new Date().getTime();;
+						document.getElementById("head-img").src = s;
+					}, function(e) {
+						document.getElementById("head-img").src = 'images/user-head.png';
+					})
+				}
+				
+				//更换头像
+//				mui("#user-info").on("tap", "#head", function(e) {
+//					var a = [{
+//						title: "拍照"
+//					}, {
+//						title: "从手机相册选择"
+//					}];
+//					plus.nativeUI.actionSheet({
+//						title: "修改头像",
+//						cancel: "取消",
+//						buttons: a
+//					}, function(b) {
+//						switch (b.index) {
+//							case 0:
+//								break;
+//							case 1:
+//								getImage();
+//								break;
+//							case 2:
+//								galleryImg();
+//								break;
+//							default:
+//								break
+//						}
+//					})
+//				});
+		</script>
+	</body>
+
+</html>

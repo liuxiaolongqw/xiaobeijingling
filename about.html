@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>关于小贝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-views,
+			.mui-view,
+			.mui-pages,
+			.mui-page,
+			.mui-page-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #efeff4;
+			}
+			.mui-pages {
+				top: 46px;
+				height: auto;
+			}
+			.mui-scroll-wrapper,
+			.mui-scroll {
+				background-color: #efeff4;
+			}
+			.mui-page.mui-transitioning {
+				-webkit-transition: -webkit-transform 200ms ease;
+				transition: transform 200ms ease;
+			}
+			.mui-page-left {
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+			}
+			.mui-ios .mui-page-left {
+				-webkit-transform: translate3d(-20%, 0, 0);
+				transform: translate3d(-20%, 0, 0);
+			}
+			.mui-navbar {
+				position: fixed;
+				right: 0;
+				left: 0;
+				z-index: 10;
+				height: 44px;
+				background-color: #69C4C5;
+			}
+			.mui-navbar .mui-bar {
+				position: absolute;
+				background: transparent;
+				text-align: center;
+			}
+			.mui-android .mui-navbar-inner.mui-navbar-left {
+				opacity: 0;
+			}
+			.mui-ios .mui-navbar-left .mui-left,
+			.mui-ios .mui-navbar-left .mui-center,
+			.mui-ios .mui-navbar-left .mui-right {
+				opacity: 0;
+			}
+			.mui-navbar .mui-btn-nav {
+				-webkit-transition: none;
+				transition: none;
+				-webkit-transition-duration: .0s;
+				transition-duration: .0s;
+			}
+			.mui-navbar .mui-bar .mui-title {
+				display: inline-block;
+				width: auto;
+			}
+			.mui-page-shadow {
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 16px;
+				height: 100%;
+				z-index: -1;
+				content: '';
+			}
+			.mui-page-shadow {
+				background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+				background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+			}
+			.mui-navbar-inner.mui-transitioning,
+			.mui-navbar-inner .mui-transitioning {
+				-webkit-transition: opacity 200ms ease, -webkit-transform 200ms ease;
+				transition: opacity 200ms ease, transform 200ms ease;
+			}
+			.mui-page {
+				display: none;
+			}
+			.mui-pages .mui-page {
+				display: block;
+			}
+			.mui-page .mui-table-view:first-child {
+				margin-top: 15px;
+			}
+			.mui-page .mui-table-view:last-child {
+				margin-bottom: 30px;
+			}
+			.mui-table-view {
+				margin-top: 20px;
+			}
+			.mui-table-view:after {
+				height: 0;
+			}
+			.mui-table-view span.mui-pull-right {
+				color: #999;
+			}
+			.mui-table-view-divider {
+				background-color: #efeff4;
+				font-size: 14px;
+			}
+			.mui-table-view-divider:before,
+			.mui-table-view-divider:after {
+				height: 0;
+			}
+			.mui-content-padded {
+				margin: 10px 0px;
+			}
+			.mui-locker {
+				margin: 35px auto;
+				display: none;
+			}
+			.update {
+				font-style: normal;
+				color: #999999;
+				margin-right: -25px;
+				font-size: 15px
+			}
+			.mui-ios .mui-navbar .mui-bar .mui-title {
+				position: static;
+			}
+			.data-table{
+                width: 100%;
+                text-align: center;
+            }
+            .data-tbody{
+                background-color: #ffffff;
+            }
+            .data-type {
+                color: #616e7f;
+                font-size: 15px;
+                font-weight: normal;
+                font-family: 'arial', '华文细黑';
+            }
+            .data-content {
+                color: #131a2d;
+                font-size: 15px;
+                font-weight: normal;
+                font-family: 'arial', '华文细黑';
+                padding-left: 5%;
+            }
+            p {
+				padding: 2px 5px;
+			}
+			h5 {
+				margin-left: 5px;
+			}
+			.mui-navigate-right{
+				font-size:15px;
+                color:#131a2d;
+			}
+		</style>
+		<link rel="stylesheet" type="text/css" href="css/feedback-page.css" />
+	</head>
+
+	<body>
+		<!--页面主结构开始-->
+		<div id="app" class="mui-views">
+			<div class="mui-view">
+				<div class="mui-navbar">
+				</div>
+				<div class="mui-pages">
+				</div>
+			</div>
+		</div>
+		<!--页面主结构结束-->
+		<!--单页面开始-->
+		<div id="setting" class="mui-page">
+			<!--页面标题栏开始-->
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">关于小贝</h1>
+			</div>
+			<!--页面标题栏结束-->
+			<!--页面主内容区开始-->
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div style="text-align:center;margin:10px;">
+			                <div style="margin:auto;height:65px;width:90px;overflow:hidden;">
+			                    <img alt="hollowlogo" src="images/hollowlogo.png" style="position:relative;height:65px;width:90px;z-index:0;">
+			                </div>
+			                <div style="padding-top:6px;color:#131a2d;font-size:13px;">小贝v1.2.7</div>
+			            </div>
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell">
+								<a id="share" class="mui-navigate-right">分享推荐</a>
+							</li>
+							<!--<li class="mui-table-view-cell">
+								<a id="tel" class="mui-navigate-right">联系电话</a>
+							</li>-->
+							<li class="mui-table-view-cell">
+								<a id="feedback-btn" href="#feedback" class="mui-navigate-right">问题反馈</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a id="update" class="mui-navigate-right">检查更新</a>
+							</li>
+							<li class="mui-table-view-cell">
+                                <a id="legalProvisionAndPolicy" href="#Policy" class="mui-navigate-right">使用条款和隐私政策</a>
+                            </li>
+                            <li class="mui-table-view-cell">
+                                <a id="thanks_link" href="#thanks" class="mui-navigate-right">感谢</a>
+                            </li>
+						</ul>
+						<div style="text-align:center;">
+			                <div id="copyrightSuffix" style="color:#b0b6bd;font-size:10px;margin-top:30px;">
+			                    <div >H3C公司 版权所有</div>
+			                    <div >Copyright 2016 h3c. All Rights Reserved.</div>
+			                </div>
+			            </div>
+					</div>
+				</div>
+			</div>
+			<!--页面主内容区结束-->
+		</div>
+		<div id="thanks" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">感谢</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+					    <table id="thanks_table" class="data-table">
+					    	<thead><tr><th>名字</th><th>单位</th></tr></thead>
+					    	<tbody id="thanks_tbody" class="data-tbody"></tbody>
+					    </table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="feedback" class="mui-page feedback">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">问题反馈</h1>
+			</div>
+			<div class="mui-page-content">
+				<p>问题和意见</p>
+				<div class="row mui-input-row">
+					<textarea id='question' class="mui-input-clear question" placeholder="请详细描述您的问题和意见..."></textarea>
+				</div>
+				<p>图片(选填,提供问题截图)</p>
+				<div id='image-list' class="row image-list">
+				</div>
+				<p>QQ/邮箱</p>
+				<div class="mui-input-row">
+					<input id='contact' type="text" class="mui-input-clear  contact" placeholder="(选填,方便我们联系您 )" />
+				</div>
+				<button id='submit' type="button" class="mui-btn mui-btn-green">提交</button>
+			</div>
+		</div>
+		<div id="Policy" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+				<h1 class="mui-center mui-title">使用条款和隐私政策</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-content-padded">
+					<h5 style="margin-top:10px;">欢迎使用小贝精灵！<br><br></h5>
+					<h5 style="margin-top:10px;">1. 权利声明</h5>
+					<p>
+						本软件的一切知识产权，以及与本软件相关的所有信息内容，包括但不限于：文字表达及其组合、图标、图饰、图像、图表、色彩、界面设计、版面框架、有关数据、附加程序、印刷资料或电子文档等均为杭州华三通信技术有限公司("H3C")所有，受著作权法和国际著作权条约以及知识产权法律法规的保护。
+					</p>
+					<h5 style="margin-top:10px;">2. 许可范围</h5>
+					<p>
+						2.1  下载、安装和使用：本软件为免费软件，用户可以非商业性、无限制数量的下载、安装及使用本软件。
+					</p>
+					<p>
+						2.2   复制、分发和传播:用户可以非商业性、无限制数量的复制、分发和传播本软件产品。但必须保证每一份复制、分发和传播的拷贝都是完整和真实的，包括所有有关本软件产品的软件、电子文档、版权和商标。
+					</p>
+					<h5 style="margin-top:10px;">3. 权利限制</h5>
+					<p>
+						3.1  禁止反向工程、反向编译和反向汇编：用户不得对本软件产品进行反向工程、反向汇编，同时不得改动编译在程序文件内部的任何资源，禁止用户二次开发、包装。除法律、法规明文规定允许上述活动外，用户必须遵守此协议限制。
+					</p>
+					<p>
+						3.2  个别授权：如需进行商业性的销售、复制、分发，包括但不限于软件销售、预装、捆绑等，必须获得H3C的书面授权和许可。
+					</p>
+					<p>
+						3.3  权利保留：本协议未明示授权的其他一切权利仍归H3C所有，用户使用其他权利时必须获得H3C书面同意。
+					</p>
+					<h5 style="margin-top:10px;">4. 使用条款</h5>
+					<p>
+						4.1  用户使用或发布小贝精灵信息内容由用户及H3C共同所有，任何其他组织或个人未经用户本人授权同意，不得复制、转载、擅改其内容。用户不得在小贝精灵上发布和散播任何形式的含有下列内容的信息：<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1）为相关法律法规所禁止；<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2）有悖于社会公共秩序；<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3）损害他人合法权益。
+					</p>
+					<p>
+						4.2  用户应保证在小贝精灵的注册信息的真实、准确和完整，并在资料变更时及时更新相关信息。对于任何信息不实所导致的用户本人或第三方损害，H3C不承担任何责任。用户应妥善保管个人注册信息及登录密码等资料，用户将对以其注册用户名进行的所有活动和事件负法律责任。
+					</p>
+					<p>
+						4.3  使用小贝精灵所潜在的法律责任及其一切可能的后果将完全由自己承担，H3C对这些可能的风险和后果不承担任何责任。
+					</p>
+					<p>
+						4.4 H3C不保证小贝精灵提供的服务能够满足用户的所有要求，也不保证已存在的服务不会中断，对这些服务的及时性、安全性、准确性也不作保证。对于因系统维护或升级的需要而需暂停网络服务的情形，H3C将视具体情形尽可能事先在重要页面发布通知。同时，H3C保留在不事先通知用户的情况下中断或终止部分或全部服务的权利，对于因服务的中断或终止而造成的用户或第三方的任何损失，H3C不承担任何责任。
+					</p>
+					<p>
+						4.5  用户同意尊重和维护H3C以及其他用户的合法权益。用户因违反有关法律、法规或协议规定中的任何条款而给H3C或任何第三方造成的损失，用户同意承担由此造成的一切损害赔偿责任。用户因违反有关法律、法规或协议规定中的任何条款而给H3C或任何第三方造成的损失，用户同意承担由此造成的一切损害赔偿责任。
+					</p>
+					<p>
+						4.6  在适用法律允许的范围内，H3C保留对本协议任何条款的解释权和随时变更的权利。 H3C可能会随时根据需要修改本协议的任一条款。如发生此类变更，H3C会提供新版本的条款。用户在变更后对小贝精灵服务的使用将视为已完全接受变更后的条款。
+					</p>
+					<p>
+						4.7  本协议在根据下述规定终止前，将会一直适用。当下列情况出现时，H3C可以随时中止与用户的协议：<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) 用户违反了本协议中的任何规定；<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) 法律法规要求终止本协议；<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) H3C认为实际情形不再适宜继续执行本协议。
+					</p>
+					<h5 style="margin-top:10px;">5. 隐私保护</h5>
+					<p>
+						5.1  本协议所指的“隐私”包括《电信和互联网用户个人信息保护规定》第4条规定的用户个人信息的内容以及未来不时制定或修订的法律法规中明确规定的隐私应包括的内容。
+					</p>
+					<p>			
+						5.2  保护用户隐私和个人数据是H3C的一项基本制度，H3C将采取各种制度、安全技术和程序等措施来保护用户隐私和个人数据不被未经授权的访问、使用或泄漏，并保证不会将单个用户的注册资料及用户在使用小贝精灵时存储的非公开内容向除合作单位以外的第三方公开或用于任何非法的用途，但下列情况除外：<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) 事先获得用户的明确授权；<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) 根据有关法律法规的要求；<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) 按照相关政府主管部门的要求；<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4) 为维护社会公众的利益；<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5) 用户侵害本协议项下H3C的合法权益的情况下而为维护H3C的合法权益所必须。
+					</p>
+					<p>
+						5.3  用户在注册绿洲云帐号或使用小贝精灵服务的过程中，需要提供一些必要的信息，例如：为向用户提供帐号注册服务或进行用户身份识别，需要用户填写手机号码，若用户不授权或提供的信息不完整，则无法使用本服务或在使用过程中受到限制。用户授权提供的信息，H3C承诺将采取措施保护用户的个人信息安全。
+					</p>
+					<p>
+						5.4  为了向用户提供更好的用户体验和提高小贝精灵的服务质量，将可能会收集使用或向第三方提供用户的非个人隐私信息。H3C将对该第三方使用用户个人数据的行为进行监督和管理，尽一切可能努力保护用户个人信息的安全。
+					</p>
+					<h5 style="margin-top:10px;">6. 免责声明</h5>
+					<p>
+						6.1  用户在使用小贝精灵的过程中应遵守国家法律法规及政策规定，对其所制作、上传、发送、传播的信息和内容承担任何法律责任，与H3C无关。
+					</p>
+					<p>
+						6.2  本软件经过详细测试，但不能保证与所有的软硬件系统完全兼容，不能保证本软件完全没有错误。
+					</p>
+					<p>
+						6.3  对于因电信系统或网络故障、病毒、信息损坏或丢失或其他任何不可抗力原因而产生的损失，H3C不承担任何责任。
+					</p>
+					<p>
+						6.4 用户违反本协议的规定，H3C有权采取包括但不限于中断使用许可、停止提供服务、限制使用、法律追究等措施。
+					</p>
+					<h5 style="margin-top:10px;">7. 其他条款</h5>
+					<p>
+						7.1 本协议的版权归H3C所有，本协议各项条款内容的最终解释权及修改权归H3C所有。
+					</p>
+					<p>
+						7.2 H3C在法律允许最大范围内对本协议拥有解释权与修改权。
+					</p>
+					<p>
+						7.3 针对不同产品、服务或实际情况发布的单项条款，将在本服务条款基础上，共同对您产生效力。如果单项条款与本服务条款存在同类条款冲突，讲义单项条款为准。
+					</p>
+					<h5 style="margin-top:10px;">8. 与H3C联络</h5>
+					<p>
+						您在使用我们产品和服务的同时，如果有任何疑问、意见或者建议，您可以通过以下方式与我们取得联系：
+					</p>
+					<p>
+						用户支持邮箱：service@h3c.com
+					</p>
+					<p>
+						技术支持热线电话：400-810-0504
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="./js/mui.min.js "></script>
+	<script src="./js/mui.view.js "></script>
+	<script src='./libs/easymob-webim-sdk/jquery-1.11.1.js'></script>
+	<script src='./libs/easymob-webim-sdk/strophe-custom-2.0.0.js'></script>
+	<script src='./libs/easymob-webim-sdk/json2.js'></script>
+	<script src="./libs/easymob-webim-sdk/easemob.im-1.0.5.js"></script>
+	<script src='./js/feedback.js'></script>
+	<script src="./js/feedback-page.js"></script>
+	<!--<script src="./js/mui.locker.js"></script>-->
+	<script src="./js/app.js"></script>
+	<script>
+		mui.init();
+		 //初始化单页view
+		var viewApi = mui('#app').view({
+			defaultPage: '#setting'
+		});
+		 //初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+		 //分享操作
+		var shares = {};
+		mui.plusReady(function() {
+			plus.share.getServices(function(s) {
+				if (s && s.length > 0) {
+					for (var i = 0; i < s.length; i++) {
+						var t = s[i];
+						shares[t.id] = t;
+					}
+				}
+			}, function() {
+				console.log("获取分享服务列表失败");
+			});
+		});
+		 //分享链接点击事件
+		document.getElementById("share").addEventListener('tap', function() {
+			var ids = [{
+					id: "weixin",
+					ex: "WXSceneSession"
+				}, {
+					id: "weixin",
+					ex: "WXSceneTimeline"
+				}],
+				bts = [{
+					title: "发送给微信好友"
+				}, {
+					title: "分享到微信朋友圈"
+				}];
+			plus.nativeUI.actionSheet({
+				cancel: "取消",
+				buttons: bts
+			}, function(e) {
+				var i = e.index;
+				if (i > 0) {
+					var s_id = ids[i - 1].id;
+					var share = shares[s_id];
+					if (share.authenticated) {
+						shareMessage(share, ids[i - 1].ex);
+					} else {
+						share.authorize(function() {
+							shareMessage(share, ids[i - 1].ex);
+						}, function(e) {
+							console.log("认证授权失败：" + e.code + " - " + e.message);
+						});
+					}
+				}
+			});
+		});
+
+		function shareMessage(share, ex) {
+				var msg = {
+					extra: {
+						scene: ex
+					}
+				};
+				msg.href = "https://lvzhoudiskh3c.blob.core.chinacloudapi.cn/xiaobei/index.html";
+				msg.title = "小贝精灵";
+				msg.content = "使用小贝精灵，无线精彩，任您掌握";
+				msg.thumbs = ["https://lvzhoudiskh3c.blob.core.chinacloudapi.cn/xiaobei/xiaobei.ipa"];
+				share.send(msg, function() {
+					console.log("分享到\"" + share.description + "\"成功！ ");
+				}, function(e) {
+					console.log("分享到\"" + share.description + "\"失败: " + e.code + " - " + e.message);
+				});
+			}
+
+		 //客服电话
+//		document.getElementById("tel").addEventListener('tap', function() {
+//			plus.device.dial("4008100504");
+//		});
+
+		 //********************
+		var view = viewApi.view;
+		(function($) {
+			//处理view的后退与webview后退
+			var oldBack = $.back;
+			$.back = function() {
+				if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					oldBack();
+				}
+			};
+			//监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
+			//第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
+			view.addEventListener('pageBeforeShow', function(e) {
+				//				console.log(e.detail.page.id + ' beforeShow');
+			});
+			view.addEventListener('pageShow', function(e) {
+				//进入手执设定界面时
+				if (e.detail.page.id == 'lock') {
+					var settings = app.getSettings();
+					/*if (!settings.autoLogin) {
+						plus.nativeUI.toast('当前没有启用 “自动登录”，需要在登录时启用 "自动登录"，设定的手势锁屏才会升效。');
+					}*/
+					var lockStateButton = document.getElementById("lockState");
+					var locker = document.querySelector('.mui-locker');
+					lockStateButton.classList[settings.gestures ? 'add' : 'remove']('mui-active')
+					locker.style.display = settings.gestures ? 'block' : 'none';
+				}
+				else if(e.detail.page.id == 'thanks'){
+				    getKnownUserInfo(updateFansStatistics);
+				}
+				//				console.log(e.detail.page.id + ' show');
+			});
+			view.addEventListener('pageBeforeBack', function(e) {
+				//				console.log(e.detail.page.id + ' beforeBack');
+			});
+			view.addEventListener('pageBack', function(e) {
+				//				console.log(e.detail.page.id + ' back');
+			});
+		})(mui);
+
+        //检查更新
+        document.getElementById("update").addEventListener('tap', function() {
+
+            var xhr = new plus.net.XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                switch ( xhr.readyState ) {
+                    case 0:
+                        //mui.toast( "xhr请求已初始化" );
+                    break;
+                    case 1:
+                        //mui.toast( "xhr请求已打开" );
+                    break;
+                    case 2:
+                        //mui.toast( "xhr请求已发送" );
+                    break;
+                    case 3:
+                        //mui.toast( "xhr请求已响应");
+                        break;
+                    case 4:
+                        if ( xhr.status == 200 ) {
+                            var data=JSON.parse(xhr.responseText);
+                            //var evaltext = "(" + xhr.responseText + ")";
+                            //var data = eval(evaltext);
+                            var appInfo = data.result;
+                            var newVersion = "0";
+                            var note = "";
+                            var title = "";
+                            var updateUrl = "";
+                            if (mui.os.ios) {
+                                newVersion = appInfo.iOS.version;
+                                note = appInfo.iOS.releaseNotes;
+                                title = appInfo.iOS.trackName;
+                                updateUrl = appInfo.iOS.trackViewUrl;
+                            }
+                            else{
+                                newVersion = appInfo.Android.version;
+                                note = appInfo.Android.releaseNotes;
+                                title = appInfo.Android.trackName;
+                                updateUrl = appInfo.Android.trackViewUrl;
+                            }
+                            if (newVersion > plus.runtime.version) {
+                                plus.nativeUI.confirm(note, function(event) {
+                                    if (0==event.index) {
+                                        plus.runtime.openURL(updateUrl);
+                                    }
+                                }, title, ["立即更新", " 取消 "]);
+                            } else {
+                                mui.toast('已是最新版本~')
+                            }
+                        } else {
+                            mui.toast( "更新失败!");
+                        }
+                        break;
+                    default :
+                        break;
+                }
+            }
+            xhr.open( "GET", "https://lvzhouv3.h3c.com/v3/app/version?appId=H3CXIAOBEIJINGLING" );
+            xhr.send();
+        });
+
+
+		function getKnownUserInfo(callback) {
+            var ajaxValue;
+            ajaxValue = mui.ajax({
+                url: 'https://lvzhouv3.h3c.com/v3/spiritapp/knownuserinfo',
+                type: 'get',
+                timeout: 5000,
+                success: function(data,status){
+                    var info = $.parseJSON(data);
+                    if(status == 'success'){
+                        callback && callback(info);
+
+                    }
+                },
+                error: function(data,err){
+
+                }
+            });
+        }
+
+		function updateFansStatistics(data) {
+            var tbody = document.getElementById("thanks_tbody");
+            tbody.innerHTML = "";
+            var index = 0;
+
+            for (index in data) {
+                var line = document.createElement("tr");
+                var name = document.createElement("td");
+                name.className = "data-type";
+                name.innerText = data[index].name;
+                var company = document.createElement("td");
+                company.className = "data-content";
+                company.innerText = data[index].career;
+                line.appendChild(name);
+                line.appendChild(company);
+                tbody.appendChild(line);
+            }
+            //暂时先手动加，后续添加到微服务
+            var data1 = [{"name":"于鸿洲","career":"中国移动"},{"name":"陈宇","career":"拉勾网"},{"name":"王琳凯","career":"联合创业办公社"},{"name":"李奕","career":"openapm"},{"name":"李振华","career":"桂林电子科大"}];
+            
+            for (index in data1) {
+                var line = document.createElement("tr");
+                var name = document.createElement("td");
+                name.className = "data-type";
+                name.innerText = data1[index].name;
+                var company = document.createElement("td");
+                company.className = "data-content";
+                company.innerText = data1[index].career;
+                line.appendChild(name);
+                line.appendChild(company);
+                tbody.appendChild(line);
+            }
+
+            return;
+        }
+	</script>
+
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>安全</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <!--标准mui.css-->
+        <link rel="stylesheet" href="css/mui.min.css">
+        <style>
+            html,
+			body {
+				background-color: #ffffff;
+			}
+            .sub-title{
+                text-shadow: none;
+                text-align:left;
+                width:93%;
+                margin:10px 0 0 10px;
+                padding: 5px 0px 5px 0px;
+                font-size:16px;
+                color:#131a2d;
+                font-family:华文细黑;
+                background-color: #FAFAFA;
+
+            }
+            .triContentA {
+                width: 93%;
+                height: 100%;
+                border-top: 3px solid #d6dce3;
+                padding: 1px;
+                position: relative;
+                margin: auto;
+            }
+            #pullUp1, #pullUp2 {
+                background: #fafafa;
+                /*height: 15px;*/
+                line-height: 15px;
+                padding: 5px 10px;
+                border-bottom: 1px solid #fafafa;
+                color: #888;
+                text-align: center;
+            }
+            .pullDownLabel, .pullUpLabel {
+                font-size: 13px;
+                color: #d6dce3;
+                font-weight: 300;
+                font-family: '华文细黑';
+                text-shadow: none;
+            }
+            .sta_img{
+                height:17px;
+                width:15px;
+            }
+            .sta_h_a {
+			    color: #131a2d;
+			    font-size: 13px;
+			    font-weight: 500;
+			    text-shadow: none;
+			    font-family: 'arial', '华文细黑';
+			    height:20px;
+			    padding-top:8px;
+			}
+
+			.sta_h_b {
+			    color: #131a2d;
+			    font-size: 13px;
+			    width: 120px;
+			    left: 42%;
+			    text-shadow: none;
+			    font-weight: 500;
+			    font-family: 'arial', '华文细黑';
+			    position: absolute;
+			    padding-top:8px;
+			}
+
+			.sta_h_c {
+			    color: #131a2d;
+			    font-size: 13px;
+			    width: 20%;
+			    left: 79%;
+			    text-shadow: none;
+			    font-weight: 500;
+			    font-family: 'arial', '华文细黑';
+			    text-align: center;
+			    position: absolute;
+			    padding-top:8px;
+			}
+			.sta_a {
+                color: #616e7f;
+                font-size: 11px;
+                width: 40%;
+                text-shadow: none;
+                font-weight: 300;
+                font-family: 'arial', '华文细黑';
+                height:20px;
+                word-break: break-all;
+            }
+            .sta_b {
+                color: #616e7f;
+                font-size: 11px;
+                width: 120px;
+                left: 42%;
+                text-shadow: none;
+                font-weight: 300;
+                font-family: 'arial', '华文细黑';
+                position: absolute;
+            }
+            .sta_c {
+                color: #616e7f;
+                font-size: 11px;
+                width: 20%;
+                left: 79%;
+                text-shadow: none;
+                font-weight: 300;
+                font-family: 'arial', '华文细黑';
+                text-align: center;
+                position: absolute;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+          <div class="mui-content mui-fullscreen">
+	            <div class="content-tripletB">
+	                <div class="sub-title">无线安全统计</div>
+	                <div class="triContentB">
+	                    <table style="position: relative; height:100px; width:100%;">
+	                        <tr>
+	                            <td>
+	                                <span id="illApCount" style="position:absolute; top:30%; left:20%; text-shadow: none; font-size:29px; color:#d82733;z-index:2;">0</span>
+	                                <img alt="sta_img1" src="images/sta_img1.png"
+	                                     style="top:20%; position:absolute; left:3%; height: 60%; width:44%; z-index:1;">
+	                            </td>
+	                            <td>
+	                                <span id="priApCount" style="position:absolute; top:30%; left:73%; text-shadow: none;font-size:29px; color:#616e7f; z-index:2;">0</span>
+	                                <img alt="sta_img2" src="images/sta_img2.png"
+	                                     style="position:absolute; top:20%; left:53%; height: 60%; width:44%; z-index:1;">
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </div>
+	            </div>
+	            <div class="content-tripletA">
+	                <div style="text-shadow: none; text-align:left; width:93%; margin: 0 0 5px 10px; font-size:15px; color:#131a2d; font-weight:500;">非法AP</div>
+	                <div class="triContentA">
+	                    <table id= "aptable1" style="width:95%;">
+	                        <tr>
+	                            <td class="sta_h_a" >发现AP</td>
+	                            <td class="sta_h_b" >MAC</td>
+	                            <td class="sta_h_c" >危险程度</td>
+	                        </tr>
+	                    </table>
+	                </div>
+	                <div id="pullUp1">
+	                    <div id="pulluptext1" class="pullDownLabel">点击查看更多</div>
+	                </div>
+	            </div>
+	            <div class="content-tripletA">
+	                <div style="text-shadow: none;text-align:left; width:93%; margin:0 0 5px 10px; bottom: 0; font-size:15px; color:#131a2d; font-weight:500;">私接代理</div>
+	                <div class="triContentA">
+	                    <table id= "aptable2" style="width:95%;">
+	                        <tr>
+	                            <td class="sta_h_a">接入AP</td>
+	                            <td class="sta_h_b">MAC</td>
+	                        </tr>
+	                    </table>
+	                </div>
+	                <div id="pullUp2">
+	                    <div id="pulluptext2" class="pullDownLabel">点击查看更多</div>
+	                </div>
+	            </div>
+            </div>
+        </div>
+        <script src="js/mui.min.js"></script>
+        <script src="js/base.js"></script>
+        <script src="js/data.js"></script>
+        <script>
+            var domready = false;
+            var illAPReqFlag = false;
+            var priAPReqFlag = false;
+
+            mui.init({
+                pullRefresh: {
+                    container: '#pullrefresh',
+                    down: {
+                        callback: pulldownRefresh
+                    }
+                }
+            });
+
+            function checkAPActionReq(){
+                if (illAPReqFlag && priAPReqFlag) {
+                	mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+                }
+            }
+            /**
+             * 下拉刷新具体业务实现
+             */
+            function pulldownRefresh() {
+                updataSecurityData();
+//              mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+            }
+
+            function getApnameByStaMAC(acSN, clients, i, callback) {
+                dataAPI.getClientInfo(acSN, clients[i].ClientMAC, function(clientInfo) {
+                    clients[i].APName = clientInfo && clientInfo.ApName || "";
+                    callback && callback();
+                });
+            }
+
+            function getApnameAccessedClient(acSN, clients, callback) {
+                var max = clients.length;
+                var num = 0;
+
+                for (var i in clients) {
+                    getApnameByStaMAC(acSN, clients, i, function(){
+                        num ++;
+                        if (num >= max) {
+                            callback && callback();
+                        }
+                    });
+                }
+            }
+
+            //var priap = {'acSN':'5', 'apSN':'5','apname':'5','macaddr':'4'};
+            function insertPriAp(acSn, result, starNum){
+                var row, td_1, td_2;
+
+                var begin = starNum;
+                var end   = begin + 5;
+
+                for (var i = 0; i < result.length; i++)
+                {
+                    if (((i + 1) > begin) && ((i + 1) <= end)) {
+                        if (!result[i].APName) {
+                            result[i].APName = "非本地网络设备";
+                        }
+                        
+                    	var table1 = document.getElementById("aptable2");
+
+                        var row = document.createElement('tr');
+                        var td_1 = document.createElement('td');
+                        td_1.classList.add('sta_a');
+                        var textNode_apName = document.createTextNode(result[i].APName);
+                        td_1.appendChild(textNode_apName);
+
+                        var td_2 = document.createElement('td');
+                        td_2.classList.add('sta_b');
+                        var textNode_mac = document.createTextNode(result[i].ClientMAC);
+                        td_2.appendChild(textNode_mac);
+
+                        row.appendChild(td_1);
+                        row.appendChild(td_2);
+                        table1.appendChild(row);             	
+
+                        starnumB ++;
+                    }
+                }
+
+                if (starnumB == 0) {
+                    document.getElementById('pulluptext2').innerText = "网络中未发现私接代理";
+                }
+                else if (starnumB >= result.length)
+                {
+                    document.getElementById('pulluptext2').style.display = "none";
+                }
+
+            }
+
+            //var illegalap = {'acSN':'5', 'apSN':'5', 'apname':'5','macaddr':'4','level':'4'};
+            var starnumA = 0;
+            var starnumB = 0;
+            function insertillAp(result, starNum)
+            {
+//              var table1, row, td_1, td_2, td_3, imgsrc;
+
+                var numberBegin = starNum;
+                var numberEnd = starNum + 5;
+
+				
+                var table1 = document.getElementById("aptable1");
+                for (var i = 0; i < result.length; i++)
+                {
+                    if (((i+ 1) > numberBegin) && ((i + 1) <= numberEnd)) {
+
+                        var row = document.createElement('tr');
+
+                        var td_1 = document.createElement('td');
+                        td_1.classList.add('sta_a');
+                        if ((result[i].APName =="unknown") || (!result[i].APName)) {
+		                    result[i].APName = "非本地网络设备";
+		                }
+                        var textNode_apName = document.createTextNode(result[i].APName);
+                        td_1.appendChild(textNode_apName);
+
+                        var td_2 = document.createElement('td');
+                        td_2.classList.add('sta_b');
+                        var textNode_mac = document.createTextNode(result[i].MacAddress);
+                        td_2.appendChild(textNode_mac);
+
+                        //SeverrutyLevel 1..100
+                        var td_3 = document.createElement('td');
+                        td_3.classList.add('sta_c');
+                        var img = document.createElement('img');
+                        img.classList.add('sta_img');
+                        if (result[i].SeverityLevel <= 5)
+                        {
+                            img.src = 'images/gz.png';
+                        }else if (result[i].SeverityLevel <= 20)
+                        {
+                            img.src = 'images/wx1.png';
+                        }
+                        else
+                        {
+                            img.src = 'images/wx2.png';
+                        }
+                        td_3.appendChild(img);
+
+                        row.appendChild(td_1);
+                        row.appendChild(td_2);
+                        row.appendChild(td_3);
+                        table1.appendChild(row);
+
+                        starnumA++;
+                    }
+                }
+
+                if (starnumA == 0) {
+                    document.getElementById('pulluptext1').innerText = "网络中未发现非法ap";
+                }
+                else if (starnumA >= result.length)
+                {
+                    document.getElementById('pulluptext1').style.display = "none";
+                }
+            }
+
+            function addapAction(indexvalue, starNum) {
+
+                var acSn = baseAPI.getCurrentACSN();
+
+                //var acSn = "210235A1AMB143000025";
+
+                if (1 == indexvalue)
+                {
+                    var showMoreA = document.getElementById('pulluptext1');
+                    dataAPI.getSecureData(acSn, function(data,err){
+                        illAPReqFlag = true;
+                        checkAPActionReq();
+                        showMoreA.innerText = "点击查看更多";
+                        showMoreA.addEventListener('tap', displayMoreA);
+
+                        if(err == 0){
+                            if (starNum == 0){
+                                var tb = document.getElementById('aptable1');
+                                var rowNum=tb.rows.length;
+                                for (i=1;i<rowNum;i++)
+                                {
+                                    tb.deleteRow(i);
+                                    rowNum=rowNum-1;
+                                    i=i-1;
+                                }
+                            }
+
+                            insertillAp(data, starNum);
+
+                            //Update rogue ap count
+                            document.getElementById("illApCount").innerText = data.length;
+
+                        }
+                        else
+                        {
+                            //showMoreA.innerText = "加载失败";
+                            showMoreA.innerText = "网络未发现非法AP";
+                        }
+                    });
+
+                    showMoreA.innerText = "正在加载...";
+                }
+                else if (2 == indexvalue)
+                {
+                    var showMoreB = document.getElementById('pulluptext2');
+                    dataAPI.getPrivateNatList(acSn, function(data,err){
+                        priAPReqFlag = true;
+                        checkAPActionReq();
+                        showMoreB.innerText = "点击查看更多";
+                        showMoreB.addEventListener('tap', displayMoreB);
+
+                        if(err == 0){
+                            if (starNum == 0){
+
+                                var tb = document.getElementById('aptable2');
+                                var rowNum=tb.rows.length;
+                                for (i=1;i<rowNum;i++)
+                                {
+                                    tb.deleteRow(i);
+                                    rowNum=rowNum-1;
+                                    i=i-1;
+                                }
+                            }
+
+                            getApnameAccessedClient(acSn, data, function() {
+                                insertPriAp(acSn, data, starNum);
+                            });
+
+                            //Update private ap count
+                            document.getElementById("priApCount").innerText = data.length;
+                        }
+                        else
+                        {
+                            showMoreB.innerText = "加载失败";
+                        }
+                    });
+
+                    showMoreB.innerText = "正在加载...";
+                }
+
+            }
+
+            function updataSecurityData() {
+
+                document.getElementById('pulluptext1').style.display = "block";
+                document.getElementById('pulluptext2').style.display = "block";
+
+                starnumA = 0;
+                starnumB = 0;
+                illAPReqFlag = false;
+                priAPReqFlag = false;
+
+                addapAction(1, starnumA);
+                addapAction(2, starnumB);
+            }
+
+            function displayMoreA() {
+                document.getElementById("pulluptext1").removeEventListener('tap', displayMoreA);
+                addapAction(1, starnumA);
+            }
+
+            function displayMoreB() {
+                document.getElementById("pulluptext2").removeEventListener('tap', displayMoreB);
+                addapAction(2, starnumB);
+            }
+
+            document.getElementById("pulluptext1").addEventListener('tap', displayMoreA);
+
+            document.getElementById("pulluptext2").addEventListener('tap', displayMoreB);
+
+            window.addEventListener('Refresh',function(event){
+                updataSecurityData();
+            });
+
+            function plusReady(){
+//              console.log("plusready");
+                if(!window.plus||!domready){
+                    return;
+                }
+//              console.log("plusready and domready");
+
+                var curView = plus.webview.currentWebview();
+                curView.addEventListener( "show", function(e){
+//                  console.log( "Webview Showed" );
+                    setTimeout(function(){
+                        updataSecurityData();
+                    },0);
+                }, false );
+            }
+
+            if(window.plus){
+                plusReady();
+            }else{
+                document.addEventListener("plusready",plusReady,false);
+            }
+
+            // 监听DOMContentLoaded事件
+            document.addEventListener("DOMContentLoaded",function(){
+                domready=true;
+                plusReady();
+//              console.log("DOMContentLoaded");
+            },false);
+
+        </script>
+    </body>
+</html>

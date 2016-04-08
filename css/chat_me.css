@@ -1,0 +1,16 @@
+#chat_me_name{
+	top:22px;
+	position: absolute;
+	font-size: 17px;
+}
+#chat_me_headimg{
+	margin-right: 17px;
+	border-radius: 4px;
+	height: 45px;
+	width: 45px;
+}
+#chat_me_signatrue{
+	color: gray;
+	font-size: 15px;
+}
+

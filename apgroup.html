@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>AP组</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="css/mui.min.css">
+        <style>
+            html,
+            body {
+                background-color: #efeff4;
+            }
+            .mui-views,
+            .mui-view,
+            .mui-pages,
+            .mui-page,
+            .mui-page-content {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #efeff4;
+            }
+            .mui-pages {
+                top: 46px;
+                height: auto;
+            }
+            .mui-scroll-wrapper,
+            .mui-scroll {
+                background-color: #efeff4;
+            }
+            .mui-page.mui-transitioning {
+                -webkit-transition: -webkit-transform 200ms ease;
+                transition: transform 200ms ease;
+            }
+            .mui-page-left {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+            .mui-ios .mui-page-left {
+                -webkit-transform: translate3d(-20%, 0, 0);
+                transform: translate3d(-20%, 0, 0);
+            }
+            .mui-navbar {
+                position: fixed;
+                right: 0;
+                left: 0;
+                z-index: 10;
+                height: 44px;
+                background-color: #69C4C5;
+            }
+            .mui-navbar .mui-bar {
+                position: absolute;
+                background: transparent;
+                text-align: center;
+            }
+            .mui-android .mui-navbar-inner.mui-navbar-left {
+                opacity: 0;
+            }
+            .mui-ios .mui-navbar-left .mui-left,
+            .mui-ios .mui-navbar-left .mui-center,
+            .mui-ios .mui-navbar-left .mui-right {
+                opacity: 0;
+            }
+            .mui-navbar .mui-btn-nav {
+                -webkit-transition: none;
+                transition: none;
+                -webkit-transition-duration: .0s;
+                transition-duration: .0s;
+            }
+            .mui-navbar .mui-bar .mui-title {
+                display: inline-block;
+                width: auto;
+            }
+            .mui-page-shadow {
+                position: absolute;
+                right: 100%;
+                top: 0;
+                width: 16px;
+                height: 100%;
+                z-index: -1;
+                content: '';
+            }
+            .mui-page-shadow {
+                background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+                background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+            }
+            .mui-navbar-inner.mui-transitioning,
+            .mui-navbar-inner .mui-transitioning {
+                -webkit-transition: opacity 200ms ease, -webkit-transform 200ms ease;
+                transition: opacity 200ms ease, transform 200ms ease;
+            }
+            .mui-page {
+                display: none;
+            }
+            .mui-pages .mui-page {
+                display: block;
+            }
+            /*.mui-page .mui-table-view:first-child {
+                margin-top: 15px;
+            }
+            .mui-page .mui-table-view:last-child {
+                margin-bottom: 30px;
+            }*/
+            /*.mui-table-view {
+                margin-top: 1px;
+            }*/
+            .mui-table-view:after {
+                height: 0;
+            }
+            .mui-table-view span.mui-pull-right {
+                color: #999;
+            }
+            .mui-table-view-divider {
+                background-color: #efeff4;
+                font-size: 14px;
+            }
+            .mui-table-view-divider:before,
+            .mui-table-view-divider:after {
+                height: 0;
+            }
+            .mui-content-padded {
+                margin: 10px;
+            }
+            .mui-ios .mui-navbar .mui-bar .mui-title {
+                position: static;
+            }
+            .mui-control-content {
+                background-color: white;
+                min-height: 250px;
+            }
+            .mui-control-content .mui-loading {
+                margin-top: 50px;
+            }
+            .apgroup-info-footer{
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                z-index: 10;
+                background-color: #efeff4;
+            }
+            .apgrp-btn {
+                width: 100%;
+                /*padding: 0;*/
+            }
+            .mui-btn-primary{
+                border: 1px solid #69c4c5;
+                background-color: #69c4c5;
+            }
+
+            .mui-btn-primary:enabled:active{
+                border: 1px solid #2faab2;
+                background-color: #2faab2;
+            }
+            .more{
+                text-align:center;
+                height:30px;
+                text-shadow: none;
+                font-size: 13px;
+                color: #d6dce3;
+                font-weight: 300;
+                font-family: '华文细黑';
+            }
+        </style>
+	</head>
+	<body>
+	    <!--页面主结构开始-->
+        <div id="app" class="mui-views">
+            <div class="mui-view">
+                <div class="mui-navbar">
+                </div>
+                <div class="mui-pages">
+                </div>
+            </div>
+        </div>
+        <!--页面主结构结束-->
+        <!--单页面开始-->
+        <div id="apgroup_page" class="mui-page">
+            <!--页面标题栏开始-->
+            <div class="mui-navbar-inner mui-bar mui-bar-nav">
+                <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+                    <span class="mui-icon mui-icon-left-nav"></span>
+                </button>
+                <h1 class="mui-center mui-title">AP组</h1>
+            </div>
+            <!--页面标题栏结束-->
+            <!--页面主内容区开始-->
+            <div class="mui-page-content">
+                <div class="mui-input-row mui-search mui-content-padded">
+                    <input id="apgroup_search" type="search" class="mui-input-clear" placeholder="">
+                </div>
+                <div class="mui-scroll-wrapper" style="top:50px">
+                    <div class="mui-scroll">
+                        <ul id="apgroup_list" class="mui-table-view mui-table-view-chevron">
+                        </ul>
+                        <div id="apGrp_more" class="more" style="display: none;">点击查看更多</div>
+                    </div>
+                </div>
+            </div>
+            <!--页面主内容区结束-->
+        </div>
+        <!--单页面结束-->
+        <div id="apgroup_info_page" class="mui-page">
+            <div class="mui-navbar-inner mui-bar mui-bar-nav">
+                <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+                    <span class="mui-icon mui-icon-left-nav"></span>AP组
+                </button>
+                <h1 id="apgrp_info_title" class="mui-center mui-title"></h1>
+            </div>
+            <div class="mui-page-content">
+                <div class="mui-content">
+                    <div style="padding: 0px 10px;">
+                        <div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted">
+                            <a id="ctl_sn" class="mui-control-item mui-active" href="#item_sn">SN</a>
+                            <a id="ctl_mac" class="mui-control-item" href="#item_mac">MAC</a>
+                        </div>
+                        <div class="mui-input-row mui-search" style="margin-top: 5px;">
+                            <input id="ap_search" type="search" class="mui-input-clear" placeholder="">
+                        </div>
+                    </div>
+                    <div>
+                        <div id="item_sn" class="mui-control-content mui-active">
+                            <div id="scroll" class="mui-scroll-wrapper">
+                                <div class="mui-scroll">
+                                    <div class="mui-card">
+                                        <form class="mui-input-group">
+                                        </form>
+                                    </div>
+                                    <div id="apGrpInfo_more_sn" style="text-align:center; height:30px; width: 100%; text-shadow: none; font-size: 13px;color: #d6dce3;font-weight: 300;font-family: '华文细黑';">点击查看更多</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="item_mac" class="mui-control-content">
+                            <div class="mui-scroll-wrapper">
+                                <div class="mui-scroll">
+                                    <div class="mui-card">
+                                        <form class="mui-input-group">
+                                        </form>
+                                    </div>
+                                    <div id="apGrpInfo_more_mac" style="text-align:center; height:30px; width: 100%; text-shadow: none; font-size: 13px;color: #d6dce3;font-weight: 300;font-family: '华文细黑';">点击查看更多</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="apgroup_info_footer" class="apgroup-info-footer">
+                        <div style="text-align:center;">
+                            <img id="ap_scan" alt="扫一扫" style="width:300px; height:100px" src="images/scan.png" onclick="clicked('barcode_scan.html',true,true);">
+                        </div>
+                        <table style="width:100%">
+                            <tr>
+                                <td style="width:50%;padding: 5px 10px;">
+                                    <button type="button" id="add_group_member" class="mui-btn mui-btn-primary apgrp-btn">手动加组</button>
+                                </td>
+                                <td style="width:50%;padding: 5px 10px;">
+                                    <button type="button" id="del_group_member" class="mui-btn mui-btn-primary apgrp-btn">移出</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/mui.min.js"></script>
+        <script src="js/mui.view.js "></script>
+        <script src="js/base.js"></script>
+        <script src="js/data.js"></script>
+        <script type="text/javascript" src="js/common.js"></script>
+        <script>
+            var g_apGrpStartNum = 0;
+            var g_apGrpMemberStartNum_sn = 0;
+            var g_apGrpMemberStartNum_mac = 0;
+
+            function showApGrpMember(index){
+                if (index != 0 && index != 1) {
+                	return;
+                }
+                var controls = mui("#segmentedControl .mui-control-item");
+                var contents = mui(".mui-control-content");
+                mui.each(controls, function(){
+                    this.classList.remove("mui-active");
+                });
+
+                mui.each(contents, function(){
+                    this.classList.remove("mui-active");
+                });
+
+                if (index == 0) {
+                	document.getElementById("ctl_sn").classList.add("mui-active");
+                	document.getElementById("item_sn").classList.add("mui-active");
+                }
+                else if (index == 1){
+                    document.getElementById("ctl_mac").classList.add("mui-active");
+                    document.getElementById("item_mac").classList.add("mui-active");
+                }
+            }
+
+            function isValidMacAddress(address) {
+                var c = '';
+                var i = 0, j = 0;
+
+                if ((address.toLowerCase() == 'ff:ff:ff:ff:ff:ff') || (address.toLowerCase() == '00:00:00:00:00:00')) {
+                    console.log('error');
+                    return false;
+                }
+
+                var addrParts = address.split(':');
+                if (addrParts.length != 6) {
+                    return false;
+                }
+                for (i = 0; i < 6; i++){
+                    if (addrParts[i] == ''){
+                        return false;
+                    }
+                    if (addrParts[i].length != 2) {
+                        return false;
+                    }
+                    for (j = 0; j < addrParts[i].length; j++) {
+                        c = addrParts[i].toLowerCase().charAt(j);
+                        if ((c >= '0' && c <= '9') || (c >= 'a' && c <='f')) {
+                            continue;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+
+                if ((parseInt(addrParts[0], 16) % 2) == 1) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            /*用户点击将AP移出AP组*/
+            function removeMemberFromApGroup(){
+                var devSN = baseAPI.getCurrentACSN();
+                var header = document.getElementById("apgrp_info_title");
+                var apGroupName = header.innerText;
+                var apId = "";
+                var apGrpMemberDel;
+                var configType = 0;
+
+                mui('.mui-control-content.mui-active').each(function(){
+                    if (this.id == "item_sn") {
+                    	configType = 1;
+                    }
+                    else{
+                        configType = 2;
+                    }
+                });
+
+                mui('.mui-control-content.mui-active input[type="checkbox"]').each(function(index){
+                    if (this.checked) {
+                    	var curNode = this;
+                    	apId = curNode.value;
+                      	dataAPI.delAPGroupMember(devSN, apGroupName, configType, apId, function(data, errCode){
+                            if (errCode==0) {
+                                if (data.communicateResult != "success") {
+                                    return;
+                                }
+                                var delNode = curNode.parentNode;
+                                delNode.parentNode.removeChild(delNode);
+                                plus.nativeUI.toast( "AP:"+apId+"移出AP组:"+apGroupName+"成功！");
+                            }
+                            else{
+                                plus.nativeUI.toast('网络异常');
+                            }
+                        });
+                    }
+                });
+            }
+
+            function submitApGroupMember(result){
+                /* 获取用户输入的AP SN */
+                var apId = result;
+
+                var header = document.getElementById("apgrp_info_title");
+                var apGroupName = header.innerText;
+                var convertedApId = apId;
+                var configType = 0;
+
+                /*检验AP SN 是否合法不合法给予用户提示*/
+                if (!apId) {return false}
+
+                if (true == isValidMacAddress(apId)){
+                    configType = 2;
+                    convertedApId = apId.substring(0,2) + apId.substring(3,5) + '-' + apId.substring(6,8) +
+                                    apId.substring(9,11) + '-' + apId.substring(12,14) + apId.substring(15,17);
+                }
+                else{
+                    if (apId.length == 12){
+                        var macTem = apId.substring(0,2) + ":" + apId.substring(2,4) + ":"
+                                   + apId.substring(4,6) + ":" + apId.substring(6,8) + ":"
+                                   + apId.substring(8,10) + ":" + apId.substring(10,12);
+
+                        if (true == isValidMacAddress(macTem)) {
+                            configType = 2;
+                            convertedApId = apId.substring(0,2) + apId.substring(2,4) + "-"
+                                   + apId.substring(4,6) + apId.substring(6,8) + "-"
+                                   + apId.substring(8,10) + apId.substring(10,12);
+                        } else{
+                            configType = 1;
+                        }
+                    }else{
+                        configType = 1;
+                    }
+                }
+
+                dataAPI.addAPGroupMember(baseAPI.getCurrentACSN(), apGroupName, configType, convertedApId, function(data, errCode){
+
+                    if(errCode == 0){
+                        if (data.communicateResult != "success") {
+                            plus.nativeUI.alert('设备连接异常', function() {});
+                            return;
+                        }
+
+                        if (data.deviceResult[0].result == "success") {
+                            addAPGrpMemberListInfo(configType, convertedApId);
+                            if (1 == configType) {
+                                showApGrpMember(0);
+                            } else if (2 == configType){
+                                showApGrpMember(1);
+                            }
+                        }
+                        else{
+                            plus.nativeUI.alert('设备添加配置失败', function() {});
+                        }
+                    }
+                    else if (errCode == 1){
+                        plus.nativeUI.alert('AP已经加入AP组', function() {});
+                    }
+                    else{
+                        plus.nativeUI.alert('网络异常', function() {});
+                    }
+                });
+            }
+
+
+            function scaned( t, r, f ) {
+                var bts=["确定","取消"];
+                plus.nativeUI.confirm("是否将AP:"+ r + " 加入当前AP组", function(e) {
+                    if (e.index == 0) {
+                        submitApGroupMember(r);
+                    }
+                },'AP加组', bts);
+            }
+
+            function addAPGrpMemberListInfo(configType, apId){
+                var itemDiv = document.createElement("div");
+                itemDiv.classList.add('mui-input-row');
+                itemDiv.classList.add('mui-checkbox');
+                itemDiv.classList.add('mui-left');
+                itemDiv.innerHTML = '<label>' + apId + '</label><input name="checkbox" value=' +apId + ' type="checkbox" >'
+
+                if (1 == configType) {
+                    mui("#item_sn form")[0].appendChild(itemDiv);
+                } else if(2 == configType){
+                    mui("#item_mac form")[0].appendChild(itemDiv);
+                }
+
+            }
+
+            function showAPGrpMemberList(configType, APGrpMemberList){
+                var dataLen = APGrpMemberList.length;
+                var i = dataLen;
+                var curAPGrpMember;
+                var grpMemberId;
+
+                while(i>0){
+                    curAPGrpMember = APGrpMemberList[dataLen-i];
+
+                    if (1 == configType) {
+                        g_apGrpMemberStartNum_sn++;
+                        grpMemberId = curAPGrpMember.serial;
+                    }else if (2 == configType) {
+                        g_apGrpMemberStartNum_mac++;
+                        grpMemberId = curAPGrpMember.mac;
+                    }
+                    addAPGrpMemberListInfo(configType, grpMemberId);
+                    i--;
+                }
+
+                if (dataLen < 10)
+                {
+                    if (1 == configType) {
+                        document.getElementById('apGrpInfo_more_sn').style.display = "none";
+                    } else if (2 == configType){
+                        document.getElementById('apGrpInfo_more_mac').style.display = "none";
+                    }
+                }
+            }
+
+            function loadAPGrpMemberList(APGroupName, configType, startNum){
+                dataAPI.getAPGroupMembers(baseAPI.getCurrentACSN(), APGroupName, configType, startNum,function(data,err){
+                    if(err == 0){
+                        showAPGrpMemberList(configType, data);
+                    }
+                });
+            }
+
+            function showAPInAPGroup(APGroup){
+                var header = document.getElementById("apgrp_info_title");
+                var apGrpName = APGroup.innerText;
+                header.innerText = apGrpName;
+                document.getElementById('apGrpInfo_more_sn').style.display = "block";
+                document.getElementById('apGrpInfo_more_mac').style.display = "block";
+
+                loadAPGrpMemberList(apGrpName, 1, 0);
+                loadAPGrpMemberList(apGrpName, 2, 0);
+            }
+
+            function addAPGrpListInfo(apGrpName){
+                var ul = document.getElementById("apgroup_list");
+                var li= document.createElement("li");
+                li.classList.add('mui-table-view-cell');
+                var a = document.createElement("a");
+                a.href = "#apgroup_info_page";
+                a.classList.add('mui-navigate-right');
+                a.innerHTML = apGrpName;
+                a.addEventListener("tap", function(){
+                    g_apGrpMemberStartNum_sn = 0;
+                    g_apGrpMemberStartNum_mac = 0;
+                    mui(".mui-control-content .mui-checkbox").each(function(){
+                        this.parentNode.removeChild(this);
+                    });
+                    showApGrpMember(0);
+                    showAPInAPGroup(this);
+                });
+                li.appendChild(a);
+                ul.appendChild(li);
+            }
+
+            function showAPGrpList(APGrpList){
+                var dataLen = APGrpList.length;
+                var i = dataLen;
+
+                while(i>0){
+                    addAPGrpListInfo(APGrpList[dataLen-i].apgrpName);
+                    i--;
+                    g_apGrpStartNum++;
+                }
+
+                if (dataLen < 10)
+                {
+                    document.getElementById('apGrp_more').style.display = "none";
+                }
+                else{
+                    document.getElementById('apGrp_more').style.display = "block";
+                }
+            }
+
+            function loadAPGrpList(startNum){
+                dataAPI.getAPGroups(baseAPI.getCurrentACSN(), startNum,function(data,err){
+                    if(err == 0){
+                        showAPGrpList(data);
+                    }
+                });
+            }
+
+            function filterList(items, filter, activeDis, inactiveDis) {
+                if (items.length == 0) {
+                	return;
+                }
+                if (filter) {
+                    mui.each(items, function (i,e) {
+                        if (e.innerText.indexOf(filter) == -1) {
+                            e.style.display=inactiveDis;
+                        }
+                        else{
+                            e.style.display=activeDis;
+                        }
+                    });
+                } else{
+                    mui.each(items, function (i,e) {
+                        e.style.display=activeDis;
+                    });
+                }
+            }
+
+            document.getElementById("apgroup_search").addEventListener('input',function(){
+                var filter = this.value;
+                var list = document.getElementById("apgroup_list");
+                var items = list.getElementsByTagName("li");
+                filterList(items, filter, "list-item", "none");
+            });
+
+            document.getElementById("apgroup_search").addEventListener('change',function(){
+                var filter = this.value;
+                var list = document.getElementById("apgroup_list");
+                var items = list.getElementsByTagName("li");
+                filterList(items, filter, "list-item", "none");
+            });
+
+            document.getElementById("ap_search").addEventListener('input',function(){
+                var filter = this.value;
+                var items = mui(".mui-control-content.mui-active .mui-checkbox");
+                filterList(items, filter, "block", "none");
+            });
+
+            document.getElementById("ap_search").addEventListener('change',function(){
+                var filter = this.value;
+                var items = mui(".mui-control-content.mui-active .mui-checkbox");
+                filterList(items, filter, "block", "none");
+            });
+
+            document.getElementById("apGrp_more").addEventListener('tap', function () {
+                loadAPGrpList(g_apGrpStartNum);
+            });
+
+            document.getElementById("apGrpInfo_more_sn").addEventListener('tap', function () {
+                var header = document.getElementById("apgrp_info_title");
+                var apGrpName = header.innerText;
+                loadAPGrpMemberList(apGrpName, 1, g_apGrpMemberStartNum_sn);
+            });
+
+            document.getElementById("apGrpInfo_more_mac").addEventListener('tap', function () {
+                var header = document.getElementById("apgrp_info_title");
+                var apGrpName = header.innerText;
+                loadAPGrpMemberList(apGrpName, 2, g_apGrpMemberStartNum_mac);
+            });
+
+            document.getElementById("del_group_member").addEventListener('tap', function () {
+                removeMemberFromApGroup();
+            });
+
+            document.getElementById("add_group_member").addEventListener('tap', function () {
+
+                plus.nativeUI.prompt( "请输入AP序列号或MAC地址", function(e){
+                    if (e.index == 0) {
+                        if (e.value) {
+                        	submitApGroupMember(e.value);
+                        }
+                        else{
+                            plus.nativeUI.alert('AP序列号或MAC地址不能为空！', function() {});
+                        }
+                    }
+                }, "手动加组", "SN或MAC", ["确认","取消"] );
+            });
+
+            var footerOffsetTop = 0;
+            window.addEventListener("resize", function() {
+                if (mui.os.android) {// 修正:android下输入法让footer上移问题
+                    var offsetTop = document.getElementById("apgroup_info_footer").offsetTop;
+                    if (offsetTop === 0) {
+                        document.getElementById("apgroup_info_footer").classList.remove("mui-hidden");
+                    } else {
+                        if (offsetTop < footerOffsetTop) {
+                            document.getElementById("apgroup_info_footer").classList.add("mui-hidden");
+                        }
+                    }
+                }
+            })
+
+            mui.init({
+                swipeBack:true //启用右滑关闭功能
+            });
+            //初始化单页view
+            var viewApi = mui('#app').view({
+                defaultPage: '#apgroup_page'
+            });
+            //初始化单页的区域滚动
+            mui('.mui-scroll-wrapper').scroll();
+             //
+            var view = viewApi.view;
+            (function($) {
+                //处理view的后退与webview后退
+                var oldBack = $.back;
+                $.back = function() {
+                    if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+                        viewApi.back();
+                    } else { //执行webview后退
+                        oldBack();
+                    }
+                };
+                //监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
+                //第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
+                view.addEventListener('pageBeforeShow', function(e) {
+                    //              console.log(e.detail.page.id + ' beforeShow');
+                });
+                view.addEventListener('pageShow', function(e) {
+                    //进入手执设定界面时
+                    if (e.detail.page.id == 'apgroup_page') {
+
+                    }
+                    else if(e.detail.page.id == 'apgroup_info_page'){
+                        footerOffsetTop = document.getElementById("apgroup_info_footer").offsetTop;
+                    }
+                    //              console.log(e.detail.page.id + ' show');
+                });
+                view.addEventListener('pageBeforeBack', function(e) {
+                    //              console.log(e.detail.page.id + ' beforeBack');
+                });
+                view.addEventListener('pageBack', function(e) {
+                    //              console.log(e.detail.page.id + ' back');
+                });
+            })(mui);
+
+            var domready = false;
+            function plusReady(){
+                console.log("plusready");
+                if(!window.plus||!domready){
+                    return;
+                }
+                console.log("plusready and domready");
+
+                var curView = plus.webview.currentWebview();
+                curView.addEventListener( "show", function(e){
+                    console.log( "Webview Showed" );
+                    setTimeout(function(){
+                        mui("#apgroup_list li").each(function(){
+                            this.parentNode.removeChild(this);
+                        });
+                        g_apGrpStartNum=0;
+                        loadAPGrpList(0);
+                    },0);
+                }, false );
+            }
+
+            if(window.plus){
+                plusReady();
+            }else{
+                document.addEventListener("plusready",plusReady,false);
+            }
+
+            // 监听DOMContentLoaded事件
+            document.addEventListener("DOMContentLoaded",function(){
+                domready=true;
+                plusReady();
+            },false);
+
+        </script>
+	</body>
+</html>

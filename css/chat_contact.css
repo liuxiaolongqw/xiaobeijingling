@@ -1,0 +1,59 @@
+.mui-table-view .mui-media-object{
+	width: 35px;
+	height: 35px;
+	border-radius: 2px;
+}
+.mui-table-view-cell{
+	padding: 12px 17px;
+}
+.mui-table-view-cell a:not(.mui-btn){
+	margin: -15px -19px;
+}
+.mui-media-body span{
+	top: 18px;
+	position: absolute;	
+	font-size: 15px;
+	
+}
+.sort_letter{
+	background-color: gainsboro;
+	padding-left: 12px;
+	font-size: 13px;
+	color: gray;
+	height: 17px;
+	line-height: 1.5;
+	margin-top: -1px;
+}
+.initials{
+	position: fixed;
+	top: 17px;
+	right: 0px;
+	height: 100%;
+	width: 30px;
+	/* padding-right: 10px; */
+	text-align: center;
+	font-size: 12px;
+	z-index: 9998;
+	border-radius: 30px;
+	/* background: rgba(59, 39, 39, 0); */
+}
+.initials ul{
+	list-style-type: none;
+	padding-left: 0px;
+}
+#letter{
+    width: 70px;
+    height: 70px;
+    border-radius: 5px;
+    font-size: 40px;
+    color: #555;
+    text-align: center;
+    line-height: 65px;
+    background: rgba(145,145,145,0.6);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin:-50px 0px 0px -50px;
+    z-index: 99;
+    display: none;
+}

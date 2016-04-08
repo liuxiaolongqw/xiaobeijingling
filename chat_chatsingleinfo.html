@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+
+</head>
+ <style type="text/css">
+  	html,
+	body {
+		height: 100%;
+		/*margin: 0px;*/
+		/*padding: 0px;*/
+		/*overflow: hidden;*/
+		/*-webkit-touch-callout: none;*/
+		/*-webkit-user-select: none;*/
+	}
+ 	.chat_member_c{
+		
+ 	}
+ 	.chat_member{
+ 		/*width: 25%;*/
+		width: 24%;
+		position: relative;
+		margin: 0px;
+		text-align: center;
+		/*float: left;*/
+		margin-top: 15px;
+		display: inline-block;
+ 	}
+ 	.chat_member img{
+ 		height: 50px;
+ 		width: 50px;
+ 		border-radius: 4px;
+ 	}
+ 	.chat_member span{
+ 		font-size: 11px;
+ 		display: block;
+ 	}
+ 	.mui-scroll-wrapper{
+ 		top:45px
+ 	}
+ 	
+ </style>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 id="title" class="mui-title">聊天信息</h1>
+	</header>
+	<div class="mui-content">
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				
+			<div id="chat_member_c">
+				<div class="chat_member">
+					<img id="userHeadImg" onerror=this.src='./images/chat/test_xiaozhu.jpg' />
+					<span id="userName" class="mui-ellipsis">liuxiaolong</span>
+				</div>
+	
+				<div id="add" class="chat_member">
+					<img src="images/chat/chatgroupadduser.png"/>
+					<span class="mui-ellipsis">&nbsp;</span>
+				</div>
+			</div>
+
+	
+			<!--<ul class="mui-table-view" style="margin-top: 15px;">
+				<li id="group_name" class="mui-table-view-cell">
+					<a href="javascript:;" class="mui-navigate-right">群聊名称<span class="mui-pull-right mui-ellipsis" style="margin-right: 20px;max-width: 200px"> ssssssssssssssssssssssssssssssss</span></a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="privacy" class="mui-navigate-right">群公告</a>
+				</li>
+			</ul>-->
+			<ul class="mui-table-view" style="margin-top: 15px;">
+				<li id="calm" class="mui-table-view-cell">
+					<span>消息免打扰</span>
+					<div class="mui-switch mui-switch-blue">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 15px;">
+				<li id="clean_msgrecord" class="mui-table-view-cell">
+					<a href="javascript:;" class="mui-navigate-right">清空聊天记录</a>
+				</li>
+			</ul>
+			<!--<div class="mui-content-padded" style="margin-top: 40px;margin-bottom: 60px;">
+			 	<button id="delete" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="height: 45px;line-height: 0.4;">删除并退出</button>
+			</div>-->
+				
+			</div>
+		</div>
+		
+	</div>
+	
+</body>
+    <script src="js/mui.min.js"></script>
+    <script src="libs/jquery/jquery-1.11.3.min.js"></script>
+    <script src="js/app.js"></script>
+	<script src="js/chat_websql.js"></script>
+	<script src="js/chat_base.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+    	var self;
+    	var sid;
+    	var uid;
+    	var name;
+    	var myUid;
+
+      	mui.init();
+      	mui.plusReady(function(){
+      		self = plus.webview.currentWebview();
+      		sid = self.sid;
+      		myUid = self.myUid;
+      		recover();
+      	})
+      	function recover(){
+      		chatDb.query('select * from friendList', function(res){
+      			for (i = 0; i < res.rows.length; i++) {
+					var info=res.rows.item(i).info;
+					info = JSON.parse(info);
+					if(info.sid == sid){
+						uid = info.uid;
+						name = info.name;
+						$("#userName").text(unescape(name));
+						$("#userHeadImg").attr("src","../doc/"+uid+".jpg");
+						if(unescape(name) == "系统" || info.state != "ready"){
+							$("#add").css("display","none");
+						}
+						break;
+					}
+      			}
+      		})
+      	}
+      	$(document).on("tap","#add",function(){
+      		mui.openWindow({
+				id:"chat_sdadduser.html",
+				url:"chat_sdadduser.html",
+				styles:{
+					popGesture:"close"
+				},
+				show:{
+			    	autoShow:true,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:true
+				},
+				extras:{
+					sid:sid,
+					uid:uid,
+					name:name,
+					myUid:myUid
+				}
+			})
+      	})
+      	
+      	$(document).on("tap","#clean_msgrecord",function(){
+      		var btnArray = ['确认', '取消'];
+			mui.confirm('确认删除聊天记录？', '小贝温馨提示', btnArray, function(e) {
+				if(0 == e.index){
+				 	chatDb.cleanMrTable(msgRecord+sid);
+				 	mui.fire(plus.webview.getWebviewById("chat_chat.html"),"cleanMsgRecord");
+			 		mui.fire(plus.webview.getWebviewById("chat_dialog.html"),"cleanMsgRecord",{sid:sid});
+				 	plus.nativeUI.toast("聊天记录已清除");
+				}
+			});
+      	})
+      	
+//    	mui('.mui-scroll-wrapper').scroll({
+//			deceleration: 0.0006 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+//		});
+    </script>
+</html>

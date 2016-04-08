@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>AP列表</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="css/mui.min.css">
+    	<link rel="stylesheet" href="css/iconfont.css">
+        <style type="text/css">
+			#list {
+				/*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+				
+				margin-top: -1px;
+			}
+			.device {
+			    color: #616e7f;
+			    font-size: 15px;
+			    font-weight: normal;
+			    font-family: 'arial', '华文细黑';
+			}	
+			.device-content {
+			    color: #131a2d;
+			    font-size: 15px;
+			    font-weight: normal;
+			    font-family: 'arial', '华文细黑';
+			    padding-left: 10px;
+			}
+			* {
+			    -webkit-user-select:text;
+			}
+		</style>
+		<script src="js/mui.min.js"></script>
+		<script src="js/base.js"></script>
+	</head>
+	<body>
+	    <header class="mui-bar mui-bar-nav">
+            <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 id="title" class="mui-title">AP列表</h1>
+        </header>
+        <hr style="margin:0; padding:0; border:0; height:2px; background-color:#e6e7e8"/>
+		<div class="mui-content">
+			<ul id="list" class="mui-table-view">
+				
+			</ul>
+		</div>	
+	</body>
+	<script>
+        mui.init({
+            swipeBack:true//启用右滑关闭功能
+        });
+
+        var g_apStartNum = 0;
+        
+        mui.plusReady(function() {
+			 updateAPList(baseAPI.getCurrentACSN());
+		});
+         
+        
+        //获取AP列表
+		function getAPInfo(AcSN, ApSN, callback){
+			mui.ajax('https://lvzhouv3.h3c.com/v3/apmonitor/app/apinfo?devSN=' + AcSN + '&apSN=' + ApSN,{
+				dataType:'json',
+				type:'get',
+				timeout:10000,
+				success:function(data){
+					//获得服务器响应
+					callback(data.apInfo);
+				},
+				error:function(){
+					//异常处理；
+					mui.toast('请求AP信息失败');
+				}
+			});
+		}
+	
+	    function addAPListInfo(APBriefInfo){
+	        var apname = APBriefInfo.apName;
+	        var apstatus = "离线";
+	        var bridgesuccess = "mui-badge";
+	        var ul = document.body.querySelector('.mui-table-view');
+	        
+	        if (APBriefInfo.status == 1)
+	        {
+	            apstatus = "在线 ";
+	            bridgesuccess = "mui-badge mui-badge-success";
+	        }
+	        getAPInfo(baseAPI.getCurrentACSN(), APBriefInfo.apSN, function(apInfo){
+	        	
+	        	var li = document.createElement('li');
+				li.className = 'mui-table-view-cell mui-collapse';
+				li.innerHTML = '<a class="mui-navigate-right"><span class="mui-icon iconfont icon-icluyouqi" style= "font-size: 25px;margin-right: 20px;"></span>' +apname+ '<span class="'+ bridgesuccess+'" style="font-size: 14px;">'+apstatus+'</span></a><div class="mui-collapse-content"><table style="margin-left: 3%;"><tr><td class="device">AP类型</td><td name="apModel" class="device-content">'+apInfo.apModel+'</td></tr><tr><td class="device">MAC</td><td name="macAddr" class="device-content">'+apInfo.macAddr+'</td></tr><tr><td class="device">序列号</td><td name="apSN" class="device-content">'+apInfo.apSN+'</td></tr><tr><td class="device">IP地址</td><td name="ipv4Addr" class="device-content">'+apInfo.ipv4Addr+'</td></tr><tr><td class="device">Radio个数</td><td name="radioNum" class="device-content">'+apInfo.radioNum+'</td></tr><tr><td class="device">在线时长</td><td name="onlineTime" class="device-content">'+ Number(apInfo.onlineTime).formatTime()+'</td></tr><tr><td class="device">软件版本</td><td name="softVersion" class="device-content">'+apInfo.softVersion+'</td></tr></table></div>';
+				ul.appendChild(li);
+	        });
+			
+	    }
+	
+	    function showAPList(APListArray){
+	        var dataLen = APListArray.length;
+	        var i = dataLen;
+	        while(i>0){
+	            addAPListInfo(APListArray[dataLen-i]);
+	            i--;
+	            g_apStartNum++;
+	        }
+	    }
+	    
+	    //获取AP列表
+		function getAPList(AcSN, StartNum, callback){
+			mui.ajax('https://lvzhouv3.h3c.com/v3/apmonitor/app/aplist?devSN=' + AcSN + '&startNum='+StartNum,{
+				dataType:'json',
+				type:'get',
+				timeout:5000,
+				success:function(data){
+					//获得服务器响应
+					callback(data.apList);
+				},
+				error:function(){
+					//异常处理；
+					mui.toast('请求AP列表失败');
+				}
+			});
+		}
+        
+        function updateAPList(acSN){
+	        getAPList(acSN, g_apStartNum,function(apList){
+	        	
+	            showAPList(apList);
+	            if (apList.length != 0) {
+	                updateAPList(acSN);
+	            }
+	        });
+	    }
+        // 格式化秒数到时间格式
+		Number.prototype.formatTime=function(){
+			// 计算
+			var day=0,h=0,i=0,s=parseInt(this);
+			if(s>60){
+				i=parseInt(s/60);
+				s=parseInt(s%60);
+				 if(i > 60) {
+					h=parseInt(i/60);
+					 i = parseInt(i%60);
+				}
+			}
+			// 补零
+			 var zero=function(v){
+			 return (v>>0)<10?"0"+v:v;
+			};
+			if (h >= 24)
+			{
+				day = parseInt(h/24);
+
+				return  day + "天";
+			}
+			 return [zero(h),zero(i),zero(s)].join(":");
+		}; 
+    </script>
+</html>

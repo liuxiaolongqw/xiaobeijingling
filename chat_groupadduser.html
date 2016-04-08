@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <style type="text/css">
+	.mui-table-view .mui-media-object{
+		width: 35px;
+		height: 35px;
+		border-radius: 2px;
+	}
+	.mui-media-body span{
+		top: 18px;
+		position: absolute;	
+		font-size: 15px;
+	}
+	.mui-disabled{
+		color: #C5D6D6;
+	}
+	.mui-checkbox input[type=checkbox]:checked:before{
+		color: inherit;
+	}
+
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 id="title" class="mui-title">添加成员</h1>
+	    <button id="ok" type="button" class="mui-btn mui-btn-link mui-disabled" style="position: absolute;top:0px;right: 10px">
+			完成
+		</button>
+	</header>
+	<div class="mui-content">
+
+		<ul class="mui-table-view ">
+			<!--<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>liuchao</span>
+						<input name="checkbox1" value="Item 3" type="checkbox" >
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>wanghao</span>
+						<input name="checkbox1" value="Item 4" type="checkbox" checked>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>liuxhao</span>
+						<input name="checkbox1" value="Item 3" type="checkbox" >
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaolong</span>
+						<input name="checkbox1" value="Item 4" type="checkbox" checked>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>xiaokai</span>
+						<input name="checkbox1" value="Item 3" type="checkbox" >
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-checkbox">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>diaodif</span>
+						<input name="checkbox1" value="Item 4" type="checkbox" checked class="mui-disabled">
+					</div>
+				</a>
+			</li>-->
+		</ul>
+
+	</div>
+</body>
+<script src="js/mui.min.js"></script>
+<script src="libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/chat_websql.js"></script>
+<script type="text/javascript" charset="UTF-8">
+	var slef;
+	var myUid;
+	var mem = [];
+	var groupMembers;
+	var sid;
+  	mui.init();
+  	mui.plusReady(function(){
+  		self = plus.webview.currentWebview();
+		groupMembers = self.g;
+		sid = self.sid;
+		recovermember();
+  	})
+  	function recovermember(){
+  		$(".mui-table-view").children().remove();
+		chatDb.query('select * from friendList', function(res){
+			var isExist = false;
+			for (i = 0; i < res.rows.length; i++) {
+				var info=res.rows.item(i).info;
+				info = JSON.parse(info);
+				var uid = info.uid;
+				if(info.name != escape("系统") && info.state == "ready"){
+					for(var j in groupMembers){
+						if(uid == groupMembers[j]["uid"]){
+							isExist = true;
+						}
+					}
+				
+					var ss = makeHtmlStringUserList(uid,info.name,isExist);
+					$(".mui-table-view").append(ss);
+					isExist = false;
+				}
+			}
+//			setTimeout(function(){
+//				$(".mui-table-view").find("li").each(function(e){
+//					var uid = $(this).find("input").attr("value");
+//					for(var i in groupMembers){
+//						if(uid == groupMembers[i]["uid"]){
+//							$(this).find("input").addClass("mui-disabled").attr("checked","checked").css("color","#C5D6D6");
+//						}
+//					}
+//				})
+//			}, 1000 )
+
+		})
+  	}
+  	function makeHtmlStringUserList(uid,name,isExist){
+
+		var li = $('<li class="mui-table-view-cell mui-media mui-checkbox"></li>');
+		var a = $('<a href="javascript:;"></a>');
+		var img = $('<img class="mui-media-object mui-pull-left" onerror=this.src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;"/>')
+  		var div = $('<div class="mui-media-body"></div>');
+  		var span = $('<span class="mui-ellipsis mui-col-xs-8"></span>');
+  		if(isExist){
+			var input = $('<input name="checkbox1" class="mui-disabled" value="'+uid+'" type="checkbox" checked style="top: 15px;color:#C5D6D6;">');
+  			li.attr("already","true");
+  		}else{
+			var input = $('<input name="checkbox1" value="'+uid+'" type="checkbox" style="top: 15px;">');
+			li.attr("already","false");
+  		}
+  	
+  		span.text(name);
+  		img.attr("src",  "../doc/"+uid+".jpg");
+  		div.append(span,input);
+  		a.append(img,div);
+		li.append(a);
+  		
+  		return li;
+  	}
+
+  	mui('.mui-table-view').on('tap', 'li', function(e) {
+  		if($(this).attr("already") == "true"){
+  			e.stopPropagation();
+  		}
+  	})
+	mui('.mui-table-view').on('change', 'input', function() {
+		var name = $(this).prev().text();
+		var uid = $(this).attr("value");
+//		var sid = $(this).attr("sid");
+		if($(this).is(':checked') == true){
+			$(this).css("color", "#69c4c5");
+			mem.push({nickname:name,uid:uid});
+		}else{
+			for(var i in mem){
+				if(uid == mem[i]["uid"]){
+					mem.splice(i,1);
+				}
+			}
+		}
+		if(mem.length != 0){
+			$("#ok").removeClass("mui-disabled");
+		}else{
+			$("#ok").addClass("mui-disabled");
+		}
+	})
+	$(document).on("tap","#ok",function(){
+		plus.nativeUI.showWaiting("",{back:"close",padlock:true});
+		mui.fire(plus.webview.getWebviewById("chat.html"),"groupAddUser",{members:mem,sid:sid});
+	})
+	window.addEventListener("groupAddUserResp",function(event){
+		plus.nativeUI.closeWaiting();
+		if(event.detail.result && event.detail.result == "disconnect"){
+			plus.nativeUI.toast("请检查网络连接！");
+		}else if (event.detail.result == "success"){
+			plus.webview.close(plus.webview.getWebviewById("chat_chatgroupinfo.html"), "none", 0);
+			mui.back();
+		}else{
+			plus.nativeUI.toast("添加成员失败！");
+		}
+	})
+
+</script>
+</html>

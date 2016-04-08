@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>体检</title>
+		<script src="js/mui.min.js"></script>
+		<script src="js/base.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			/*CSS源代码*/
+			
+			html,
+			body {
+				height: 100%;
+				background: #FAFAFA;
+			}
+			
+			body {
+				position: relative;
+				overflow: hidden;
+			}
+			
+			.list {
+				width: 100%;
+			}
+			
+			.describe_right {
+				position: absolute;
+				right: 5%;
+				margin-top: -5%;
+				color: #69C4C5;
+				font-size: 16px;
+			}
+			
+			#client_right,
+			#internet_right,
+			#safe_right {
+				position: absolute;
+				right: 5%;
+				margin-top: -5%;
+				font-size:16px;
+				color:#131a2d;
+			}
+			
+			#wangluo,
+			#zhongduan,
+			#anquan {
+				width: 20px;
+				height: 20px;
+			}
+			
+			#container {
+				left: 0;
+				right: 0;
+				width: 100%;
+				background-color: #69c4c5;
+				-webkit-perspective: 450px;
+				-moz-perspective: 450px;
+				-ms-perspective: 450px;
+				perspective: 450px;
+			}
+			
+			#circle {
+				width: 53%;
+				margin-top: 3%;
+				height: 0;
+				margin-left: 23%;
+				/*border-radius: 50%;
+				background: -moz-repeating-radial-gradient(#FFFFFF 3%, #4282ec 5%, #4282ec 25%);
+				/*径向渐变，虽然理解，但是调起来麻烦*/
+				/*background: -webkit-repeating-radial-gradient(#FFFFFF 3%, #4282ec 5%, #4282ec 25%);
+				background: repeating-radial-gradient(#FFFFFF 3%, #4282ec 5%, #4282ec 25%);*/
+			}
+			
+			#state {
+				margin-top: 25%;
+				padding-bottom: 3%;
+				text-align: center;
+				color: white;
+			}
+			
+			#circle_state {
+				margin-top: -2%;
+				color: white;
+				text-align: center;
+				font-family: 'arial';
+				font-weight: 900;
+			}
+			
+			#scan {
+				width: 0;
+				height: 0;
+				margin-top: -54%;
+				margin-left: 23%;
+				background: linear-gradient(0deg, rgba(250, 250, 250, 0.1), rgba(255, 255, 255, 0.5));
+				border-radius: 100% 0 0 0;
+				animation: scan 4s linear infinite;
+				-webkit-animation: scan 4s linear infinite;
+				animation-play-state: paused;
+				opacity: 0;
+				z-index: 999;
+			}
+			
+			#button {
+				position: relative;
+				width: 60%;
+				margin-top: 10%;
+				margin-left: 20%;
+				border: none;
+				background-color: #69c4c5;
+			}
+			
+			#finish {
+				position: absolute;
+				width: 60%;
+				bottom: 3%;
+				margin-left: 17%;
+				font-size: 16px;
+			}
+			
+			#solve {
+				position: absolute;
+				width: 30%;
+				bottom: 3%;
+				margin-left: 13%;
+				font-size: 15px;
+			}
+			
+			#ignore {
+				position: absolute;
+				width: 30%;
+				bottom: 3%;
+				margin-left: 53%;
+				font-size: 15px;
+			}
+			
+			#titleAll {
+				font-size: 14px;
+				margin-left: 6%;
+				color: #131a2d;
+			}
+			
+			#title1 {
+				font-size: 22px;
+				color: #FF5053;
+			}
+			#title2 {
+				font-size: 15px;
+				color: #131a2d;
+			}
+			
+			#describe {
+				font-size: 12px;
+			}
+			
+			#popover {
+				min-width: 90%;
+				height: 80%;
+				top: 50% !important;
+				margin-top: -50%;
+				left: 50% !important;
+				margin-left: -45%;
+			}
+			
+			.mui-popover .mui-popover-arrow {
+				display: none !important;
+			}
+			
+			#dot1 {
+				position: absolute;
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
+				box-shadow: 0 0 5px 3px #ffffff;
+				opacity: 0;
+				background: #EFEFF4;
+				top: 90px;
+				left: 200px;
+				visibility: hidden;
+				animation: flash 4s linear infinite 3.5s;
+				-webkit-animation: flash 4s linear infinite 3.5s;
+			}
+			
+			#dot2 {
+				position: absolute;
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
+				box-shadow: 0 0 5px 3px #ffffff;
+				opacity: 0;
+				background: #EFEFF4;
+				top: 80px;
+				left: 130px;
+				visibility: hidden;
+				animation: flash 4s linear infinite 1s;
+				-webkit-animation: flash 4s linear infinite 1s;
+			}
+			
+			#dot3 {
+				position: absolute;
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
+				box-shadow: 0 0 5px 3px #ffffff;
+				opacity: 0;
+				background: #EFEFF4;
+				top: 50px;
+				left: 120px;
+				visibility: hidden;
+				animation: flash 4s linear infinite 1.5s;
+				-webkit-animation: flash 4s linear infinite 1.5s;
+			}
+			
+			#dot4 {
+				position: absolute;
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
+				box-shadow: 0 0 5px 3px #ffffff;
+				opacity: 0;
+				background: #EFEFF4;
+				top: 120px;
+				left: 210px;
+				visibility: hidden;
+				animation: flash 4s linear infinite 0.5s;
+				-webkit-animation: flash 4s linear infinite 0.5s;
+			}
+			
+			#dot5 {
+				position: absolute;
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
+				box-shadow: 0 0 5px 3px #ffffff;
+				opacity: 0;
+				background: #EFEFF4;
+				top: 160px;
+				left: 160px;
+				visibility: hidden;
+				animation: flash 4s linear infinite 0.5s;
+				-webkit-animation: flash 4s linear infinite 0.5s;
+			}
+			
+			@keyframes scan {
+				0% {
+					transform: rotateZ(0deg);
+					transform-origin: 100% 100%;
+				}
+				100% {
+					transform: rotateZ(360deg);
+					transform-origin: 100% 100%;
+				}
+			}
+			
+			@-webkit-keyframes scan {
+				0% {
+					transform: rotateZ(0deg);
+					transform-origin: 100% 100%;
+				}
+				100% {
+					transform: rotateZ(360deg);
+					transform-origin: 100% 100%;
+				}
+			}
+			
+			@keyframes flash {
+				0% {
+					opacity: 0;
+				}
+				10% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			
+			@-webkit-keyframes flash {
+				0% {
+					opacity: 0;
+				}
+				10% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div id="container">
+				<img id="circle" src="images/leida.png" />
+				<div class="cover">
+					<div id="scan"></div>
+				</div>
+				<div id="circle_state"></div>
+				<div id="dot1"></div>
+				<div id="dot2"></div>
+				<div id="dot3"></div>
+				<div id="dot4"></div>
+				<div id="dot5"></div>
+				<div id="state"></div>
+			</div>
+			<div id="list" class="list">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a id="client" style="font-size:16px;color:#131a2d;"><img id="wangluo" class="mui-media-object mui-pull-left" src="images/zhongduan.png">无线终端
+							<div id="client_right"></div>
+						</a>
+
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="internet"  style="font-size:16px;color:#131a2d;"><img id="zhongduan" class="mui-media-object mui-pull-left" src="images/wangluo.png">无线网络
+							<div id="internet_right"></div>
+						</a>
+
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="safe"  style="font-size:16px;color:#131a2d;"><img id="anquan" class="mui-media-object mui-pull-left" src="images/anquan.png">无线安全
+							<div id="safe_right"></div>
+						</a>
+
+					</li>
+				</ul>
+			</div>
+			<button id="button"  style="font-size:16px;color:#fff;" class="mui-btn">开始体检</button>
+		</div>
+		<div id="popover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-content-padded">
+				<h4 style="text-align: center;margin-top: 20px;font-size: 16px;color:#131a2d;">诊断报告</h4>
+				<span id="titleAll" style="font-size: 14px;color:#131a2d;">发现<span id="title1"></span><span style="font-size: 14px;color:#131a2d;">个问题影响上网，建议立即解决</span></span>
+				<ul id="OA_task1" class="mui-table-view"></ul>
+				<h5 id="title2" style="margin-left: 6%;"></h5>
+				<ul id="OA_task2" class="mui-table-view"></ul>
+				<div id="add_div" class="operate mui-hidden"></div>
+			</div>
+		</div>
+		<script>
+			var result, results;
+			var newWidth = document.getElementById("circle").offsetWidth;
+			document.getElementById("circle").style.height = newWidth + 'px';
+			document.getElementById("scan").style.width = newWidth / 2 + 'px';
+			document.getElementById("scan").style.height = newWidth / 2 + 'px';
+			document.getElementById("circle_state").innerHTML = '&nbsp';
+			document.getElementById("state").innerHTML = '&nbsp';
+
+			function buttonClick() {
+				kb = 0;
+				document.getElementById("button").innerHTML = '正在体检...';
+				document.getElementById("button").disabled = true;
+				document.getElementById("client_right").innerHTML = '诊断中';
+				document.getElementById("internet_right").innerHTML = '等待中';
+				document.getElementById("safe_right").innerHTML = '等待中';
+				document.getElementById("circle_state").innerHTML = '终端';
+				document.getElementById("state").innerHTML = '正在诊断 无线终端...';
+				document.getElementById("scan").style.animationPlayState = "running";
+				document.getElementById("scan").style.opacity = '1';
+				document.getElementById("dot1").style.visibility = 'visible';
+				document.getElementById("dot2").style.visibility = 'visible';
+				document.getElementById("dot3").style.visibility = 'visible';
+				document.getElementById("dot4").style.visibility = 'visible';
+				document.getElementById("dot5").style.visibility = 'visible';
+				setTimeout(function() {
+					document.getElementById("client_right").innerHTML = '完成';
+					document.getElementById("internet_right").innerHTML = '诊断中';
+					document.getElementById("circle_state").innerHTML = '网络';
+					document.getElementById("state").innerHTML = '正在诊断 无线网络...';
+				}, 2000);
+				setTimeout(function() {
+					document.getElementById("internet_right").innerHTML = '完成';
+					document.getElementById("safe_right").innerHTML = '诊断中';
+					document.getElementById("circle_state").innerHTML = '安全';
+					document.getElementById("state").innerHTML = '正在诊断 无线安全...';
+				}, 4000);
+				setTimeout(function() {
+					document.getElementById("safe_right").innerHTML = '完成';
+					document.getElementById("circle_state").innerHTML = '完成';
+					document.getElementById("button").innerHTML = '开始体检';
+					document.getElementById("button").disabled = false;
+					document.getElementById("state").innerHTML = '诊断完毕 ';
+					document.getElementById("scan").style.animationPlayState = "paused";
+					document.getElementById("scan").style.opacity = '0';
+					document.getElementById("dot1").style.visibility = 'hidden';
+					document.getElementById("dot2").style.visibility = 'hidden';
+					document.getElementById("dot3").style.visibility = 'hidden';
+					document.getElementById("dot4").style.visibility = 'hidden';
+					document.getElementById("dot5").style.visibility = 'hidden';
+					del1();
+					del2();
+					delButton();
+					if (results == 1) {
+						document.getElementById("title1").innerText = 1;
+						document.getElementById("title2").innerText = "以下2项正常";
+						add1('images/zhongduan_err.png', '无线终端', result[0].content);
+						add2('wangluo', 'images/wangluo.png', '无线网络', '正常');
+						add2('anquan', 'images/anquan.png', '无线安全', '正常');
+						//						addButton('solve', '立即解决');
+						//						addButton('ignore', '忽略');
+						//						document.getElementById("solve").addEventListener('tap', function() {
+						//							waiting();
+						//							setTimeout(function() {
+						//								mui("#popover").popover("toggle");
+						//							}, 2000);
+						//						});
+						//						document.getElementById("ignore").addEventListener('tap', function() {
+						//							mui("#popover").popover("toggle");
+						//						});
+						addButton('finish', '完成');
+						document.getElementById("finish").addEventListener('tap', function() {
+							document.getElementById("client_right").innerHTML = '';
+							document.getElementById("internet_right").innerHTML = '';
+							document.getElementById("safe_right").innerHTML = '';
+							document.getElementById("circle_state").innerHTML = '&nbsp';
+							document.getElementById("state").innerHTML = '&nbsp';
+							mui("#popover").popover("toggle");
+						});
+					} else {
+						document.getElementById("titleAll").innerText = "小贝体检正常，您的网络未发现问题";
+						add2('zhongduan', 'images/zhongduan.png', '无线终端', '正常');
+						add2('wangluo', 'images/wangluo.png', '无线网络', '正常');
+						add2('anquan', 'images/anquan.png', '无线安全', '正常');
+						addButton('finish', '完成');
+						document.getElementById("finish").addEventListener('tap', function() {
+							document.getElementById("client_right").innerHTML = '';
+							document.getElementById("internet_right").innerHTML = '';
+							document.getElementById("safe_right").innerHTML = '';
+							document.getElementById("circle_state").innerHTML = '&nbsp';
+							document.getElementById("state").innerHTML = '&nbsp';
+							mui("#popover").popover("toggle");
+						});
+					}
+					add_div.classList.remove("mui-hidden");
+					mui("#popover").popover("toggle");
+				}, 6000);
+			}
+
+			function diagnose(devSN, diaType, callback) {
+				mui.ajax('https://lvzhouv3.h3c.com/v3/diagnosis/app/result?devSN=' + devSN + '&optType=' + diaType, {
+					dataType: 'json',
+					type: 'get',
+					timeout: 5000,
+					success: function(data) {
+						//获得服务器响应
+						//alert("---1----");
+						callback(data);
+					},
+					error: function() {
+						//异常处理；
+						mui.toast('请求体检数据失败');
+					}
+				});
+			}
+
+			function add1(dw_picurl, name, describe) {
+				var ul = document.getElementById('OA_task1');
+				var li = document.createElement("li");
+				li.setAttribute("class", "mui-table-view-cell mui-media");
+				var html = [];
+				html.push('<img class="mui-media-object mui-pull-left" src="' + dw_picurl + '"><div class="mui-media-body" style="font-size:15px;color: #FF5053">' + name + '<p id="describe">' + describe + '</p></div>');
+				li.innerHTML += html.join('');
+				ul.appendChild(li);
+			}
+
+			function add2(id, dw_picurl, name, describe) {
+				var ul = document.getElementById('OA_task2');
+				var li = document.createElement("li");
+				li.setAttribute("class", "mui-table-view-cell");
+				var html = [];
+				html.push('<a style="font-size:16px;color:#131a2d;"><img id="' + id + '" class="mui-media-object mui-pull-left" src="' + dw_picurl + '">' + name + '<div class="describe_right">' + describe + '</div></a>');
+				li.innerHTML += html.join('');
+				ul.appendChild(li);
+			}
+
+			function addButton(id, name) {
+				var div = document.getElementById('add_div');
+				var btn = document.createElement("div");
+				btn.innerHTML = '<button type="button" class="mui-btn mui-btn-blue" id="' + id + '">' + name + '</button>';
+				div.appendChild(btn);
+			}
+
+			function del1() {
+				var ul = document.getElementById('OA_task1');
+				var childs = ul.childNodes;
+				for (var i = childs.length - 1; i >= 0; i--) {
+					ul.removeChild(childs.item(i));
+				}
+			}
+
+			function del2() {
+				var ul = document.getElementById('OA_task2');
+				var childs = ul.childNodes;
+				for (var i = childs.length - 1; i >= 0; i--) {
+					ul.removeChild(childs.item(i));
+				}
+			}
+
+			function delButton() {
+				var div = document.getElementById('add_div');
+				var childs = div.childNodes;
+				for (var i = childs.length - 1; i >= 0; i--) {
+					div.removeChild(childs.item(i));
+				}
+			}
+
+			function waiting() {
+				var w = plus.nativeUI.showWaiting("正在优化...");
+				w.onclose = function() {
+					clearInterval(t);
+				}
+				var t = setInterval(function() {
+					w.setTitle("正在优化...");
+					w.close();
+					clearInterval(t);
+				}, 2000);
+			}
+			
+			function getHealthData(para, callback){
+				//利用RunJS的Echo Ajax功能测试
+				var url_t = "https://lvzhouv3.h3c.com/v3/health/home/health";
+				
+		        mui.ajax({
+		            url:url_t,
+		            dataType:'json',
+		            timeout: 5000,
+		            data: para,
+		            success:function(data) {
+		                var result = mui.parseJSON(data);
+		                err = 0;
+		                callback(result,err);
+		            },
+		            error:function(request, status, err){
+		                if (status == "timeout")
+		                {
+		                    err = 1;
+		                    callback("",err);
+		                }
+		            }
+		        });
+			};
+			
+			//添加登陆成功后页面刷新事件监听
+			window.addEventListener('Refresh', function(event) {
+				document.getElementById("client_right").innerHTML = '';
+				document.getElementById("internet_right").innerHTML = '';
+				document.getElementById("safe_right").innerHTML = '';
+				document.getElementById("circle_state").innerHTML = '&nbsp';
+				document.getElementById("state").innerHTML = '&nbsp';
+			});
+			mui.plusReady(function() {
+				document.getElementById('button').addEventListener('tap', function() {
+					getHealthData({acSN:baseAPI.getCurrentACSN()}, function(resultdata, err){
+						if (err == 1){
+		                	plus.nativeUI.alert("体检前必须将设备连接绿洲云", null, "绿洲云无该设备体检数据", "确认");
+	                	}else{
+	                		if (resultdata.finalscore) {
+								diagnose(baseAPI.getCurrentACSN(), 1, function(data) {
+									result = data.issueList;
+									results = result.length;
+									buttonClick();
+								});
+							}
+							else{
+							    plus.nativeUI.alert("体检前必须将设备连接绿洲云", null, "绿洲云无该设备体检数据", "确认");
+							}
+	                		
+	                	}
+					});
+				});
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <!--<link href="css/mui.indexedlist.css" rel="stylesheet" />-->
+    <link href="css/chat_common.css" rel="stylesheet"/>
+    <link href="css/chat_contact.css" rel="stylesheet"/> 
+    
+	<style type="text/css">
+	#chat_newfriend_badge{
+		right: initial;
+		top: 12px;
+		left: 43px;
+	}
+
+	</style>
+</head>
+<body>
+	<div class="mui-content">
+		<ul id="chat_contact_linkcontent" class="mui-table-view">
+			<li class="mui-table-view-cell mui-media">
+				<a id="chat_newfriendentry">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/chatnewfriend.jpg" style="margin-right: 15px;">
+					<span id="chat_newfriend_badge" class="mui-badge mui-badge-danger">2</span>
+					<div class="mui-media-body">
+						<span>新的朋友</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media">
+				<a id="chat_groupentry">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/chatgroup.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span>群聊</span>
+					</div>
+				</a>
+			</li>
+		</ul>
+
+		<div id="letter" ></div>
+		<ul id="chat_contact_friendcontent" class="mui-table-view sort_box" >
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">刘小龙</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">wanghao</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+				<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+			</li>
+				<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">xiaokia</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">c</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">d</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">aaaa</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">刘小龙</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">wanghao</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+				<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+				<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">aaaa</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">刘小龙</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">wanghao</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+				<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+				<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">jixiaokia</span>
+					</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media sort_list">
+				<a href="javascript:;">
+					<img class="mui-media-object mui-pull-left " src="./images/chat/test_xiaozhu.jpg" style="margin-right: 15px;">
+					<div class="mui-media-body">
+						<span class="num_name">aaaa</span>
+					</div>
+				</a>
+			</li>
+		</ul>
+		<div class="initials" >
+			<ul>
+				
+			</ul>
+		</div>
+		<div id="addTopPopover" class="mui-popover">
+			<div class="mui-popover-arrow mui-pull-right"></div>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="chat_newdialog.html"><span class="mui-icon iconfont mui-icon mui-icon-chatbubble" style= "font-size: 22px;margin-right: 6px;"></span>新建会话</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="chat_finduser.html"><span class="mui-icon iconfont mui-icon mui-icon-personadd" style= "font-size: 22px;margin-right: 6px;"></span>添加好友</a>
+				</li>
+			</ul>
+		</div>
+		<!--<img src="../asdf.hsn" onerror="this.src='./images/chat/test_xiaozhu.jpg'" />-->
+	</div>
+	
+</body>
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="libs/jquery/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="js/jquery.charfirst.pinyin.js"></script>
+	<script type="text/javascript" src="js/sort.js"></script>
+	<!--<script src="js/mui.indexedlist.js"></script>-->
+	<script src="js/app.js"></script>
+	<script src="js/chat_base.js"></script>
+	<script src="js/chat_websql.js"></script>
+	<script type="text/javascript" charset="utf-8">
+	(function($,mui){
+		var newFriendCount = 0;
+		var self;
+		var myUid;
+		var myName;
+		var groupPage;
+		var arFriend = {};
+		var newFBadge = $("#chat_newfriend_badge");
+		mui.init();
+		mui.ready(function() {
+		});
+		
+		mui.plusReady(function(){
+			self = plus.webview.currentWebview();
+			self.setStyle( {scrollIndicator:"none"} );
+
+			recoverSelfInfo(function(){
+				recoverFriendList();
+			});
+			initGroupPage();
+		})
+
+		function recoverSelfInfo(cback){
+			chatDb.query('select * from selfInfo', function(res){
+				for(var i = 0;i< res.rows.length;i++){
+					var info = res.rows.item(i).info;
+					info = JSON.parse(info);
+					if(res.rows.item(i).key == "base"){
+						myUid = info.uid;
+						myName = unescape(info.name);
+					}else if(res.rows.item(i).key == "arwFriendList"){
+						arFriend = $.extend(true, {}, info);
+					}
+				}
+				cback();
+			})
+		}
+		
+		/*为什么要MERGE 因为自己的另一个账号在别的终端登录后接受了某些人的请求，那么得保证本客户端的arFriend是正确的,所以要把这些人删除掉*/
+		function mergeAlreadyReadWaitMeFriendData(b){
+			var a = $.extend(true, {}, arFriend);;
+			if(isEmptyObject(arFriend)){
+				return;
+			}
+			for(var i in b){
+				if(a[i]){
+					delete a[i];
+				}
+			}
+			for(var j in a){
+				if(arFriend[j]){
+					delete arFriend[j];
+				}
+			}
+			saveAlreadyReadWaitMeFriendList();
+		}
+//		function addAlreadyReadWaitMeFriendList(uid){
+//			console.log("dddddddddddddd+"+uid);
+//			chatDb.query('select * from selfInfo where key = "arwFriendList"', function(res){
+//				if(res.rows.length == 0){
+//					var info = {};
+//					info[uid] = true;
+//					chatDb.insertMe("arwFriendList",JSON.stringify(info),function(){
+//						console.log("insert arwFriendList success");
+//					},function(){
+//						console.log("ERROR insert arwFriendList failed");
+//					})
+//				}else{
+//					var oldInfo = res.rows.item(0).info;
+//					oldInfo = JSON.parse(oldInfo);
+//					oldInfo[uid] = true;
+//					chatDb.updateMe("arwFriendList",JSON.stringify(oldInfo),function(){
+//						console.log("update arwFriendList success");
+//					},function(){
+//						console.log("ERROR update arwFriendList failed");
+//					})
+//				}
+//			})
+//		}
+//		function delAlreadyReadWaitMeFriendList(uid){
+//			chatDb.query('select * from selfInfo where key = "arwFriendList"', function(res){
+//				if(res.rows.length == 0){
+//					return;
+//				}else{
+//					var oldInfo = res.rows.item(0).info;
+//					oldInfo = JSON.parse(oldInfo);
+//					
+//					delete oldInfo[uid];
+//					console.log(JSON.stringify(oldInfo));
+//					chatDb.updateMe("arwFriendList",JSON.stringify(oldInfo),function(){
+//						console.log("update arwFriendList success");
+//					},function(){
+//						console.log("ERROR update arwFriendList failed");
+//					})
+//				}
+//			})
+//		}
+		function saveAlreadyReadWaitMeFriendList(){
+			chatDb.query('select * from selfInfo where key = "arwFriendList"', function(res){
+				if(res.rows.length == 0){
+					chatDb.insertMe("arwFriendList",JSON.stringify(arFriend),function(){
+						console.log("insert arwFriendList success");
+					},function(){
+						console.log("ERROR insert arwFriendList failed");
+					})
+				}else{
+					chatDb.updateMe("arwFriendList",JSON.stringify(arFriend),function(){
+						console.log("update arwFriendList success");
+					},function(){
+						console.log("ERROR update arwFriendList failed");
+					})
+				}
+			})
+		}
+		window.addEventListener("addARFriendList",function(e){
+			var uid = e.detail.uid;
+			arFriend[uid] = true;
+			saveAlreadyReadWaitMeFriendList();
+		})
+		window.addEventListener("DelARFriendList",function(e){
+			var uid = e.detail.uid;
+			delete arFriend[uid];
+			saveAlreadyReadWaitMeFriendList();
+		})
+		
+		function initGroupPage(){
+			groupPage = mui.preload({
+				id:'chat_group.html',
+    			url:'chat_group.html',
+    			styles:{
+    				popGesture:"hide",
+//  				scrollIndicator:"none",
+    			},
+    			show: {
+					aniShow: 'none'
+				}
+			})
+        }
+
+		mui('#chat_contact_friendcontent').on("tap","li",function(){
+			var name = $(this).find(".num_name").text();
+			var uid =  $(this).attr("uid");
+			var headImg = $(this).find("img").attr("src");
+			var sid = $(this).attr("sid");
+			console.log("concat info myUid = "+ myUid);
+			
+			mui.openWindow({
+				id:"chat_friendinfo.html",
+				url:"chat_friendinfo.html",
+				styles:{
+					popGesture:"close"
+				},
+				show:{
+			    	autoShow:true,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:true
+				},
+				extras:{
+					name:name,
+					uid:uid,
+					headImg:headImg,
+					myUid:myUid,
+					sid:sid
+				}
+			})
+		})
+		mui('#chat_contact_linkcontent').on("tap","#chat_groupentry",function(){
+//			var target = this.getAttribute('href');
+//			var em = mui.openWindow({
+//				id:target,
+//				url:target,
+//				styles:{
+//					popGesture:"hide"
+//				},
+//				show:{
+//			    	autoShow:true,
+//			    	aniShow:"slide-in-right"
+//				},
+//				waiting:{
+//					autoShow:true
+//				},
+//				extras:{
+//				}
+//			})
+			plus.webview.show(groupPage,"slide-in-right");
+		})
+		mui('#chat_contact_linkcontent').on("tap","#chat_newfriendentry",function(){
+			var target = "chat_newfriend.html";
+			var em = mui.openWindow({
+				id:target,
+				url:target,
+				styles:{
+					popGesture:"close"
+				},
+				show:{
+			    	autoShow:true,
+			    	aniShow:"slide-in-right"
+				},
+				waiting:{
+					autoShow:true
+				},
+				extras:{
+				}
+			})
+		})
+		
+		/*弹出菜单处理*/
+		window.addEventListener("tapAddLink",function(event){
+			if(self.isVisible()){
+				mui('#addTopPopover').popover('toggle');
+			}
+		})
+		window.addEventListener("hidePopView",function(event){
+			mui('#addTopPopover').popover('hide');
+		})
+		window.addEventListener("setNameAndUid",function(event){
+			myUid = event.detail.uid;
+			myName = event.detail.name;
+		})
+		window.addEventListener("recoverFriendList",function(event){
+			console.log("concat page revb recoverFriendList");
+			recoverFriendList();
+		})
+
+		mui("#addTopPopover").on("tap","a",function(){
+			var href = $(this).attr('href')
+			mui.fire(self.parent(),"addLinkResp",href);
+			mui('#addTopPopover').popover("hide");
+		})
+		function makeHtmlStringFriendList(sid, uid, name){
+			var li 	 = $("<li class='mui-table-view-cell mui-media sort_list' sid = '"+ sid+"' uid = '"+ uid+"' smooth='true'></li>");
+			var a  	 = $("<a></a>");
+			var img	 = $("<img class='mui-media-object mui-pull-left' style='margin-right: 15px;' uid = '"+ uid+"' onerror=this.src='./images/chat/test_xiaozhu.jpg'>" );
+			var div	 = $("<div class='mui-media-body'></div>");
+			var span = $("<span class='num_name mui-ellipsis mui-col-xs-7'></span");
+			
+			img.attr("src",  "../doc/"+uid+".jpg");
+			span.text(name);
+			div.append(span);
+			a.append(img,div);
+			li.append(a);
+			
+			return li;
+		}
+
+
+		function recoverFriendList(){
+			var dif = false;
+			
+			/*将平滑标志设置为false,以便平滑结束后，将标志为false的好友清除*/
+			$("#chat_contact_friendcontent li").attr("smooth","false");
+
+			chatDb.query('select * from friendList', function(res){
+				var badgeCnt = 0;
+				var waitMeFriendList = {};
+				for (i = 0; i < res.rows.length; i++) {
+					var info=res.rows.item(i).info;
+					info = JSON.parse(info);
+					if(info.state == "ready"){
+						var user = $("#chat_contact_friendcontent").find("li[uid='"+info.uid+"']");
+						if(user.length){
+							user.attr("smooth","true");	
+						}else{
+							var fls = makeHtmlStringFriendList(info.sid,info.uid,unescape(info.name))
+								
+							$("#chat_contact_friendcontent").append(fls);
+					
+							dif = true;
+						}
+					}else if(info.state == "wait_me"){
+						var uid = info.uid;
+						if(!arFriend[uid]){
+							badgeCnt++;
+						}
+						waitMeFriendList[uid] = true;
+					}
+					/*merge already read wait me friend list*/
+					
+				}
+				var s = $("#chat_contact_friendcontent").find("li[smooth='false']");
+				if(dif || s.length){
+					s.each(function(){
+						this.remove();
+					})
+					$("#chat_contact_friendcontent").find(".sort_letter").remove();
+					initials();
+				}
+				setBadge(newFBadge,badgeCnt);
+				setContactBadge(badgeCnt);
+				mergeAlreadyReadWaitMeFriendData(waitMeFriendList);
+			});
+		}
+		
+		window.addEventListener("updateHeadImg",function(event){
+			var uid = event.detail.uid;
+			$("#chat_contact_friendcontent").find("img[uid='"+uid+"']").attr("src", "../doc/"+uid+".jpg?"+new Date().getTime());
+		})
+		window.addEventListener("opendChatNewFriendPage",function(){
+			setContactBadge(0);
+			setBadge(newFBadge,0);
+		})
+		
+		/*设置 chat.html页面的好友 BADGE*/
+		function setContactBadge(count){
+			mui.fire(plus.webview.getWebviewById("chat.html"),"setContactBadge",{count:count});
+		}
+
+	})(jQuery,mui)
+		
+	</script>
+
+</html>

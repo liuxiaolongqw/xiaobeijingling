@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>无线终端</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="css/mui.min.css">
+    	<link rel="stylesheet" href="css/iconfont.css">
+        <style type="text/css">
+            html,
+            body {
+                background-color: #efeff4;
+            }
+            .mui-views,
+            .mui-view,
+            .mui-pages,
+            .mui-page,
+            .mui-page-content {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #efeff4;
+            }
+            .mui-pages {
+                top: 46px;
+                height: auto;
+            }
+            .mui-scroll-wrapper,
+            .mui-scroll {
+                background-color: #efeff4;
+            }
+            .mui-page.mui-transitioning {
+                -webkit-transition: -webkit-transform 200ms ease;
+                transition: transform 200ms ease;
+            }
+            .mui-page-left {
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+            }
+            .mui-ios .mui-page-left {
+                -webkit-transform: translate3d(-20%, 0, 0);
+                transform: translate3d(-20%, 0, 0);
+            }
+            .mui-navbar {
+                position: fixed;
+                right: 0;
+                left: 0;
+                z-index: 10;
+                height: 44px;
+                background-color: #69C4C5;
+            }
+            .mui-navbar .mui-bar {
+                position: absolute;
+                background: transparent;
+                text-align: center;
+            }
+            .mui-android .mui-navbar-inner.mui-navbar-left {
+                opacity: 0;
+            }
+            .mui-ios .mui-navbar-left .mui-left,
+            .mui-ios .mui-navbar-left .mui-center,
+            .mui-ios .mui-navbar-left .mui-right {
+                opacity: 0;
+            }
+            .mui-navbar .mui-btn-nav {
+                -webkit-transition: none;
+                transition: none;
+                -webkit-transition-duration: .0s;
+                transition-duration: .0s;
+            }
+            .mui-navbar .mui-bar .mui-title {
+                display: inline-block;
+                width: auto;
+            }
+            .mui-page-shadow {
+                position: absolute;
+                right: 100%;
+                top: 0;
+                width: 16px;
+                height: 100%;
+                z-index: -1;
+                content: '';
+            }
+            .mui-page-shadow {
+                background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+                background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+            }
+            .mui-navbar-inner.mui-transitioning,
+            .mui-navbar-inner .mui-transitioning {
+                -webkit-transition: opacity 200ms ease, -webkit-transform 200ms ease;
+                transition: opacity 200ms ease, transform 200ms ease;
+            }
+            .mui-page {
+                display: none;
+            }
+            .mui-pages .mui-page {
+                display: block;
+            }
+            .mui-ios .mui-navbar .mui-bar .mui-title {
+                position: static;
+            }
+			#list {
+				/*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+
+				margin-top: -1px;
+			}
+
+			.client-detail {
+			    color: #616e7f;
+			    font-size: 15px;
+			    font-weight: normal;
+			    font-family: 'arial', '华文细黑';
+			    width: 100%;
+			}
+			.client{
+			    width: 40%;
+			}
+			.client-content {
+			    width: 60%;
+			    color: #131a2d;
+			    font-size: 15px;
+			    font-weight: normal;
+			    font-family: 'arial', '华文细黑';
+			    padding-left: 10px;
+			}
+			#rebootap {
+				font-family: 'arial', '华文细黑';
+			    color: #fff;
+			    background-color: #69C4C5;
+			    border: 0;
+			    margin-top: 10px;
+			    margin-right: 5%;
+			    font-weight: normal;
+			    text-shadow: none;
+			    box-shadow: none;
+			}
+			#Test11kResult th{
+                text-align: left;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+            }
+			#Test11kResult td{
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                overflow:hidden;
+            }
+            #Test11kResult table{
+                table-layout:fixed;
+            }
+            #Test11kResult td:hover
+            {
+                text-overflow:inherit;
+                overflow:visible;
+            }
+			.terminal-btn{
+                width: 100%;
+                padding: 0px;
+			}
+			.mui-btn-primary{
+                border: 1px solid #69c4c5;
+                background-color: #69c4c5;
+            }
+            a:active {color: #ffffff}
+            .mui-btn-primary:enabled:active{
+                border: 1px solid #2faab2;
+                background-color: #2faab2;
+            }
+            .td-btn{
+                width:50%;
+                padding: 5px 10px;
+            }
+            .Data11k {
+                text-align: right;
+            }
+            * {
+			    -webkit-user-select:text;
+			}
+		</style>
+	</head>
+	<body>
+	    <!--页面主结构开始-->
+        <div id="app" class="mui-views">
+            <div class="mui-view">
+                <div class="mui-navbar">
+                </div>
+                <div class="mui-pages">
+                </div>
+            </div>
+        </div>
+        <!--页面主结构结束-->
+        <div id="terminal_page" class="mui-page">
+            <div class="mui-navbar-inner mui-bar mui-bar-nav">
+                <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+                    <span class="mui-icon mui-icon-left-nav"></span>
+                </button>
+                <h1 class="mui-center mui-title">无线终端</h1>
+            </div>
+    		<div class="mui-page-content">
+    		    <div class="mui-scroll-wrapper">
+                    <div class="mui-scroll">
+            			<ul class="mui-table-view">
+            			</ul>
+    			 </div>
+    			</div>
+    		</div>
+		</div>
+
+		<div id="terminal_test_page" class="mui-page">
+            <div class="mui-navbar-inner mui-bar mui-bar-nav">
+                <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+                    <span class="mui-icon mui-icon-left-nav"></span>无线终端
+                </button>
+                <h1 class="mui-center mui-title">射频测试</h1>
+            </div>
+            <div class="mui-page-content">
+                <div id="terminal_test_scroll" class="mui-scroll-wrapper">
+                    <div class="mui-scroll">
+                        <div id="Test11kDisplay">
+                            <div id="Test11kError" style="text-align: center;">
+                                <p id = "Test11kErrorReason"></p>
+                            </div>
+                            <div id="Test11kLoad" style="text-align: center;">
+                                <img src="images/login.gif" />
+                                <p>测量进行中 请稍候...</p>
+                            </div>
+
+                            <div id="Test11kResult" style="margin: 0 5px;">
+                                <p >Radio Measure Report</p>
+                                <hr />
+                                <div id="Test11kTitleResult"></div>
+                                <hr />
+                                <div>
+                                    <table id="LinkTable" style="width:100%">
+                                        <tr><th>Link measurement:</th></tr>
+                                        <tr>
+                                            <td>Link margin:</td>
+                                            <td id="Linkmargin" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>RCPI:</td>
+                                            <td id="RCPI" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>RSNI:</td>
+                                            <td id="RSNI" class="Data11k"></td>
+                                        </tr>
+                                        <tr><th class = 'TableHead11k' >Noise histogram:</th></tr>
+                                        <tr>
+                                            <td>Antenna ID:</td>
+                                            <td id="AntennaID" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>ANPI:</td>
+                                            <td id="ANPI" class="Data11k"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>IPI0 TO 10:</td>
+                                        </tr>
+                                        <tr><td  id="IPI0210" class="Data11k"></td></tr>
+
+                                        <tr><th class = 'TableHead11k' >Spectrum measurement:</th></tr>
+                                        <tr>
+                                            <td>Transmit power:</td>
+                                            <td id="Transmitpower" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>BSS:</td>
+                                            <td id="BSS" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>OFDM preamble:</td>
+                                            <td id="OFDM" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Radar:</td>
+                                            <td id="Radar" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Unidentified signal:</td>
+                                            <td id="Unsignal" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>CCA busy fraction:</td>
+                                            <td id="CCA" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>RPI0 to 7:</td>
+                                        </tr>
+                                        <tr><td id="RPI027" colspan ='2' class="Data11k"></td></tr>
+
+                                        <tr><th class = 'TableHead11k' >Frame report entry:</th></tr>
+                                        <tr>
+                                            <td>BSSID:</td>
+                                            <td id="BSSID" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>PHY type:</td>
+                                            <td id="PHY" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Average RCPI:</td>
+                                            <td id="AverageRCPI" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last RSNI:</td>
+                                            <td id="LastRSNI" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last RCPI:</td>
+                                            <td id="LastRCPI" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Frames:</td>
+                                            <td id="Frames" class="Data11k"></td>
+                                        </tr>
+                                        <tr><th class = 'TableHead11k' >BSSAverageAccessDelay:</th></tr>
+                                        <tr>
+                                            <td>Average access delay:</td>
+                                            <td id="AveAc" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>BestEffort delay:</td>
+                                            <td id="Be" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Background delay:</td>
+                                            <td id="Bk" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Video delay:</td>
+                                            <td id="Vi" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Voice delay:</td>
+                                            <td id="Vo" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Clients:</td>
+                                            <td id="QosClients" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Channel utilization rate:</td>
+                                            <td id = "Channelutilizationrate" class="Data11k"></td>
+                                        </tr>
+                                        <tr><th class = 'TableHead11k' >Transmit stream:</th></tr>
+                                        <tr>
+                                            <td>Traffic ID:</td>
+                                            <td id="TrafficID" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sent MSDUs:</td>
+                                            <td id="SentMSDUs" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Discarded MSDUs:</td>
+                                            <td id="DiscardedMSDUs" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Failed MSDUs:</td>
+                                            <td id="FailedMSDUs" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>MSDUs resent times:</td>
+                                            <td id="MSDUsTimes" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lost QoS CF-Polls:</td>
+                                            <td id="LostQoSCFPolls" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Queue delay:</td>
+                                            <td id="Averagequeuedelay" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Transmit delay:</td>
+                                            <td id="Averagetransmitdelay" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bin0 range:</td>
+                                            <td id="Bin0rangePolls" class="Data11k"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bin0 to Bin5:</td>
+                                        </tr>
+                                        <tr>  <td id="Bin025" class="Data11k"></td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/mui.min.js"></script>
+        <script src="js/base.js"></script>
+		<script src="js/mui.view.js "></script>
+		<script>
+	        mui.init({
+	            swipeBack:true//启用右滑关闭功能
+	        });
+
+	        var g_clentStartNum = 0;
+
+	        mui.plusReady(function() {
+				 updateClientList(baseAPI.getCurrentACSN());
+			});
+
+            function get11kReport(mac, apname, callback){
+
+                var surl = "https://lvzhouv3.h3c.com/v3/ant/confmgr";
+                var acSN = baseAPI.getCurrentACSN();
+//              console.log('11k test acSN: '+acSN+' Mac: '+mac +' ApName: '+apname);
+                mui.ajax({url:surl,
+                    timeout : 10000,
+                    dataType:"json",
+                    type:"post",
+                    data:{configType:0,
+                        devSN:acSN,
+                        cloudModule:"stamonitor",
+                        deviceModule:"stamgr",
+                        method:'wrrmGetMeaRpt',
+                        param: [{clientMAC:mac, ApName:apname}]
+                    },
+                    success:function (Data)
+                    {
+                        callback(true, Data);
+//                      console.log(Data);
+                    },
+                    error: function()
+                    {
+                        callback(false);
+                    }
+                });
+            }
+
+            function isArr(arr){
+                return Object.prototype.toString.call(arr) === '[object Array]';
+            }
+
+            function isNullObj(obj){
+                for(var i in obj){
+                    if(obj.hasOwnProperty(i)){
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function addClient11kReport(clientInfo){
+                var tblText = [
+                    ["Linkmargin", "linkMargin"," dbm", -128],
+                    ["RCPI", "RCPI", " dbm", -128],
+                    ["RSNI", "RSNI", " dbm", -128],
+                    ["AntennaID", "antenId", "", 0],
+                    ["ANPI", "ANPI", " dbm", -128],
+                    ["IPI0210", "IPI", "", [0,0,0,0,0,0,0,0,0,0,0]],
+                    ["Transmitpower", "txmtPower", " dbm", -128],
+                    ["BSS", "BSS", "", 0],
+                    ["OFDM", "OFDMPreamble", "", 0],
+                    ["Radar", "radar", "", 0],
+                    ["Unsignal", "unidetifiedSignal", "", 0],
+                    ["CCA", "CCA", "%", 65535],
+                    ["RPI027", "RPI", "", [0,0,0,0,0,0,0,0]],
+                    ["BSSID", "BSSID", "", "0000-0000-0000"],
+                    ["PHY", "phyType", "", 0],
+                    ["AverageRCPI", "averRCPI", " dbm", 0],
+                    ["LastRSNI", "lastRSNI", " dbm", 0],
+                    ["LastRCPI", "lastRCPI", " dbm", 0],
+                    ["Frames", "frameCount", "", 0],
+                    ["AveAc", "APAverAccDelay", " ms", 0],
+                    ["Be", "averAccDelayBE", " ms", 0],
+                    ["Bk", "averAccDelayBK", " ms", 0],
+                    ["Vi", "averAccDelayVI", " ms", 0],
+                    ["Vo", "averAccDelayVO", " ms", 0],
+                    ["QosClients", "staCnt", "", 0],
+                    ["Channelutilizationrate", "chlUtilize", "", 0],
+                    ["TrafficID", "tid", "", 15],
+                    ["SentMSDUs", "transMSDUCnt", "", 4294967295],
+                    ["DiscardedMSDUs", "MSDUDiscardCnt", "", 4294967295],
+                    ["FailedMSDUs", "MSDUFailCnt", "", 4294967295],
+                    ["MSDUsTimes", "MSDUMulRetryCnt", "", 4294967295],
+                    ["LostQoSCFPolls", "qosLostCnt", "", 4294967295],
+                    ["Averagequeuedelay", "averQueDelay", " ms", 4294967295],
+                    ["Averagetransmitdelay", "averTransDelay", " ms", 4294967295],
+                    ["Bin0rangePolls", "bin0Range", "", 255],
+                    ["Bin025", "Bin0Bin5", "", [4294967295,4294967295,4294967295,4294967295,4294967295,4294967295]]
+                ];
+
+                if (isNullObj(clientInfo)) {
+                    clientInfo = {linkMargin:'n/a',RCPI:'n/a',RSNI:'n/a',antenId:'n/a',ANPI:'n/a',
+                        IPI:['n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a'],
+                        txmtPower:'n/a',BSS:'n/a',OFDMPreamble:'n/a',radar:'n/a',unidetifiedSignal:'n/a',
+                        CCA:'n/a',RPI:['n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a'],BSSID:'n/a',phyType:'n/a',
+                        averRCPI:'n/a',lastRSNI:'n/a',lastRCPI:'n/a', frameCount:'n/a',APAverAccDelay:'n/a',
+                        averAccDelayBE:'n/a',averAccDelayBK:'n/a',averAccDelayVI:'n/a', averAccDelayVO:'n/a',staCnt:'n/a',
+                        chlUtilize:'n/a',tid:'n/a',transMSDUCnt:'n/a',MSDUDiscardCnt:'n/a', MSDUFailCnt:'n/a',MSDUMulRetryCnt:'n/a',
+                        qosLostCnt:'n/a',averQueDelay:'n/a',averTransDelay:'n/a',bin0Range:'n/a',Bin0Bin5:['n/a','n/a','n/a','n/a','n/a']};
+                }
+
+                //dataModifyForDisplay(clientInfo);
+                for (i = 0; i < tblText.length; i++) {
+                    var name = "clientInfo." + tblText[i][1];
+                    var temp = eval(name);
+                    var id = tblText[i][0];
+                    if (isArr(temp))
+                    {
+//                      if(temp.toString() === tblText[i][3].toString())
+//                      {
+                            for(j=0; j < temp.length; j++)
+                            {
+                                if (temp[j] == 'n/a') {
+                                	temp[j]= tblText[i][3][j];
+                                }
+                            }
+//                      }
+                        document.getElementById(id).innerText = temp.toString();
+                    }
+                    else
+                    {
+                        if((temp === tblText[i][3])||(temp == undefined) || ('n/a' === temp))
+                        {
+                            document.getElementById(id).innerText = tblText[i][3] + tblText[i][2];
+                        }
+                        else {
+                            document.getElementById(id).innerText = temp + tblText[i][2];
+                        }
+                    }
+                }
+
+            }
+
+            function Proc11Ktest(mac,apname){
+                document.getElementById("Test11kTitleResult").innerText = ("MAC Address: "+mac);
+                document.getElementById("Test11kError").style.display="none";
+                document.getElementById("Test11kResult").style.visibility="hidden";
+                document.getElementById("Test11kLoad").style.display="block";
+                get11kReport(mac, apname, function (result, Data){
+                    var rcvData;
+                    document.getElementById("Test11kLoad").style.display="none";
+                    if (true == result)
+                    {
+                        if ("fail" === Data.communicateResult)
+                        {
+                            document.getElementById("Test11kError").style.display="block";
+                            document.getElementById("Test11kErrorReason").innerText = "Error: "+ Data.reason;
+                        }
+                        else
+                        {
+                            if(Data.deviceResult[0] && Data.deviceResult[0].result)
+                            {
+                                rcvData = JSON.parse(Data.deviceResult[0].result);
+                            }
+                            addClient11kReport(rcvData);
+                            document.getElementById("Test11kResult").style.visibility="visible";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("Test11kError").style.display="block";
+                        document.getElementById("Test11kErrorReason").innerText = "Error: Request time out";
+//                      alert("error");
+                    }
+
+                });
+            }
+
+	        // 格式化秒数到时间格式
+			Number.prototype.formatTime=function(){
+				// 计算
+				var h=0,i=0,s=parseInt(this);
+				if(s>60){
+				i=parseInt(s/60);
+				s=parseInt(s%60);
+				 if(i > 60) {
+				h=parseInt(i/60);
+				 i = parseInt(i%60);
+				}
+				}
+				// 补零
+				 var zero=function(v){
+				 return (v>>0)<10?"0"+v:v;
+				};
+				 return [zero(h),zero(i),zero(s)].join(":");
+			};
+
+	        function getClientInfo(acSN, clientMAC, callback){
+
+		        mui.ajax('https://lvzhouv3.h3c.com/v3/stamonitor/app/stainfo?devSN=' + acSN + '&clientMAC=' + clientMAC,{
+					dataType:'json',
+					type:'get',
+					timeout:10000,
+					success:function(data){
+						//获得服务器响应
+						callback(data.clientInfo);
+					},
+					error:function(){
+						//异常处理；
+						mui.toast('请求终端信息失败');
+					}
+				});
+		    }
+
+            /* 将数据修改为要显示的形式 */
+            function dataModifyForDisplay(data) {
+                switch (data.clientRadioMode) {
+                case 1:
+                    data.clientRadioMode = "802.11b";
+                    break;
+                case 2:
+                    data.clientRadioMode = "802.11a";
+                    break;
+                case 4:
+                    data.clientRadioMode = "802.11g";
+                    break;
+                case 8:
+                    data.clientRadioMode = "802.11gn";
+                    break;
+                case 16:
+                    data.clientRadioMode = "802.11an";
+                    break;
+                case 32:
+                    data.clientRadioMode = "802.11gac";
+                    break;
+                case 64:
+                    data.clientRadioMode = "802.11ac";
+                    break;
+                default:
+                    break;
+                }
+                //data.clientRxRate += " Kbps";
+                //data.clientTxRate += " Kbps";
+
+                /* 计算上线时长 */
+                data.onlineTime = baseAPI.timeToString(data.onlineTime);
+            }
+
+		    function addClientListInfo(client) {
+
+		        var ul = document.body.querySelector('.mui-table-view');
+
+		        getClientInfo(baseAPI.getCurrentACSN(), client.clientMAC, function(clientInfo){
+
+		        	var onlineTime = 0;
+
+                    dataModifyForDisplay(clientInfo);
+		        	//onlineTime = Number(clientInfo.onlineTime).formatTime();
+		        	var li = document.createElement('li');
+					li.className = 'mui-table-view-cell mui-collapse';
+
+					var a_title = document.createElement('a');
+					a_title.className = "mui-navigate-right";
+					a_title.innerHTML = '<span class="mui-icon iconfont icon-zhongduanxiaoshou" style= "font-size: 25px;margin-right: 5px;"></span>'
+    					              + client.clientMAC
+    					              + '<span class="mui-badge mui-badge-success" style="font-size: 14px;">在线：'
+    					              + clientInfo.onlineTime
+    					              + '</span>';
+					li.appendChild(a_title);
+
+					var div_content = document.createElement('div');
+					div_content.className = "mui-collapse-content";
+					var content_table = document.createElement('table');
+					content_table.className = "client-detail";
+					content_table.innerHTML = '<tr><td class="client">MAC地址</td><td name="clientMAC" class="client-content">'+clientInfo.clientMAC
+					                        + '</td></tr><tr><td class="client">IP地址</td><td name="clientIP" class="client-content">'+clientInfo.clientIP
+					                        + '</td></tr><tr><td class="client">终端厂商</td><td name="clientName" class="client-content">'+clientInfo.clientVendor
+					                        + '</td></tr><tr><td class="client">终端模式</td><td name="clientMode" class="client-content">'+clientInfo.clientMode
+					                        + '</td></tr><tr><td class="client">接入AP名</td><td name="ApName" class="client-content">'+clientInfo.ApName
+					                        + '</td></tr><tr><td class="client">SSID</td><td name="clientSSID" class="client-content">'+clientInfo.clientSSID
+					                        + '</td></tr><tr><td class="client">信号强度</td><td name="signalStrength" class="client-content">'+clientInfo.signalStrength
+					                        + '</td></tr><tr><td class="client">上线时长</td><td name="onlineTime" class="client-content">'+clientInfo.onlineTime
+					                        + '</td></tr><tr><td class="client">关联radio类型</td><td name="clientRadioMode" class="client-content">'+clientInfo.clientRadioMode+'</td></tr>';
+					div_content.appendChild(content_table);
+
+                    var btn_table = document.createElement('table');
+                    btn_table.className = "client-detail";
+					var tr_btn = document.createElement("tr");
+					var td1_btn = document.createElement("td");
+					td1_btn.className = "td-btn";
+
+					var td2_btn = document.createElement("td");
+					td2_btn.className = "td-btn";
+
+
+//					var linkTestButton = document.createElement("button");
+//					linkTestButton.className = "mui-btn mui-btn-primary terminal-btn";
+//					linkTestButton.innerHTML = "<a>无线链路测试</a>";
+//
+//					td1_btn.appendChild(linkTestButton);
+
+					terminalTestButton = document.createElement("button");
+					terminalTestButton.className = "mui-btn mui-btn-primary terminal-btn";
+					terminalTestButton.innerHTML = "<a href='#terminal_test_page' style='display: block; padding: 6px 12px;'>11K测量</a>";
+					terminalTestButton.mac = client.clientMAC;
+					terminalTestButton.apname = clientInfo.ApName;
+					terminalTestButton.addEventListener('tap',function(){
+//					    console.log(this.mac);
+//					    console.log(this.apname);
+					    Proc11Ktest(this.mac, this.apname);
+					});
+
+					td1_btn.appendChild(terminalTestButton);
+
+					tr_btn.appendChild(td1_btn);
+					tr_btn.appendChild(td2_btn);
+					btn_table.appendChild(tr_btn);
+					div_content.appendChild(btn_table);
+
+					li.appendChild(div_content);
+					ul.appendChild(li);
+		        });
+		    }
+
+		    function showClentList(clientList){
+		        var dataLen = clientList.length;
+		        var i = dataLen;
+		        while(i>0){
+		            addClientListInfo(clientList[dataLen-i]);
+		            i--;
+		            g_clentStartNum++;
+		        }
+		    }
+
+	        function getClientList(acSN, starNum, callback){
+
+		        mui.ajax('https://lvzhouv3.h3c.com/v3/stamonitor/app/stalist?devSN=' + acSN + '&startNum='+starNum,{
+					dataType:'json',
+					type:'get',
+					timeout:5000,
+					success:function(data){
+						//获得服务器响应
+						callback(data.clientList);
+					},
+					error:function(){
+						//异常处理；
+						mui.toast('请求终端列表失败');
+					}
+				});
+		    }
+
+	        function updateClientList(acSN){
+		        getClientList(acSN, g_clentStartNum, function(clientList){
+
+	                showClentList(clientList);
+                    if (clientList.length != 0) {
+                    	 updateClientList(acSN);
+                    }
+	        	});
+	        }
+
+            //初始化单页view
+            var viewApi = mui('#app').view({
+                defaultPage: '#terminal_page'
+            });
+            //初始化单页的区域滚动
+            mui('.mui-scroll-wrapper').scroll();
+             //
+            var view = viewApi.view;
+            (function($) {
+                //处理view的后退与webview后退
+                var oldBack = $.back;
+                $.back = function() {
+                    if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+                        viewApi.back();
+                    } else { //执行webview后退
+                        oldBack();
+                    }
+                };
+                //监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
+                //第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
+                view.addEventListener('pageBeforeShow', function(e) {
+                    if (e.detail.page.id == 'terminal_test_page') {
+                        var scrollApi = mui('#terminal_test_scroll').scroll();//获取插件对象
+                        scrollApi.refresh();//刷新
+                        scrollApi.scrollTo(0,0);//滚动至顶部
+                    }
+                    //              console.log(e.detail.page.id + ' beforeShow');
+                });
+                view.addEventListener('pageShow', function(e) {
+                    //进入手执设定界面时
+                    if (e.detail.page.id == 'terminal_test_page') {
+//                      mui('#terminal_test_scroll').scroll().scroll();
+                    }
+//                  else if(e.detail.page.id == ''){
+//                      footerOffsetTop = document.getElementById("apgroup_info_footer").offsetTop;
+//                  }
+                    //              console.log(e.detail.page.id + ' show');
+                });
+                view.addEventListener('pageBeforeBack', function(e) {
+                    //              console.log(e.detail.page.id + ' beforeBack');
+                });
+                view.addEventListener('pageBack', function(e) {
+                    //              console.log(e.detail.page.id + ' back');
+                });
+            })(mui);
+
+	    </script>
+	</body>
+</html>

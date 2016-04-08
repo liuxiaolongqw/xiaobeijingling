@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>设备管理</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="css/mui.min.css">
+        <style type="text/css">
+			#list {
+				/*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+				
+				margin-top: -1px;
+			}
+			.sub-config-title{
+				font-size:15px;
+                color:#131a2d;
+			}
+			.oa-contact-email{
+				font-size:12px;
+				color:#93A0B1;
+			}
+		</style>
+	</head>
+	<body>
+        <header class="mui-bar mui-bar-nav">
+            <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 id="title" class="mui-title">设备管理</h1>
+        </header>
+        <hr style="margin:0; padding:0; border:0; height:2px; background-color:#e6e7e8"/>
+        <div class="mui-content">
+            <ul id="list" class="mui-table-view">
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="device-topo.html">
+                        <img class="mui-media-object mui-pull-left" src="images/add-dev.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">添加设备</div>
+                            <p class="oa-contact-email mui-h6">扫码添加需绑定的设备</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="apgroup.html">
+                        <img class="mui-media-object mui-pull-left" src="images/group.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">AP组</div>
+                            <p class="oa-contact-email mui-h6">扫描AP条形码即可入AP组</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <script src="js/mui.min.js"></script>
+        <script type="text/javascript" src="js/common.js"></script>
+        <script>
+            mui.init({
+                swipeBack:true //启用右滑关闭功能
+            });
+
+            mui('.mui-table-view').on('tap', 'a', function() {
+                var id = this.getAttribute("href");
+                var type = this.getAttribute("open-type");
+                var href = this.href;
+
+                if(type=="common"||mui.os.ios){
+                    clicked(href,true, false,{render:'always'});
+                }else{
+                    var href = this.href;
+                    var title = this.getElementsByClassName("sub-config-title")[0].innerText;
+
+                    template = plus.webview.getWebviewById("default-main");
+                    //获得共用子webview
+                    subWebview = template.children()[0];
+
+                    //通知模板修改标题，并显示隐藏右上角图标；
+                    mui.fire(template,'updateHeader',{title:title,showMenu:false});
+                    if (subWebview.getURL() != href) {
+                        subWebview.loadURL(href);
+                    } else {
+                         subWebview.show();
+                    }
+                    template.show('slide-in-right', 150);
+                }
+            });
+        </script>
+	</body>
+</html>

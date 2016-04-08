@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>网络监控</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="css/mui.min.css">
+        <style type="text/css">
+			#list {
+				/*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+				
+				margin-top: -1px;
+			}
+			.sub-config-title{
+				font-size:15px;
+                color:#131a2d;
+			}
+			.oa-contact-email{
+				font-size:12px;
+				color:#93A0B1;
+			}
+		</style>
+	</head>
+	<body>
+        <header class="mui-bar mui-bar-nav">
+            <a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 id="title" class="mui-title">网络监控</h1>
+        </header>
+		<hr style="margin:0; padding:0; border:0; height:2px; background-color:#e6e7e8"/>
+        <div class="mui-content">
+            <ul id="list" class="mui-table-view">
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="internet.html">
+                        <img class="mui-media-object mui-pull-left" src="images/internet.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">Internet</div>
+                            <p class="oa-contact-email mui-h6">查看设备接口、IP等网络信息</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="system.html">
+                        <img class="mui-media-object mui-pull-left" src="images/computer.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">系统</div>
+                            <p class="oa-contact-email mui-h6">查看设备CPU、内存、软硬件信息</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="aplist.html">
+                        <img class="mui-media-object mui-pull-left" src="images/AP.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">AP列表</div>
+                            <p class="oa-contact-email mui-h6">显示AP的详细信息</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="terminal.html">
+                        <img class="mui-media-object mui-pull-left" src="images/terminal.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">无线终端</div>
+                            <p class="oa-contact-email mui-h6">显示连接中断的详细信息</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="statistic_rssi.html">
+                        <img class="mui-media-object mui-pull-left" src="images/rssi.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">终端信号强度分布</div>
+                            <p class="oa-contact-email mui-h6">反映AP信号覆盖是否充分</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="statistic_tx.html">
+                        <img class="mui-media-object mui-pull-left" src="images/tx.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">终端协商速率分布</div>
+                            <p class="oa-contact-email mui-h6">反映无线总体健康状态</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="statistic_rx.html">
+                        <img class="mui-media-object mui-pull-left" src="images/rx.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">空口占用率分布</div>
+                            <p class="oa-contact-email mui-h6">是否存在空口干扰、信道部署是否合理</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" open-type="common" href="visitor.html">
+                        <img class="mui-media-object mui-pull-left" src="images/visitor.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">访客数据统计</div>
+                            <p class="oa-contact-email mui-h6">统计最近访客的访问数据</p>
+                        </div>
+                    </a>
+                </li>
+                <!--<li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" href="coming-soon.html">
+                        <img class="mui-media-object mui-pull-left" src="images/radiotower.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">无线环境</div>
+                            <p class="oa-contact-email mui-h6">信道、邻居等无线环境信息</p>
+                        </div>
+                    </a>
+                </li>-->
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" href="coming-soon.html">
+                        <img class="mui-media-object mui-pull-left" src="images/document.png">
+                        <div class="mui-media-body">
+                            <div class="sub-config-title">详细日志</div>
+                            <p class="oa-contact-email mui-h6">查看设备的日志信息</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <script src="js/mui.min.js"></script>
+        <script>
+            mui.init({
+                swipeBack:true //启用右滑关闭功能
+            });
+
+            var aniShow = "slide-in-right";
+			//关于backbutton和menubutton两个按键的说明，在iOS平台不存在，故需隐藏
+			if(!mui.os.android){
+				var span = document.getElementById("android-only")
+				if(span){
+					span.style.display = "none";
+				}
+				aniShow = "pop-in";
+			}
+			var subWebview=null,template=null;
+
+            mui('.mui-table-view').on('tap', 'a', function() {
+				var id = this.getAttribute("href");
+				var type = this.getAttribute("open-type");
+				var href = this.href;
+
+				if(type=="common"||mui.os.ios){
+					var webview_style = {
+						popGesture: "close",
+				        scrollIndicator:"none"//去除滚动条
+					};
+					mui.openWindow({
+						id: id,
+						url: href,
+						styles: webview_style,
+						show: {
+							aniShow: aniShow
+						}
+					});
+				}else{
+					var href = this.href;
+					var title = this.getElementsByClassName("sub-config-title")[0].innerText;
+
+					template = plus.webview.getWebviewById("default-main");
+					//获得共用子webview
+					subWebview = template.children()[0];
+
+					//通知模板修改标题，并显示隐藏右上角图标；
+					mui.fire(template,'updateHeader',{title:title,showMenu:false});
+					if (subWebview.getURL() != href) {
+						subWebview.loadURL(href);
+					} else {
+						 subWebview.show();
+					}
+					template.show('slide-in-right', 150);
+				}
+			});
+
+        </script>
+	</body>
+</html>

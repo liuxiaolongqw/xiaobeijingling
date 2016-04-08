@@ -1,0 +1,707 @@
+{
+  "home.html": {
+    "resources": [
+      "css/app.css",
+      "fonts/iconfont.ttf",
+      "health.html",
+      "css/iconfont.css",
+      "css/mui.min.css",
+      "js/mui.min.js"
+    ],
+    "refer": [
+      "dashboard.html",
+      "environment.html",
+      "diagnose.html",
+      "login.html",
+      "template.html",
+      "security.html",
+      "health.html",
+      "visitor.html",
+      "coming-soon.html"
+    ]
+  },
+  "index.html": {
+    "resources": [
+      "js/base.js",
+      "home.html",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/iconfont.css",
+      "css/mui.min.css",
+      "js/data.js",
+      "js/app.js",
+      "images/xb-icons.png",
+      "images/chat/redpoint.png"
+    ],
+    "refer": [
+      "home.html",
+      "index-menu.html",
+      "device-topo.html",
+      "chat.html"
+    ]
+  },
+  "index-menu.html": {
+    "resources": [
+      "js/common.js",
+      "js/app.js",
+      "css/iconfont.css",
+      "css/mui.min.css",
+      "fonts/iconfont.ttf",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "images/user-photo.png",
+      "images/user-head.png"
+    ],
+    "refer": [
+      "net-monitor.html",
+      "webview_embed.html",
+      "login.html",
+      "device-manage.html",
+      "about.html",
+      "im-chat.html",
+      "shake.html"
+    ]
+  },
+  "diagnose.html": {
+    "resources": [
+      "images/leida.png",
+      "images/zhongduan.png",
+      "images/anquan.png",
+      "images/wangluo.png",
+      "js/base.js",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "images/zhongduan_err.png"
+    ],
+    "refer": []
+  },
+  "login.html": {
+    "resources": [
+      "js/app.js",
+      "css/login.css",
+      "images/weixin.png",
+      "js/mui.enterfocus.js",
+      "images/user-photo.png",
+      "js/base.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/iconfont.css",
+      "css/mui.min.css",
+      "js/data.js",
+      "fonts/iconfont.ttf",
+      "images/chat/test_xiaozhu.jpg"
+    ],
+    "refer": [
+      "guide.html",
+      "forget-password.html",
+      "reg.html"
+    ]
+  },
+  "security.html": {
+    "resources": [
+      "images/sta_img2.png",
+      "images/sta_img1.png",
+      "js/data.js",
+      "css/mui.min.css",
+      "js/base.js",
+      "js/mui.min.js"
+    ],
+    "refer": []
+  },
+  "health.html": {
+    "resources": [
+      "images/achievement.png",
+      "images/baogao.png",
+      "libs/echarts-all.js",
+      "images/history.png",
+      "js/base.js",
+      "js/mui.min.js",
+      "css/app.css",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "healthhistory.html",
+      "healthachievement.html",
+      "healthReport.html"
+    ]
+  },
+  "device-topo.html": {
+    "resources": [
+      "js/mui.picker.js",
+      "js/common.js",
+      "images/link.png",
+      "js/mui.min.js",
+      "js/mui.poppicker.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/city.data.js",
+      "css/mui.poppicker.css",
+      "css/mui.picker.css",
+      "images/xb-icons.png",
+      "js/city.data-3.js",
+      "js/base.js",
+      "js/app.js",
+      "js/data.js"
+    ],
+    "refer": [
+      "barcode_scan.html"
+    ]
+  },
+  "environment.html": {
+    "resources": [
+      "images/grin.png",
+      "images/smile.png",
+      "images/question.png",
+      "images/sad.png",
+      "js/base.js",
+      "js/mui.min.js",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "environmentdetail.html"
+    ]
+  },
+  "barcode_scan.html": {
+    "resources": [
+      "js/common.js"
+    ],
+    "refer": []
+  },
+  "dashboard.html": {
+    "resources": [
+      "js/base.js",
+      "js/data.js",
+      "libs/echarts-all.js",
+      "js/mui.min.js",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "healthhistory.html": {
+    "resources": [
+      "js/base.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "libs/echarts.min.js"
+    ],
+    "refer": []
+  },
+  "net-monitor.html": {
+    "resources": [
+      "images/computer.png",
+      "images/AP.png",
+      "js/mui.min.js",
+      "images/security.png",
+      "images/terminal.png",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/document.png",
+      "images/radiotower.png",
+      "images/internet.png",
+      "images/visitor.png",
+      "images/rx.png",
+      "images/tx.png",
+      "images/rssi.png"
+    ],
+    "refer": [
+      "system.html",
+      "internet.html",
+      "visitor.html",
+      "terminal.html",
+      "aplist.html",
+      "statistic_rssi.html",
+      "statistic_tx.html"
+    ]
+  },
+  "system.html": {
+    "resources": [
+      "js/base.js",
+      "css/iconfont.css",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "healthachievement.html": {
+    "resources": [
+      "js/base.js",
+      "images/cj_shenbei.png",
+      "js/mui.min.js",
+      "images/cj_mengbei.png",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/cj_textbg.png",
+      "images/coming_soon.png",
+      "images/mengbei.png",
+      "images/shenbei.png"
+    ],
+    "refer": []
+  },
+  "internet.html": {
+    "resources": [
+      "js/base.js",
+      "images/wan-history.png",
+      "libs/echarts-all.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "healthReport.html": {
+    "resources": [
+      "js/base.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "libs/echarts-all.js"
+    ],
+    "refer": []
+  },
+  "webview_embed.html": {
+    "resources": [
+      "js/common.js",
+      "js/mui.min.js",
+      "css/common.css",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/immersed.js"
+    ],
+    "refer": []
+  },
+  "forget-password.html": {
+    "resources": [
+      "js/app.js",
+      "js/mui.min.js",
+      "css/login.css",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "reg.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "js/app.js",
+      "js/mui.min.js",
+      "css/login.css",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "device-manage.html": {
+    "resources": [
+      "images/add-dev.png",
+      "js/common.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "images/group.png",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "apgroup.html"
+    ]
+  },
+  "apgroup.html": {
+    "resources": [
+      "js/base.js",
+      "images/scan.png",
+      "js/data.js",
+      "js/mui.view.js"
+    ],
+    "refer": []
+  },
+  "environmentdetail.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "libs/echarts-all.js"
+    ],
+    "refer": []
+  },
+  "about.html": {
+    "resources": [
+      "js/app.js",
+      "libs/easymob-webim-sdk/easemob.im-1.0.5.js",
+      "fonts/mui.ttf",
+      "images/hollowlogo.png",
+      "images/iconfont-tianjia.png",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "libs/easymob-webim-sdk/json2.js",
+      "libs/easymob-webim-sdk/jquery-1.11.1.js",
+      "css/feedback-page.css",
+      "js/feedback.js",
+      "js/feedback-page.js",
+      "libs/easymob-webim-sdk/strophe-custom-2.0.0.js",
+      "js/mui.view.js"
+    ],
+    "refer": [
+      "privacy.html"
+    ]
+  },
+  "im-chat.html": {
+    "resources": [
+      "js/mui.imageViewer.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "images/kefu.png",
+      "css/mui.min.css",
+      "css/mui.imageviewer.css",
+      "js/arttmpl.js"
+    ],
+    "refer": []
+  },
+  "shake.html": {
+    "resources": [
+      "js/common.js",
+      "css/common.css",
+      "js/mui.min.js",
+      "images/shakedown.png",
+      "fonts/mui.ttf",
+      "images/shakeup.png",
+      "css/mui.min.css",
+      "images/shake_bg.png",
+      "js/immersed.js"
+    ],
+    "refer": [
+      "shake-home.html"
+    ]
+  },
+  "shake-home.html": {
+    "resources": [
+      "images/h3c.png",
+      "images/huawei.png"
+    ],
+    "refer": []
+  },
+  "visitor.html": {
+    "resources": [
+      "js/base.js",
+      "js/data.js",
+      "libs/echarts-all.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/mui.view.js",
+      "js/app.js"
+    ],
+    "refer": []
+  },
+  "terminal.html": {
+    "resources": [
+      "js/base.js",
+      "css/iconfont.css",
+      "images/login.gif",
+      "fonts/iconfont.ttf",
+      "js/mui.view.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "coming-soon.html": {
+    "resources": [
+      "js/mui.min.js",
+      "css/app.css",
+      "images/coming_soon.png",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "privacy.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "aplist.html": {
+    "resources": [
+      "js/base.js",
+      "css/iconfont.css",
+      "fonts/iconfont.ttf",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "statistic_rssi.html": {
+    "resources": [
+      "js/base.js",
+      "images/tips.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "libs/echarts-all.js"
+    ],
+    "refer": []
+  },
+  "statistic_tx.html": {
+    "resources": [
+      "js/base.js",
+      "images/tips.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "libs/echarts-all.js"
+    ],
+    "refer": []
+  },
+  "chat_contact.html": {
+    "resources": [
+      "css/chat_contact.css",
+      "images/chat/test_xiaozhu.jpg",
+      "js/jquery.charfirst.pinyin.js",
+      "css/chat_common.css",
+      "js/sort.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/chat_websql.js",
+      "js/app.js",
+      "js/chat_base.js",
+      "images/chat/chatgroup.jpg",
+      "images/chat/chatnewfriend.jpg"
+    ],
+    "refer": [
+      "chat_group.html",
+      "chat_friendinfo.html",
+      "chat_newfriend.html"
+    ]
+  },
+  "chat_me.html": {
+    "resources": [
+      "js/mui.zoom.js",
+      "js/mui.previewimage.js",
+      "css/chat_me.css",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/chat_common.css",
+      "js/chat_websql.js",
+      "js/app.js",
+      "js/chat_base.js",
+      "chat_signature.html",
+      "libs/bootstrap.min.js",
+      "libs/cropper.min.js",
+      "images/chat/test_xiaozhu.jpg"
+    ],
+    "refer": [
+      "chat_signature.html",
+      "chat_newmsgnotice.html"
+    ]
+  },
+  "chat.html": {
+    "resources": [
+      "js/chat_websql.js",
+      "js/app.js",
+      "js/chat.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "js/chat_base.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "libs/socket.io.js",
+      "images/login.gif",
+      "chat_dialog.html",
+      "chat_contact.html"
+    ],
+    "refer": [
+      "chat_contact.html",
+      "chat_me.html",
+      "chat_dialog.html",
+      "chat_newdialog.html",
+      "chat_finduser.html"
+    ]
+  },
+  "chat_dialog.html": {
+    "resources": [
+      "css/chat_dialog.css",
+      "css/chat_common.css",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "images/chat/test_xiaozhu.jpg",
+      "js/chat_websql.js",
+      "js/app.js",
+      "js/chat_base.js",
+      "audio/chatmsg.mp3"
+    ],
+    "refer": [
+      "chat_chat.html"
+    ]
+  },
+  "chat_group.html": {
+    "resources": [
+      "images/chat/test_xiaozhu.jpg",
+      "fonts/mui.ttf",
+      "js/chat_websql.js",
+      "js/app.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "css/chat_common.css"
+    ],
+    "refer": [
+      "chat_chat.html"
+    ]
+  },
+  "chat_chat.html": {
+    "resources": [
+      "js/chat_websql.js",
+      "js/app.js",
+      "js/mui.zoom.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "js/chat_base.js",
+      "fonts/mui.ttf",
+      "js/chat_chat.js",
+      "css/mui.min.css",
+      "js/mui.previewimage.js",
+      "images/login.gif",
+      "libs/iscroll.js",
+      "js/jscroll.js",
+      "images/chat/emotion/em119.gif"
+    ],
+    "refer": [
+      "chat_chatgroupinfo.html",
+      "chat_chatsingleinfo.html"
+    ]
+  },
+  "chat_chatgroupinfo.html": {
+    "resources": [
+      "images/chat/chatgroupadduser.png",
+      "images/chat/chatgroupdeluser.png",
+      "images/chat/test_xiaozhu.jpg",
+      "js/chat_websql.js",
+      "js/app.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "js/chat_base.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "chat_groupadduser.html"
+    ]
+  },
+  "chat_friendinfo.html": {
+    "resources": [
+      "js/mui.zoom.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/mui.previewimage.js",
+      "images/chat/test_xiaozhu.jpg"
+    ],
+    "refer": [
+      "chat_chat.html"
+    ]
+  },
+  "chat_newfriend.html": {
+    "resources": [
+      "js/chat_websql.js",
+      "js/app.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "images/chat/test_xiaozhu.jpg",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "chat_chatsingleinfo.html": {
+    "resources": [
+      "js/chat_websql.js",
+      "js/app.js",
+      "images/chat/chatgroupadduser.png",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "js/chat_base.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "chat_sdadduser.html"
+    ]
+  },
+  "chat_newdialog.html": {
+    "resources": [
+      "js/chat_websql.js",
+      "js/app.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "images/chat/test_xiaozhu.jpg",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "chat_chat.html"
+    ]
+  },
+  "chat_signature.html": {
+    "resources": [
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf"
+    ],
+    "refer": []
+  },
+  "guide.html": {
+    "resources": [
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "template.html": {
+    "resources": [
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "chat_finduser.html": {
+    "resources": [
+      "images/chat/search.png",
+      "js/chat_websql.js",
+      "js/app.js",
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "images/chat/test_xiaozhu.jpg",
+      "js/chat_base.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/chat_common.css"
+    ],
+    "refer": []
+  },
+  "chat_groupadduser.html": {
+    "resources": [
+      "images/chat/test_xiaozhu.jpg"
+    ],
+    "refer": []
+  },
+  "chat_newmsgnotice.html": {
+    "resources": [
+      "libs/jquery/jquery-1.11.3.min.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/chat_common.css"
+    ],
+    "refer": []
+  },
+  "chat_sdadduser.html": {
+    "resources": [
+      "images/chat/test_xiaozhu.jpg"
+    ]
+  }
+}
